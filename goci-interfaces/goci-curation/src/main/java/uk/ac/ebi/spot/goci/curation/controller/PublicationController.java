@@ -10,6 +10,8 @@ import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/publication")
 public class PublicationController {
+    @Value("${deposition.ui.uri}")
+    private String depositionUiURL;
     @Autowired
     private PublicationRepository publicationRepository;
     @Autowired
@@ -82,41 +86,46 @@ public class PublicationController {
         JaroWinklerSimilarity jwDistance = new JaroWinklerSimilarity();
         EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
         Map<String, String> searchProps = new HashMap<>();
-        searchProps.put("pubMedID", europePMCResult.getPublication().getPubmedId());
-        searchProps.put("author", europePMCResult.getFirstAuthor().getFullname());
-        searchProps.put("title", europePMCResult.getPublication().getTitle());
-        searchProps.put("doi", europePMCResult.getDoi());
-        results.put("search", searchProps);
-        String searchTitle = europePMCResult.getPublication().getTitle();
-        String searchAuthor = europePMCResult.getFirstAuthor().getFullname();
         List<Map<String, String>> data = new ArrayList<>();
-        try {
-            CharSequence searchString = buildSearch(searchAuthor, searchTitle);
-            Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
-            for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
-                Map<String, String> props = new HashMap<>();
-                Submission submission = e.getValue();
-                String matchTitle = submission.getTitle();
-                String matchAuthor = submission.getAuthor();
-                CharSequence matchString = buildSearch(matchAuthor, matchTitle);
-                Double score = cosScore.apply(searchString, matchString) * 100;
-                Integer ldScore = levenshteinDistance.apply(searchString, matchString);
-                Double jwScore = jwDistance.apply(searchString, matchString) * 100;
-                props.put("submissionID", submission.getId());
-                props.put("cosScore", normalizeScore(score.intValue()).toString());
-                props.put("levDistance", normalizeScore(ldScore).toString());
-                props.put("jwScore", new Integer(jwScore.intValue()).toString());
-                props.put("pubMedID", submission.getPubMedID());
-                props.put("author", submission.getAuthor());
-                props.put("title", submission.getTitle());
-                props.put("doi", submission.getDoi());
-                data.add(props);
+        if(!europePMCResult.getError()) {
+            try {
+                searchProps.put("pubMedID", europePMCResult.getPublication().getPubmedId());
+                searchProps.put("author", europePMCResult.getFirstAuthor().getFullname());
+                searchProps.put("title", europePMCResult.getPublication().getTitle());
+                searchProps.put("doi", europePMCResult.getDoi());
+                results.put("search", searchProps);
+                String searchTitle = europePMCResult.getPublication().getTitle();
+                String searchAuthor = europePMCResult.getFirstAuthor().getFullname();
+                CharSequence searchString = buildSearch(searchAuthor, searchTitle);
+                Map<String, Submission> submissionMap = submissionService.getSubmissionsBasic();
+                for (Map.Entry<String, Submission> e : submissionMap.entrySet()) {
+                    Map<String, String> props = new HashMap<>();
+                    Submission submission = e.getValue();
+                    String matchTitle = submission.getTitle();
+                    String matchAuthor = submission.getAuthor();
+                    CharSequence matchString = buildSearch(matchAuthor, matchTitle);
+                    Double score = cosScore.apply(searchString, matchString) * 100;
+                    Integer ldScore = levenshteinDistance.apply(searchString, matchString);
+                    Double jwScore = jwDistance.apply(searchString, matchString) * 100;
+                    props.put("submissionID", submission.getId());
+                    props.put("cosScore", normalizeScore(score.intValue()).toString());
+                    props.put("levDistance", normalizeScore(ldScore).toString());
+                    props.put("jwScore", new Integer(jwScore.intValue()).toString());
+                    props.put("pubMedID", submission.getPubMedID());
+                    props.put("author", submission.getAuthor());
+                    props.put("title", submission.getTitle());
+                    props.put("doi", submission.getDoi());
+                    data.add(props);
+                }
+                data.sort((o1, o2) -> Integer.decode(o2.get("cosScore")).compareTo(Integer.decode(o1.get("cosScore"))));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            data.sort((o1, o2) -> Integer.decode(o2.get("cosScore")).compareTo(Integer.decode(o1.get("cosScore"))));
-        } catch (IOException e) {
-            e.printStackTrace();
+        }else{
+            results.put("error", "ID " + pubmedId + " not found");
         }
         results.put("data", data);
+        model.addAttribute("baseUrl", depositionUiURL);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
@@ -126,6 +135,12 @@ public class PublicationController {
     private CharSequence buildSearch(String author, String title) throws IOException {
         StringBuffer result = new StringBuffer();
         EnglishAnalyzer filter = new EnglishAnalyzer();
+        if(author == null){
+            author = "";
+        }
+        if(title == null){
+            title = "";
+        }
         String search = author.toLowerCase() + " " + title.toLowerCase();
         TokenStream stream = filter.tokenStream("", search.toString());
         stream.reset();

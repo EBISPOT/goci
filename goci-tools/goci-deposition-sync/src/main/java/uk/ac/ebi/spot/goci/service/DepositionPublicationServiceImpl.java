@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import uk.ac.ebi.spot.goci.model.deposition.BodyOfWorkDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
 import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPublicationListWrapper;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +113,32 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         String url = depositionIngestUri + "/publications?page={page}&size=100";
         return getAllPublications(url);
     }
+
+    @Override
+    public Map<String, BodyOfWorkDto> getAllBodyOfWork() {
+        log.info("Retrieving publications");
+        String url = depositionIngestUri + "/bodyofwork/?status=UNDER_SUBMISSION&page={page}&size=100";
+        Map<String, BodyOfWorkDto> bomMap = new HashMap<>();
+        try {
+            int i = 0;
+            Map<String, Integer> params = new HashMap<>();
+            params.put("page", i);
+            String response = template.getForObject(url, String.class, params);
+            BodyOfWorkDto[] bomArray = template.getForObject(url, BodyOfWorkDto[].class,
+                    params);
+            //while(i < publications.getPage().getTotalPages()){
+            if(bomArray != null){
+                Arrays.stream(bomArray).forEach(bom->bomMap.put(bom.getBodyOfWorkId(), bom));
+            }
+            params.put("page", ++i);
+//                publications = template.getForObject(url, DepositionPublicationListWrapper.class,
+//                        params);
+        }catch(HttpClientErrorException e){
+            System.out.println(e.getMessage());
+        }
+        return bomMap;
+    }
+
 
     @Override
     public Map<String, DepositionPublication> getAllBackendPublications() {

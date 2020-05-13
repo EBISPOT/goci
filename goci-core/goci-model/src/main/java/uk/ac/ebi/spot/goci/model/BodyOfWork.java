@@ -1,9 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.joda.time.LocalDate;
 import uk.ac.ebi.spot.goci.model.deposition.BodyOfWorkDto;
 
@@ -19,6 +16,7 @@ import java.util.Set;
 public class BodyOfWork{
     @Id
     @GeneratedValue
+    @EqualsAndHashCode.Exclude
     private Long id;
     @Column(name = "pub_id")
     private String publicationId;
@@ -35,6 +33,7 @@ public class BodyOfWork{
     @ManyToMany
     @JoinTable(name = "unpublished_study_to_work", joinColumns = @JoinColumn(name = "work_id"), inverseJoinColumns =
     @JoinColumn(name = "study_id"))
+    @EqualsAndHashCode.Exclude
     private Set<UnpublishedStudy> studies;
 
     public static BodyOfWork create(BodyOfWorkDto dto){
@@ -43,10 +42,12 @@ public class BodyOfWork{
         bodyOfWork.setPubMedId(dto.getPmids() != null ? dto.getPmids().get(0) : null);
         bodyOfWork.setJournal(dto.getJournal());
         bodyOfWork.setTitle(dto.getTitle());
-        if(dto.getFirstAuthor().getGroup() != null) {
-            bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getGroup());
-        }else{
-            bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getFirstName() + ' ' + dto.getFirstAuthor().getLastName());
+        if(dto.getFirstAuthor() != null) {
+            if (dto.getFirstAuthor().getGroup() != null) {
+                bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getGroup());
+            } else {
+                bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getFirstName() + ' ' + dto.getFirstAuthor().getLastName());
+            }
         }
         //bodyOfWork.setPublicationDate(dto.get);
         if(dto.getDoi() != null) {
@@ -55,5 +56,15 @@ public class BodyOfWork{
             bodyOfWork.setDoi(dto.getPreprintServerDOI());
         }
         return bodyOfWork;
+    }
+
+    public void update(BodyOfWork newBom){
+        publicationId = newBom.getPublicationId();
+        pubMedId = newBom.getPubMedId();
+        journal = newBom.getJournal();
+        title = newBom.getTitle();
+        firstAuthor = newBom.getFirstAuthor();
+        publicationDate = newBom.getPublicationDate();
+        doi = newBom.getDoi();
     }
 }

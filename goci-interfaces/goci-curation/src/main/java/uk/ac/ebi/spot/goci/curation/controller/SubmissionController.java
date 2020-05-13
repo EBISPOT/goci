@@ -154,7 +154,7 @@ public class SubmissionController {
             e.printStackTrace(new PrintWriter(stringWriter));
             statusMessages.add(stringWriter.getBuffer().toString());
         }
-        redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
+        redirectAttributes.addFlashAttribute("changesSaved", String.join("<br>", statusMessages));
         return "redirect:/submissions/" + submissionID;
     }
 
@@ -166,7 +166,8 @@ public class SubmissionController {
         StringWriter stringWriter = new StringWriter();
         new Throwable().printStackTrace(new PrintWriter(stringWriter));
         List<String> statusMessages = Arrays.asList(new String[]{"Error 1", "Error 2", stringWriter.getBuffer().toString()});
-        redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
+        String status = String.join("<br>", statusMessages);
+        redirectAttributes.addFlashAttribute("changesSaved", status);
         return "redirect:/submissions/" + submissionID;
     }
 

@@ -200,21 +200,16 @@ public class DepositionSyncService {
         //curation import will need to prune unpublished_studies, ancestry and body_of_work
         submissions.forEach((s, submission) -> {
             if(submission.getStatus().equals("SUBMITTED") && submission.getPublication() == null){
-                submission.getStudies().forEach(studyDto -> {
-                    BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
-                    if(bodyOfWorkDto.getEmbargoUntilPublished() == true || (bodyOfWorkDto.getEmbargoDate() != null && bodyOfWorkDto.getEmbargoDate().isBefore(new LocalDate()))){
-                    }else {
+                BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
+                if(isEligible(bodyOfWorkDto)) {
+                    Set<UnpublishedStudy> studies = new HashSet<>();
+                    submission.getStudies().forEach(studyDto -> {
                         String studyTag = studyDto.getStudyTag();
                         UnpublishedStudy unpublishedStudy = unpublishedRepository.findByAccession(studyDto.getAccession());
                         if (unpublishedStudy == null) {
                             unpublishedStudy =
                                     unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto, submission));
-                            Set<UnpublishedStudy> studies = new HashSet<>();
                             studies.add(unpublishedStudy);
-                            //add bodies of work
-                            BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
-                            bodyOfWork.setStudies(studies);
-                            bodyOfWorkRepository.save(bodyOfWork);
                             //add ancestries
                             List<DepositionSampleDto> sampleDtoList = getSamples(submission, studyTag);
                             List<UnpublishedAncestry> ancestryList = new ArrayList<>();
@@ -225,25 +220,30 @@ public class DepositionSyncService {
                             unpublishedAncestryRepo.save(ancestryList);
                             unpublishedStudy.setAncestries(ancestryList);
                             unpublishedRepository.save(unpublishedStudy);
-                        } else {//check for changes to body of work
-                            Collection<BodyOfWork> bodyOfWorks = unpublishedStudy.getBodiesOfWork();
-                            bodyOfWorks.forEach(bodyOfWork -> {
-                                if (bodyOfWork.getPublicationId().equals(bodyOfWorkDto.getBodyOfWorkId())) {
-                                    //create/update body of work
-//                                    BodyOfWork updateBodyOfWork = BodyOfWork.create(bodyOfWorkDto);
-//                                    updateBodyOfWork.setId(bodyOfWork.getId());
-//                                    if (!updateBodyOfWork.equals(bodyOfWork)) {
-//                                        bodyOfWorkRepository.save(updateBodyOfWork);
-//                                    }
-                                }
-                            });
                         }
-//                        submission.setStatus("IMPORTED");
-//                        submissionService.updateSubmission(submission);
+                    });
+                    BodyOfWork bom = bodyOfWorkRepository.findByPublicationId(bodyOfWorkDto.getBodyOfWorkId());
+                    if(bom == null) {
+                        //add bodies of work
+                        BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
+                        bodyOfWork.setStudies(studies);
+                        bodyOfWorkRepository.save(bodyOfWork);
                     }
-                });
+                }
             }
         });
+        Map<String, BodyOfWorkDto> bomMap = depositionPublicationService.getAllBodyOfWork();
+        bomMap.entrySet().stream().forEach(e->{
+            String bomId = e.getKey();
+            BodyOfWorkDto dto = e.getValue();
+            BodyOfWork bom = bodyOfWorkRepository.findByPublicationId(bomId);
+            BodyOfWork newBom = BodyOfWork.create(dto);
+            if(bom != null && isEligible(dto) && !bom.equals(newBom)){
+                bom.update(newBom);
+                bodyOfWorkRepository.save(bom);
+            }
+        });
+
     }
 
     private List<DepositionSampleDto> getSamples(DepositionSubmission submission, String studyTag){
@@ -325,5 +325,17 @@ public class DepositionSyncService {
             System.out.println("error: publication " + p.getPubmedId() + " has no authors");
         }
         return newPublication;
+    }
+
+    private boolean isEligible(BodyOfWorkDto bodyOfWorkDto) {
+        if(!bodyOfWorkDto.getStatus().equals("UNDER_SUBMISSION")){
+            return false;
+        }if (bodyOfWorkDto.getEmbargoUntilPublished() != null &&  bodyOfWorkDto.getEmbargoUntilPublished() == true && bodyOfWorkDto.getPmids() == null){
+            return false;
+        }if(bodyOfWorkDto.getEmbargoDate() != null && bodyOfWorkDto.getEmbargoDate().isBefore(new LocalDate())) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

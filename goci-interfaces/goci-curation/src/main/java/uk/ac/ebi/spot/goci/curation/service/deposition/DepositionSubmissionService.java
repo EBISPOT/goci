@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
@@ -169,7 +170,7 @@ public class DepositionSubmissionService {
             }
             testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
             testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
-            testSub.setDoi(depositionSubmission.getBodyOfWork().getDoi());
+            testSub.setDoi(depositionSubmission.getBodyOfWork().getPreprintServerDOI());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
@@ -190,7 +191,6 @@ public class DepositionSubmissionService {
 
     public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
         List<String> statusMessages = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Submission.SubmissionType submissionType = getSubmissionType(depositionSubmission);
         Curator curator = curatorRepository.findByEmail(currentUser.getEmail());
         String submissionID = depositionSubmission.getSubmissionId();
@@ -213,10 +213,6 @@ public class DepositionSubmissionService {
                 publicationService.findStudiesByPubmedId(depositionSubmission.getPublication().getPmid());
 
         List<DepositionStudyDto> studies = depositionSubmission.getStudies();
-        List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
-        List<DepositionSampleDto> samples = depositionSubmission.getSamples();
-        //List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
-        List<DepositionNoteDto> notes = depositionSubmission.getNotes();
 
         //check submission status. if PUBLISHED, import summary stats, set state DONE
         //else import metadata, set state CURATOR_REVIEW
@@ -226,51 +222,14 @@ public class DepositionSubmissionService {
             depositionSubmission.getPublication().setStatus("PUBLISHED_WITH_SS");
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
-            //template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
+            template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
             statusMessages.add("imported summary stats");
         } else {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
                 depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
 
                 for (DepositionStudyDto studyDto : studies) {
-                    StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
-                    String studyTag = studyDto.getStudyTag();
-                    studyNote.append("created " + studyTag + "\n");
-                    Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
-                    Collection<Study> pubStudies = publication.getStudies();
-                    if(pubStudies == null){
-                        pubStudies = new ArrayList<>();
-                    }
-                    pubStudies.add(study);
-                    publication.setStudies(pubStudies);
-                    studyService.save(study);
-                    if (associations != null) {
-                        studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study,
-                                associations));
-                    }
-                    if (samples != null) {
-                        studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
-                    }
-
-                    Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " +
-                            "creation");
-                    List<Event> events = new ArrayList<>();
-                    events.add(event);
-                    study.setEvents(events);
-                    depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION",
-                            curator,
-                            "Import study creation", currentUser);
-                    if (notes != null) {
-                        //find notes in study
-                        for (DepositionNoteDto noteDto : notes) {
-                            if (noteDto.getStudyTag().equals(studyTag)) {
-                                depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(),
-                                        noteDto.getStatus(), curator, noteDto.getNoteSubject(), currentUser);
-                            }
-                        }
-                    }
-                    studyService.save(study);
-                    statusMessages.add(studyNote.toString());
+                    statusMessages.add(processStudy(depositionSubmission, studyDto, currentUser, publication, curator));
                 }
                 cleanupPrePublishedStudies(studies);
             }
@@ -280,7 +239,7 @@ public class DepositionSubmissionService {
             depositionSubmission.getPublication().setStatus("CURATION_STARTED");
             try {
                 String message = mapper.writeValueAsString(depositionSubmission);
-                //template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
+                template.put(depositionIngestURL + "/submissions/" + submissionID, depositionSubmission);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -375,6 +334,54 @@ public class DepositionSubmissionService {
             return Submission.SubmissionType.SUM_STATS;
         }
         return Submission.SubmissionType.UNKNOWN;
+    }
+
+    @Transactional
+    String processStudy(DepositionSubmission depositionSubmission, DepositionStudyDto studyDto, SecureUser currentUser,
+                      Publication publication, Curator curator){
+        List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
+        List<DepositionSampleDto> samples = depositionSubmission.getSamples();
+        //List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
+        List<DepositionNoteDto> notes = depositionSubmission.getNotes();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
+        String studyTag = studyDto.getStudyTag();
+        studyNote.append("created " + studyTag + "\n");
+        Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
+        Collection<Study> pubStudies = publication.getStudies();
+        if(pubStudies == null){
+            pubStudies = new ArrayList<>();
+        }
+        pubStudies.add(study);
+        publication.setStudies(pubStudies);
+        studyService.save(study);
+        if (associations != null) {
+            studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study,
+                    associations));
+        }
+        if (samples != null) {
+            studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
+        }
+
+        Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " +
+                "creation");
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+        study.setEvents(events);
+        depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION",
+                curator,
+                "Import study creation", currentUser);
+        if (notes != null) {
+            //find notes in study
+            for (DepositionNoteDto noteDto : notes) {
+                if (noteDto.getStudyTag().equals(studyTag)) {
+                    depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(),
+                            noteDto.getStatus(), curator, noteDto.getNoteSubject(), currentUser);
+                }
+            }
+        }
+        studyService.save(study);
+        return studyNote.toString();
     }
 
     private void cleanupPrePublishedStudies(List<DepositionStudyDto> studyDtoList){

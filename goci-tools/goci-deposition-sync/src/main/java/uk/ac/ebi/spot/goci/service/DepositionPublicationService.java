@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import uk.ac.ebi.spot.goci.model.deposition.BodyOfWorkDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 
@@ -19,4 +20,7 @@ public interface DepositionPublicationService {
     Map<String, DepositionPublication> getAllPublications();
 
     Map<String, DepositionPublication> getAllBackendPublications();
-}
+
+    Map<String, BodyOfWorkDto> getAllBodyOfWork();
+
+    }

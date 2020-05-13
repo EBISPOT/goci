@@ -25,7 +25,8 @@
         /*<![CDATA[*/
         var contextPath = /*[[@{/}]]*/'';
         console.log(contextPath);
-
+        var baseURL = /*[[${@environment.getProperty('deposition.ui.uri')}]]*/'';
+        console.log(baseURL)
         /*]]>*/
     </script>
 
@@ -108,7 +109,7 @@
             <div class="col-md-offset-2 col-md-4">
                 <div class="alert alert-info">
                     <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Enter pubmed ID or a list of pumed ID separated by comma</strong>
+                    <strong>Enter PubMed ID or a list of PubMed ID separated by comma</strong>
                 </div>
             </div>
         </div>
@@ -125,7 +126,7 @@
                         <label class="control-label col-md-2">Add using Pubmed ID</label>
 
                         <div class="col-md-10">
-                            <input type="text" class="form-control" id="pubmedId" placeholder="Add using Pubmed ID"/>
+                            <input type="text" class="form-control" id="pubmedId" placeholder="Add using PubMed ID"/>
                         </div>
                     </div>
 

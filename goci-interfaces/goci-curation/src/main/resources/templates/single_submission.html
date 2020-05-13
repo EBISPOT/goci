@@ -45,11 +45,16 @@
         <div class="col-md-8">
             <div class="alert alert-success">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong th:text="${changesSaved}">Success!</strong>
+                <strong th:utext="${changesSaved}">Success!</strong>
             </div>
         </div>
     </div>
     <div class="row">
+<!--        <form class="form-inline" name="testMessageForm" role="form" method="post"-->
+<!--              th:action="@{/submissions/{submissionID}/testError(submissionID=${submission.id})}"-->
+<!--            th:object="${submission}" style="display:none;">-->
+<!--            <button id="testButton" type="submit" class="btn btn-sm">Test Error</button>-->
+<!--        </form>-->
         <form class="form-inline" name="importForm" role="form" method="post" id="importForm"
               th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
               th:object="${submission}">

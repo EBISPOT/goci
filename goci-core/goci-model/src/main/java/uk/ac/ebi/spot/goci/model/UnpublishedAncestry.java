@@ -3,10 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSampleDto;
 
 import javax.persistence.*;
@@ -41,6 +38,7 @@ public class UnpublishedAncestry {
 
     @OneToOne
     @JoinColumn(name = "study_id", unique = true)
+    @EqualsAndHashCode.Exclude
     private UnpublishedStudy study;
 
     public static UnpublishedAncestry create(DepositionSampleDto sampleDto, UnpublishedStudy unpublishedStudy){
