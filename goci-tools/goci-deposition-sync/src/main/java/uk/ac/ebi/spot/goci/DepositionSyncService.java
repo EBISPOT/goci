@@ -332,7 +332,7 @@ public class DepositionSyncService {
             return false;
         }if (bodyOfWorkDto.getEmbargoUntilPublished() != null &&  bodyOfWorkDto.getEmbargoUntilPublished() == true && bodyOfWorkDto.getPmids() == null){
             return false;
-        }if(bodyOfWorkDto.getEmbargoDate() != null && bodyOfWorkDto.getEmbargoDate().isBefore(new LocalDate())) {
+        }if(bodyOfWorkDto.getEmbargoDate() != null && new LocalDate().isBefore(bodyOfWorkDto.getEmbargoDate())) {
             return false;
         } else {
             return true;

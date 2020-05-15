@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.ac.ebi.spot.goci.model.deposition.BodyOfWorkDto;
 
 import javax.persistence.*;
@@ -19,6 +21,7 @@ public class BodyOfWork{
     @EqualsAndHashCode.Exclude
     private Long id;
     @Column(name = "pub_id")
+    @JsonProperty("publication_id")
     private String publicationId;
     private String pubMedId;
     private String journal;
@@ -37,22 +40,11 @@ public class BodyOfWork{
     private Set<UnpublishedStudy> studies;
 
     public static BodyOfWork create(BodyOfWorkDto dto){
-        BodyOfWork bodyOfWork = new BodyOfWork();
+        BodyOfWork bodyOfWork = BeanMapper.MAPPER.convert(dto);
         bodyOfWork.setPublicationId(dto.getBodyOfWorkId());
         bodyOfWork.setPubMedId(dto.getPmids() != null ? dto.getPmids().get(0) : null);
-        bodyOfWork.setJournal(dto.getJournal());
-        bodyOfWork.setTitle(dto.getTitle());
-        if(dto.getFirstAuthor() != null) {
-            if (dto.getFirstAuthor().getGroup() != null) {
-                bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getGroup());
-            } else {
-                bodyOfWork.setFirstAuthor(dto.getFirstAuthor().getFirstName() + ' ' + dto.getFirstAuthor().getLastName());
-            }
-        }
         //bodyOfWork.setPublicationDate(dto.get);
-        if(dto.getDoi() != null) {
-            bodyOfWork.setDoi(dto.getDoi());
-        }else{
+        if(dto.getDoi() == null) {
             bodyOfWork.setDoi(dto.getPreprintServerDOI());
         }
         return bodyOfWork;
