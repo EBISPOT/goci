@@ -58,7 +58,7 @@ public class DepositionAssociationService {
                     List<Locus> locusList = new ArrayList<>();
                     Locus locus = new Locus();
                     SingleNucleotidePolymorphism snp = lociService.createSnp(rsID);
-                    studyNote.append("added SNP " + rsID + "\n");
+                    studyNote.append("added SNP " + rsID + "\n");//does this fail
                     RiskAllele riskAllele =
                             lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
                     if (associationDto.getProxyVariant() != null) {
