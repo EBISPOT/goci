@@ -5,9 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.ServiceLoader;
+import java.util.*;
 
 /**
  * An abstract pussycat session that simply provides session ID definitions
@@ -18,6 +16,7 @@ import java.util.ServiceLoader;
 @Component
 public abstract class AbstractPussycatSession implements PussycatSession {
     private Collection<Renderlet> renderlets;
+    private Map<Class, Renderlet> renderletMap;
 
     private Logger log = LoggerFactory.getLogger("rendering");
 
@@ -26,21 +25,32 @@ public abstract class AbstractPussycatSession implements PussycatSession {
         //        this.renderlets = getAvailableRenderlets();
     }
 
+    private void initRenderlets(){
+        ServiceLoader<Renderlet> renderletLoader = ServiceLoader.load(Renderlet.class);
+        renderlets = new HashSet<Renderlet>();
+        renderletMap = new HashMap<>();
+        for (Renderlet renderlet : renderletLoader) {
+            renderlets.add(renderlet);
+            renderletMap.put(renderlet.getClass(), renderlet);
+        }
+        getLog().debug("Loaded " + renderlets.size() + " renderlets");
+
+    }
 
     protected Logger getLog() {
         return log;
     }
 
+    public Renderlet getRenderlet(Class renderletClass){
+        if(renderletMap == null){
+            initRenderlets();
+        }
+        return renderletMap.get(renderletClass);
+    }
 
     public Collection<Renderlet> getAvailableRenderlets() {
-        if (renderlets == null) {
-            ServiceLoader<Renderlet> renderletLoader = ServiceLoader.load(Renderlet.class);
-            Collection<Renderlet> loadedRenderlets = new HashSet<Renderlet>();
-            for (Renderlet renderlet : renderletLoader) {
-                loadedRenderlets.add(renderlet);
-            }
-            getLog().debug("Loaded " + loadedRenderlets.size() + " renderlets");
-            this.renderlets = loadedRenderlets;
+        if(renderlets == null){
+            initRenderlets();
         }
         return renderlets;
     }

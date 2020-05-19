@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.pussycat.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,9 +27,7 @@ import uk.ac.ebi.spot.goci.pussycat.session.PussycatSessionStrategy;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -75,6 +74,10 @@ public class PussycatGOCIController {
     }
 
     @Autowired
+    @Qualifier("proxiedSession")
+    public PussycatSession pussycatSession;
+
+    @Autowired
     public void setPussycatSessionManager(PussycatManager pussycatManager) {
         this.pussycatManager = pussycatManager;
     }
@@ -104,6 +107,63 @@ public class PussycatGOCIController {
         return getPussycatSession(session).performRendering(getRenderletNexus(session));
     }
 
+    public void saveAssociationsFile(String pvalueMin, String pvalueMax, String dateMin, String dateMax, String outFile)
+            throws PussycatSessionNotReadyException, NoRenderableDataException {
+        File outputFile = new File(outFile);
+        getLog().debug("Received a new rendering request - " +
+                "putting together the query from date '" + dateMin + "' to '" + dateMax +
+                "' and from pvalue '" + pvalueMin + "' to '" + pvalueMax + "'");
+        RenderletNexus renderletNexus =
+                getPussycatManager().createRenderletNexus(pussycatSession);
+        getLog().debug("Created new pussycat session, id '" + pussycatSession.getSessionID() + "'");
+        if (pvalueMin == "") {
+            pvalueMin = null;
+        }
+        if (pvalueMax == "") {
+            pvalueMax = null;
+        }
+        if (dateMin == "") {
+            dateMin = null;
+        }
+        if (dateMax == "") {
+            dateMax = null;
+        }
+        Filter pvalueFilter = null;
+        Filter dateFilter = null;
+
+        if (pvalueMin != null || pvalueMax != null) {
+            pvalueFilter = setPvalueFilter(pvalueMin, pvalueMax);
+            renderletNexus.setRenderingContext(pvalueFilter);
+        }
+
+        if (dateMin != null || dateMax != null) {
+            dateFilter = setDateFilter(dateMin, dateMax);
+            renderletNexus.setRenderingContext(dateFilter);
+        }
+
+        String svg = null;
+        if (dateFilter == null && pvalueFilter == null) {
+            svg = pussycatSession.performRendering(renderletNexus);
+        }
+        else if (dateFilter == null && pvalueFilter != null) {
+            svg = pussycatSession.performRendering(renderletNexus, pvalueFilter);
+
+        }
+        else if (pvalueFilter == null && dateFilter != null) {
+            svg = pussycatSession.performRendering(renderletNexus, dateFilter);
+
+        }
+        else {
+            svg = pussycatSession.performRendering(renderletNexus, dateFilter, pvalueFilter);
+        }
+        log.debug("done rendering, exporting file");
+        try (Writer writer = new BufferedWriter(new FileWriter(outputFile))) {
+            writer.write(svg);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        log.debug("done exporting file");
+    }
     @RequestMapping(value = "/gwasdiagram/associations")
     public @ResponseBody String renderAssociations(@RequestParam(value = "pvaluemin",
                                                                  required = false) String pvalueMin,
