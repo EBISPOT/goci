@@ -339,48 +339,52 @@ public class DepositionSubmissionService {
     @Transactional
     String processStudy(DepositionSubmission depositionSubmission, DepositionStudyDto studyDto, SecureUser currentUser,
                       Publication publication, Curator curator){
-        List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
-        List<DepositionSampleDto> samples = depositionSubmission.getSamples();
-        //List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
-        List<DepositionNoteDto> notes = depositionSubmission.getNotes();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
-        String studyTag = studyDto.getStudyTag();
-        studyNote.append("created " + studyTag + "\n");
-        Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
-        Collection<Study> pubStudies = publication.getStudies();
-        if(pubStudies == null){
-            pubStudies = new ArrayList<>();
-        }
-        pubStudies.add(study);
-        publication.setStudies(pubStudies);
-        studyService.save(study);
-        if (associations != null) {
-            studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study,
-                    associations));
-        }
-        if (samples != null) {
-            studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
-        }
+        try {
+            List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
+            List<DepositionSampleDto> samples = depositionSubmission.getSamples();
+            //List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
+            List<DepositionNoteDto> notes = depositionSubmission.getNotes();
+            String studyTag = studyDto.getStudyTag();
+            studyNote.append("created " + studyTag + "\n");
+            Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
+            Collection<Study> pubStudies = publication.getStudies();
+            if (pubStudies == null) {
+                pubStudies = new ArrayList<>();
+            }
+            pubStudies.add(study);
+            publication.setStudies(pubStudies);
+            studyService.save(study);
+            if (associations != null) {
+                studyNote.append(depositionAssociationService
+                        .saveAssociations(currentUser, studyTag, study, associations));
+            }
+            if (samples != null) {
+                studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
+            }
 
-        Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " +
-                "creation");
-        List<Event> events = new ArrayList<>();
-        events.add(event);
-        study.setEvents(events);
-        depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION",
-                curator,
-                "Import study creation", currentUser);
-        if (notes != null) {
-            //find notes in study
-            for (DepositionNoteDto noteDto : notes) {
-                if (noteDto.getStudyTag().equals(studyTag)) {
-                    depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(),
-                            noteDto.getStatus(), curator, noteDto.getNoteSubject(), currentUser);
+            Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " + "creation");
+            List<Event> events = new ArrayList<>();
+            events.add(event);
+            study.setEvents(events);
+            depositionStudyService
+                    .addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION", curator,
+                            "Import study creation", currentUser);
+            if (notes != null) {
+                //find notes in study
+                for (DepositionNoteDto noteDto : notes) {
+                    if (noteDto.getStudyTag().equals(studyTag)) {
+                        depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(),
+                                curator, noteDto.getNoteSubject(), currentUser);
+                    }
                 }
             }
+            studyService.save(study);
+        }catch(Exception e){
+            studyNote.append("error creating study: " + e.getMessage());
+            e.printStackTrace();
         }
-        studyService.save(study);
         return studyNote.toString();
     }
 

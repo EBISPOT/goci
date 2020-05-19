@@ -3,25 +3,38 @@ package uk.ac.ebi.spot.goci.curation.service.deposition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
+import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
 import uk.ac.ebi.spot.goci.repository.AssociationExtensionRepository;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 import uk.ac.ebi.spot.goci.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.service.MapCatalogService;
+import uk.ac.ebi.spot.goci.service.ValidationService;
 import uk.ac.ebi.spot.goci.utils.AssociationCalculationService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Component
 public class DepositionAssociationService {
 
     @Autowired
+    SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
+    @Autowired
     AssociationOperationsService associationOperationsService;
+    @Autowired
+    AssociationRepository associationRepository;
     @Autowired
     LociAttributesService lociService;
     @Autowired
@@ -30,14 +43,21 @@ public class DepositionAssociationService {
     AssociationExtensionRepository extensionRepository;
     @Autowired
     AssociationCalculationService calculationService;
+    @Autowired
+    EnsemblRestTemplateService ensemblRestTemplateService;
+    @Autowired
+    ValidationService validationService;
+
+
 
     public DepositionAssociationService() {}
 
+    @Transactional
     public String saveAssociations(SecureUser currentUser, String studyTag, Study study,
-                                 List<DepositionAssociationDto> associations) {
+                                 List<DepositionAssociationDto> associations) throws EnsemblMappingException {
         //find associations in study
+        String eRelease = ensemblRestTemplateService.getRelease();
         StringBuffer studyNote = new StringBuffer();
-        Collection<Association> associationList = new ArrayList<>();
         for (DepositionAssociationDto associationDto : associations) {
             if (associationDto.getStudyTag().equals(studyTag)) {
                 Association association = new Association();
@@ -75,8 +95,6 @@ public class DepositionAssociationService {
                 }else{
                     throw new IllegalArgumentException("error, no rs_id found for " + associationDto.getStudyTag());
                 }
-                associationOperationsService.saveAssociation(association, study, new ArrayList<>());
-                associationList.add(association);
                 if(associationDto.getEffectAlleleFrequency() != null && associationDto.getEffectAlleleFrequency().intValue() != -1) {
                     association.setRiskFrequency(associationDto.getEffectAlleleFrequency().toString());
                 }
@@ -86,8 +104,10 @@ public class DepositionAssociationService {
                 if(associationDto.getStandardError() != null) {
                     association.setStandardError(associationDto.getStandardError().floatValue());
                 }
+                String measurementType = "";
                 if(associationDto.getOddsRatio() != null) {
                     association.setOrPerCopyNum(associationDto.getOddsRatio().floatValue());
+                    measurementType = "or";
                 }
                 if(associationDto.getBeta() != null) {
                     Double betaValue = associationDto.getBeta();
@@ -97,6 +117,7 @@ public class DepositionAssociationService {
                         association.setBetaDirection("increase");
                     }
                     association.setBetaNum(Math.abs(betaValue.floatValue()));
+                    measurementType = "beta";
                 }
                 if(associationDto.getCiLower() != null && associationDto.getCiUpper() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
@@ -104,26 +125,45 @@ public class DepositionAssociationService {
                     if(associationDto.getOddsRatio() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getOddsRatio())));
+                        measurementType = "or";
                     }else if(associationDto.getBeta() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getBeta())));
+                        measurementType = "beta";
                     }
                 }
                 AssociationExtension associationExtension = new AssociationExtension();
                 associationExtension.setAssociation(association);
                 associationExtension.setEffectAllele(associationDto.getEffectAllele());
                 associationExtension.setOtherAllele(associationDto.getOtherAllele());
-                extensionRepository.save(associationExtension);
-                association.setAssociationExtension(associationExtension);
-                associationOperationsService.saveAssociation(association, study, new ArrayList<>());
+
+                List<AssociationValidationView> rowErrors =
+                        associationOperationsService.checkSnpAssociationErrors(association,
+                                measurementType);
+
+                if (rowErrors.isEmpty()) {
+                    // Create an association object from details in returned form
+                    SnpAssociationForm form = singleSnpMultiSnpAssociationService.createForm(association);
+                    Association newAssociation =
+                            singleSnpMultiSnpAssociationService.createAssociation(
+                                    (SnpAssociationStandardMultiForm) form);
+
+                    // Save and validate form
+                    // Validate association
+                    Collection<ValidationError> associationValidationErrors =
+                            validationService.runAssociationValidation(association, "full", eRelease);
+                    Collection<AssociationValidationView> errors = associationOperationsService
+                            .saveAssociationCreatedFromForm(study, newAssociation, currentUser, eRelease);
+
+                    mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(),
+                            Collections.singleton(association));
+                    studyNote.append("mapped associations" + "\n");
+                    associationOperationsService.saveAssociation(association, study, associationValidationErrors);
+                    extensionRepository.save(associationExtension);
+                    association.setAssociationExtension(associationExtension);
+                    associationRepository.save(association);
+                }
             }
-        }
-        try {
-            mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(), associationList);
-            studyNote.append("mapped associations" + "\n");
-        } catch (EnsemblMappingException e) {
-            e.printStackTrace();
-            studyNote.append("error mapping associations" + "\n");
         }
         return studyNote.toString();
     }
