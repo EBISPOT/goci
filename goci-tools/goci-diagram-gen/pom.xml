@@ -3,7 +3,9 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <artifactId>goci-diagram-gen</artifactId>
+    <version>2.4.42</version>
     <packaging>jar</packaging>
 
     <name>GOCI Diagram Generator</name>
@@ -31,6 +33,8 @@
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-pussycat</artifactId>
+            <version>2.4.42</version>
+            <classifier>classes</classifier>
         </dependency>
         <dependency>
             <groupId>commons-cli</groupId>
