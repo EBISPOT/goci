@@ -96,8 +96,8 @@ public class DepositionSubmissionService {
     }
 
     public Map<String, Submission> getSubmissionsBasic(){
-        //String url = "/submission-envelopes";
-        String url = "/submissions";
+        String url = "/submission-envelopes";
+        //String url = "/submissions";
         return getSubmissions(url);
 //        return new TreeMap<>();
     }
@@ -227,6 +227,7 @@ public class DepositionSubmissionService {
         } else {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
                 depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
+                publicationService.save(publication);
 
                 for (DepositionStudyDto studyDto : studies) {
                     statusMessages.add(processStudy(depositionSubmission, studyDto, currentUser, publication, curator));

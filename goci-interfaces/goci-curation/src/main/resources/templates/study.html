@@ -30,8 +30,8 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
-    <script src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
-    <script th:src="@{/js/goci-print-page.js}"></script>
+    <script async="async" src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
+    <script async="async" th:src="@{/js/goci-print-page.js}"></script>
 
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
@@ -260,14 +260,14 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <a th:if="${study.publicationId?.activeSubmission}"
-                       th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}" title="Note: This Publication has an active submission">
+
+                    <label for="pubmed" class="control-label col-md-2">
+                        <a th:if="${study.publicationId?.activeSubmission}"
+                           th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}" title="Note: This Publication has an active submission">
                         <span class="glyphicon glyphicon-warning-sign text-danger col-md-1"
                               style="font-size: 25px"></span>
-                    </a>
-
-                    <label for="pubmed" class="control-label col-md-2">Pubmed</label>
-
+                        </a>
+                        Pubmed</label>
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}" readonly="readonly" />
 
@@ -559,79 +559,7 @@
 <div th:include="fragments/footer :: page_footer"></div>
 
 <script src="../static/js/study/study-init.js" th:src="@{../js/study/study-init.js}"></script>
-<script th:src="@{/js/study/study-authors.js}"></script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#EFOTrait').select2({
-                                   placeholder: "Select an EFO trait",
-                                   allowClear: true
-                               });
-    });
-</script>
-
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#diseaseTrait').select2({
-                                       placeholder: "Select a disease/trait",
-                                       allowClear: true
-                                   });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#mappedBackgroundTraits').select2({
-            placeholder: "Select an background EFO trait",
-            allowClear: true
-        });
-    });
-</script>
-
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#backgroundTrait').select2({
-            placeholder: "Select a background disease/trait",
-            allowClear: true
-        });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#genotypingTechnology').select2({
-                                   placeholder: "Select a genotyping technology",
-                                   allowClear: true
-                               });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#platform').select2({
-                                   placeholder: "Select an array manufacturer",
-                                   allowClear: true
-                               });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#qualifier').select2({
-                                    placeholder: "Select a qualifier",
-                                    allowClear: true
-                                });
-    });
-</script>
+<script async="async" th:src="@{/js/study/study-authors.js}"></script>
 
 </body>
 </html>

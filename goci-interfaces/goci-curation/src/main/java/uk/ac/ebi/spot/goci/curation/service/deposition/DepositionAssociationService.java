@@ -52,7 +52,6 @@ public class DepositionAssociationService {
 
     public DepositionAssociationService() {}
 
-    @Transactional
     public String saveAssociations(SecureUser currentUser, String studyTag, Study study,
                                  List<DepositionAssociationDto> associations) throws EnsemblMappingException {
         //find associations in study
@@ -142,18 +141,10 @@ public class DepositionAssociationService {
                                 measurementType);
 
                 if (rowErrors.isEmpty()) {
-                    // Create an association object from details in returned form
-                    SnpAssociationForm form = singleSnpMultiSnpAssociationService.createForm(association);
-                    Association newAssociation =
-                            singleSnpMultiSnpAssociationService.createAssociation(
-                                    (SnpAssociationStandardMultiForm) form);
-
                     // Save and validate form
                     // Validate association
                     Collection<ValidationError> associationValidationErrors =
                             validationService.runAssociationValidation(association, "full", eRelease);
-                    Collection<AssociationValidationView> errors = associationOperationsService
-                            .saveAssociationCreatedFromForm(study, newAssociation, currentUser, eRelease);
 
                     mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(),
                             Collections.singleton(association));

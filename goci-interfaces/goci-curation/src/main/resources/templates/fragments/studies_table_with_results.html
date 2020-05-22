@@ -35,7 +35,7 @@
                         class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>
             </div>
         </th>
-        <th class="col-md">Pubmed ID
+        <th class="col-md-1">Pubmed ID
             <div>
                 <a th:href="@{${uri}(sorttype=pubmedsortasc)}"
                    class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -53,7 +53,7 @@
                         <!--class="glyphicon glyphicon-sort-by-alphabet-alt"></span></a>-->
             <!--</div>-->
         <!--</th>-->
-        <th class="col-md-1">Publication
+        <th class="col-md">Publication
             <div>
                 <a th:href="@{${uri}(sorttype=publicationsortasc)}"
                    class="btn btn-default btn-xs"><span class="glyphicon glyphicon-sort-by-alphabet"></span></a>
@@ -135,18 +135,22 @@
         </td>
 
         <td th:text="${study.publicationId?.publicationDate != null } ? ${#dates.format(study.publicationId?.publicationDate,'yyyy-MM-dd')} : ''"></td>
-        <td><p>
-            <a th:href="@{/publication/{pubmedId}(pubmedId=${study.publicationId?.pubmedId})}" th:text="${study.publicationId?.pubmedId}"></a>
-            &nbsp;&nbsp;
-            <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId?.pubmedId} + '\',\'/printview\');'" title="Print all GWA studies for publication">
-                <span class="glyphicon glyphicon-print color-primary-bold"></span>
-            </a>
-            <a th:if="${study.publicationId?.activeSubmission}"
-               th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}" title="Note: This Publication has an active submission">
-                <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
-            </a>
-        </p>
-
+        <td>
+            <div>
+                <p>
+                    <a th:href="@{/publication/{pubmedId}(pubmedId=${study.publicationId?.pubmedId})}"
+                       th:text="${study.publicationId?.pubmedId}"></a>
+                    <a th:onclick="'javascript:printPage(\''+ @{/pubmed/}+'\',\'' + ${study.publicationId?.pubmedId} + '\',\'/printview\');'"
+                       title="Print all GWA studies for publication">
+                        <span class="glyphicon glyphicon-print color-primary-bold"></span>
+                    </a>
+                    <a th:if="${study.publicationId?.activeSubmission}"
+                       th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}"
+                       title="Note: This Publication has an active submission">
+                        <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
+                    </a>
+                </p>
+            </div>
             <div class="btn-group">
                             <button type="button"
                                     data-toggle="dropdown"

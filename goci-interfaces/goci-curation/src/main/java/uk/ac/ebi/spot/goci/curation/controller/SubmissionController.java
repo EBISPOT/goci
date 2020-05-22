@@ -139,6 +139,7 @@ public class SubmissionController {
     public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request,
                                    RedirectAttributes redirectAttributes) {
         List<String> statusMessages = new ArrayList<>();
+        List<String> errorMessages = new ArrayList<>();
         try {
             Map<String, Submission> submissionList = submissionService.getSubmissions();
             DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionID);
@@ -152,8 +153,9 @@ public class SubmissionController {
             e.printStackTrace();
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
-            statusMessages.add(stringWriter.getBuffer().toString());
+            errorMessages.add(stringWriter.getBuffer().toString());
         }
+        redirectAttributes.addFlashAttribute("errors", String.join("<br>", errorMessages));
         redirectAttributes.addFlashAttribute("changesSaved", String.join("<br>", statusMessages));
         return "redirect:/submissions/" + submissionID;
     }
