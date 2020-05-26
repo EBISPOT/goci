@@ -644,12 +644,12 @@ public class StudyController {
         }
 
         model.addAttribute("study", studyToView);
-//        if(studyToView.getStudyExtension() == null){
-//            StudyExtension extension = new StudyExtension();
-//            extension.setStudy(studyToView);
-//            studyToView.setStudyExtension(extension);
-//        }
-        //model.addAttribute("extension", studyToView.getStudyExtension());
+        if(studyToView.getStudyExtension() == null){
+            StudyExtension extension = new StudyExtension();
+            extension.setStudy(studyToView);
+            studyToView.setStudyExtension(extension);
+        }
+        model.addAttribute("extension", studyToView.getStudyExtension());
 
         return "study";
     }
