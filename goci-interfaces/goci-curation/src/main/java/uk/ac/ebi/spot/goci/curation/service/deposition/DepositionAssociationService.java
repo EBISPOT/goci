@@ -60,6 +60,13 @@ public class DepositionAssociationService {
         for (DepositionAssociationDto associationDto : associations) {
             if (associationDto.getStudyTag().equals(studyTag)) {
                 Association association = new Association();
+                association.setSnpInteraction(false);
+                Collection<Locus> loci = new ArrayList<>();
+                Locus locus = new Locus();
+                association.setMultiSnpHaplotype(false);
+                association.setSnpType("novel");
+                locus.setDescription("Single variant");
+
                 if (associationDto.getStandardError() != null) {
                     association.setStandardError(associationDto.getStandardError().floatValue());
                 }
@@ -74,9 +81,8 @@ public class DepositionAssociationService {
                 association.setPvalueDescription(associationDto.getPValueText());
                 String rsID = associationDto.getVariantID();
                 if(rsID != null) {
-                    List<Locus> locusList = new ArrayList<>();
-                    Locus locus = new Locus();
                     SingleNucleotidePolymorphism snp = lociService.createSnp(rsID);
+
                     studyNote.append("added SNP " + rsID + "\n");//does this fail
                     RiskAllele riskAllele =
                             lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
@@ -88,9 +94,8 @@ public class DepositionAssociationService {
                     List<RiskAllele> alleleList = new ArrayList<>();
                     alleleList.add(riskAllele);
                     locus.setStrongestRiskAlleles(alleleList);
-                    associationDto.getProxyVariant();
-                    locusList.add(locus);
-                    association.setLoci(locusList);
+                    loci.add(locus);
+                    association.setLoci(loci);
                 }else{
                     throw new IllegalArgumentException("error, no rs_id found for " + associationDto.getStudyTag());
                 }
@@ -117,6 +122,7 @@ public class DepositionAssociationService {
                     }
                     association.setBetaNum(Math.abs(betaValue.floatValue()));
                     measurementType = "beta";
+                    association.setBetaUnit(associationDto.getBetaUnit());
                 }
                 if(associationDto.getCiLower() != null && associationDto.getCiUpper() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
@@ -145,14 +151,24 @@ public class DepositionAssociationService {
                     // Validate association
                     Collection<ValidationError> associationValidationErrors =
                             validationService.runAssociationValidation(association, "full", eRelease);
-
-                    mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(),
-                            Collections.singleton(association));
-                    studyNote.append("mapped associations" + "\n");
                     associationOperationsService.saveAssociation(association, study, associationValidationErrors);
                     extensionRepository.save(associationExtension);
                     association.setAssociationExtension(associationExtension);
                     associationRepository.save(association);
+
+                    Collection<AssociationValidationView> errors = null;
+                    try {
+                        errors = associationOperationsService.saveAssociationCreatedFromForm(study,
+                                association, currentUser, eRelease);
+                        mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(),
+                                Collections.singleton(association));
+                        studyNote.append("mapped associations" + "\n");
+                    }
+                    catch (EnsemblMappingException e) {
+                        return "ensembl_mapping_failure";
+                    }
+                }else{
+                    rowErrors.forEach(s->studyNote.append(s.getErrorMessage()));
                 }
             }
         }

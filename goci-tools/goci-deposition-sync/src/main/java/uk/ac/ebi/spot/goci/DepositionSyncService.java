@@ -193,6 +193,8 @@ public class DepositionSyncService {
      * searched and displayed.
      */
     public void syncUnpublishedStudies(){
+        List<String> newPubs = new ArrayList<>();
+        List<String> updatePubs = new ArrayList<>();
         Map<String, DepositionSubmission> submissions = submissionService.getSubmissions();
         //if unpublished_studies does not have accession, add
         //check body of work, if not found, add
@@ -228,6 +230,7 @@ public class DepositionSyncService {
                         BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
                         bodyOfWork.setStudies(studies);
                         bodyOfWorkRepository.save(bodyOfWork);
+                        newPubs.add(bodyOfWorkDto.getBodyOfWorkId());
                     }
                 }
             }
@@ -241,8 +244,13 @@ public class DepositionSyncService {
             if(bom != null && isEligible(dto) && !bom.equals(newBom)){
                 bom.update(newBom);
                 bodyOfWorkRepository.save(bom);
+                updatePubs.add(dto.getBodyOfWorkId());
             }
         });
+        System.out.println("created " + newPubs.size());
+        System.out.println(Arrays.toString(newPubs.toArray()));
+        System.out.println("updated " + updatePubs.size());
+        System.out.println(Arrays.toString(updatePubs.toArray()));
 
     }
 
@@ -294,7 +302,7 @@ public class DepositionSyncService {
         //read all publications from GOCI
         List<Publication> gociPublications = publicationService.findAll();
         //check status, set to PUBLISHED_SS if hasSummaryStats
-        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
+        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllBackendPublications();
         for (Publication p : gociPublications) {
             boolean isPublished = isPublished(p);
             String pubmedId = p.getPubmedId();
