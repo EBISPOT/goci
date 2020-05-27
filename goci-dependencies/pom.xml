@@ -154,12 +154,6 @@
             </dependency>
             <dependency>
                 <groupId>uk.ac.ebi.spot</groupId>
-                <artifactId>goci-pussycat</artifactId>
-                <version>2.4.45</version>
-                <classifier>classes</classifier>
-            </dependency>
-            <dependency>
-                <groupId>uk.ac.ebi.spot</groupId>
                 <artifactId>goci-renderlets-core</artifactId>
                 <version>${goci.version}</version>
             </dependency>
