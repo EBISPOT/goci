@@ -39,8 +39,7 @@
     <label for="EFOTrait" class="control-label col-md-2">EFO Trait:</label>
 
     <div class="col-md-10">
-        <select name="efoTraits" th:field="*{efoTraits}"
-
+        <select name="efoTraits"
                 class="form-control select2-select"
                 multiple="multiple" id="EFOTrait">
             <option th:each="efoTrait : ${efoTraits}"
