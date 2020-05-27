@@ -521,12 +521,13 @@ public class SnpGenomicContextMappingService {
     private void cleanUpEnsemblGenes(Long id, List<EnsemblGene> ensemblGenesToDelete) {
 
         // Find any genes with this Ensembl ID
-        Gene geneWithEnsemblId = geneRepository.findByEnsemblGeneIdsId(id);
+        EnsemblGene ensemblGene = ensemblGeneRepository.findOne(id);
+        Gene geneWithEnsemblId = ensemblGene.getGene();
 
         // If this ID is not linked to a gene then delete it
         if (geneWithEnsemblId == null) {
 //            ensemblGeneRepository.delete(id);
-            ensemblGenesToDelete.add(ensemblGeneRepository.findOne(id));
+            ensemblGenesToDelete.add(ensemblGene);
         }
     }
 
@@ -538,12 +539,13 @@ public class SnpGenomicContextMappingService {
     private void cleanUpEntrezGenes(Long id, List<EntrezGene> entrezGenesToDelete) {
 
         // Find any genes with this Entrez ID
-        Gene geneWithEntrezIds = geneRepository.findByEntrezGeneIdsId(id);
+        EntrezGene entrezGene = entrezGeneRepository.findOne(id);
+        Gene geneWithEntrezIds = entrezGene.getGene();
 
         // If this ID is not linked to a gene then delete it
         if (geneWithEntrezIds == null) {
 //            entrezGeneRepository.delete(id);
-            entrezGenesToDelete.add(entrezGeneRepository.findOne(id));
+            entrezGenesToDelete.add(entrezGene);
         }
     }
 

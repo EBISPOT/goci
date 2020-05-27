@@ -193,6 +193,8 @@ public class DepositionSyncService {
      * searched and displayed.
      */
     public void syncUnpublishedStudies(){
+        List<String> newPubs = new ArrayList<>();
+        List<String> updatePubs = new ArrayList<>();
         Map<String, DepositionSubmission> submissions = submissionService.getSubmissions();
         //if unpublished_studies does not have accession, add
         //check body of work, if not found, add
@@ -228,6 +230,7 @@ public class DepositionSyncService {
                         BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
                         bodyOfWork.setStudies(studies);
                         bodyOfWorkRepository.save(bodyOfWork);
+                        newPubs.add(bodyOfWorkDto.getBodyOfWorkId());
                     }
                 }
             }
@@ -241,8 +244,13 @@ public class DepositionSyncService {
             if(bom != null && isEligible(dto) && !bom.equals(newBom)){
                 bom.update(newBom);
                 bodyOfWorkRepository.save(bom);
+                updatePubs.add(dto.getBodyOfWorkId());
             }
         });
+        System.out.println("created " + newPubs.size());
+        System.out.println(Arrays.toString(newPubs.toArray()));
+        System.out.println("updated " + updatePubs.size());
+        System.out.println(Arrays.toString(updatePubs.toArray()));
 
     }
 
@@ -261,18 +269,24 @@ public class DepositionSyncService {
         List<DepositionSummaryStatsDto> summaryStatsDtoList = new ArrayList<>();
         Collection<Study> studies = publication.getStudies();
         for(Study study: studies){
-            DepositionSummaryStatsDto summaryStatsDto = new DepositionSummaryStatsDto();
-            summaryStatsDto.setStudyAccession(study.getAccessionId());
-            summaryStatsDto.setSampleDescription(study.getInitialSampleSize());
-            summaryStatsDto.setTrait(study.getDiseaseTrait().getTrait());
-            summaryStatsDto.setStudyTag(study.getStudyTag());
-            if(study.getFullPvalueSet()){
-                hasFiles = true;
+            if(study.getAccessionId() != null) {
+                DepositionSummaryStatsDto summaryStatsDto = new DepositionSummaryStatsDto();
+                summaryStatsDto.setStudyAccession(study.getAccessionId());
+                summaryStatsDto.setSampleDescription(study.getInitialSampleSize());
+                if (study.getDiseaseTrait() != null) {
+                    summaryStatsDto.setTrait(study.getDiseaseTrait().getTrait());
+                }
+                summaryStatsDto.setStudyTag(study.getStudyTag());
+                if (study.getFullPvalueSet()) {
+                    hasFiles = true;
+                }
+                summaryStatsDto.setHasSummaryStats(study.getFullPvalueSet());
+                summaryStatsDtoList.add(summaryStatsDto);
             }
-            summaryStatsDto.setHasSummaryStats(study.getFullPvalueSet());
-            summaryStatsDtoList.add(summaryStatsDto);
         }
-        depositionPublication.setSummaryStatsDtoList(summaryStatsDtoList);
+        if(summaryStatsDtoList.size() != 0) {
+            depositionPublication.setSummaryStatsDtoList(summaryStatsDtoList);
+        }
         if(hasFiles){
             depositionPublication.setStatus("PUBLISHED_WITH_SS");
         }
@@ -284,22 +298,30 @@ public class DepositionSyncService {
      * daily sync
      */
     public void fixPublications() {
+        List<String> fixedPubs = new ArrayList<>();
         //read all publications from GOCI
         List<Publication> gociPublications = publicationService.findAll();
         //check status, set to PUBLISHED_SS if hasSummaryStats
-        Map<String, DepositionPublication> depositionPublications =
-                depositionPublicationService.getAllBackendPublications();
+        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllBackendPublications();
         for (Publication p : gociPublications) {
             boolean isPublished = isPublished(p);
             String pubmedId = p.getPubmedId();
             //System.out.println("checking pmid " + pubmedId);
             DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-            if(isPublished && depositionPublication.getStatus().equals("PUBLISHED") && addSummaryStatsData(depositionPublication, p)){
-                depositionPublication.setStatus("PUBLISHED_WITH_SS");
-                System.out.println("updating " + depositionPublication.getPmid());
-//                depositionPublicationService.updatePublication(depositionPublication);
+            if(depositionPublication != null && isPublished) {
+                boolean hadSummaryStats = depositionPublication.getSummaryStatsDtoList() != null;
+                addSummaryStatsData(depositionPublication, p);
+                boolean hasSummaryStats = depositionPublication.getSummaryStatsDtoList() != null;
+                if (!hadSummaryStats && hasSummaryStats) {
+                    System.out.println("adding summary stats to " + depositionPublication.getPmid());
+                    depositionPublicationService.updatePublication(depositionPublication);
+                    fixedPubs.add(pubmedId);
+                }
             }
         }
+        System.out.println("fixed " + fixedPubs.size());
+        System.out.println(Arrays.toString(fixedPubs.toArray()));
+
     }
 
     private DepositionPublication createPublication(Publication p) {

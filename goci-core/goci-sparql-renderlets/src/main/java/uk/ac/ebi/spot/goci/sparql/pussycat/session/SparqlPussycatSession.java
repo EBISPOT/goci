@@ -15,14 +15,19 @@ import uk.ac.ebi.spot.goci.pussycat.exception.NoRenderableDataException;
 import uk.ac.ebi.spot.goci.pussycat.exception.PussycatSessionNotReadyException;
 import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
+import uk.ac.ebi.spot.goci.pussycat.renderlet.AssociationRenderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.Renderlet;
 import uk.ac.ebi.spot.goci.pussycat.renderlet.RenderletNexus;
+import uk.ac.ebi.spot.goci.pussycat.renderlet.TraitRenderlet;
+import uk.ac.ebi.spot.goci.pussycat.renderlet.chromosome.ChromosomeRenderlet;
 import uk.ac.ebi.spot.goci.pussycat.service.OntologyService;
 import uk.ac.ebi.spot.goci.pussycat.session.AbstractPussycatSession;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;
 import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.QuerySolutionMapper;
 import uk.ac.ebi.spot.goci.sparql.pussycat.query.SparqlTemplate;
+import uk.ac.ebi.spot.goci.sparql.pussycat.renderlet.SparqlAssociationRenderlet;
+import uk.ac.ebi.spot.goci.sparql.pussycat.renderlet.SparqlTraitRenderlet;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -164,16 +169,17 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 getLog().debug("Querying SPARQL endpoint for GWAS data...");
                 List<URI> chromosomes = loadChromosomes(getSparqlTemplate());
                 getLog().debug("Acquired " + chromosomes.size() + " chromosomes to render");
-                List<URI> individuals = new ArrayList<URI>();
-                individuals.addAll(loadAssociations(getSparqlTemplate(),
+                List<URI> associations = new ArrayList<URI>();
+                associations.addAll(loadAssociations(getSparqlTemplate(),
                                                     associationQueryString,
                                                     renderletNexus.getRenderingContext()));
-                individuals.addAll(loadTraits(getSparqlTemplate(),
+                List<URI> traits = new ArrayList<URI>();
+                traits.addAll(loadTraits(getSparqlTemplate(),
                                               traitQueryString,
                                               renderletNexus.getRenderingContext()));
-                getLog().debug("Acquired " + individuals.size() + " individuals to render");
+                getLog().debug("Acquired " + associations.size() + " associations and " + traits.size() + " to render");
 
-                if (individuals.size() == 0) {
+                if (associations.size() == 0 && traits.size() == 0) {
                     throw new NoRenderableDataException("No individuals available for rendering");
                 }
 
@@ -185,9 +191,8 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
                 }
 
                 // then render individuals
-                for (URI individual : individuals) {
-                    dispatchRenderlet(renderletNexus, individual);
-                }
+                associations.parallelStream().forEach(a->dispatchRenderlet(renderletNexus, a, SparqlAssociationRenderlet.class));
+                traits.parallelStream().forEach(t->dispatchRenderlet(renderletNexus, t, SparqlTraitRenderlet.class));
                 getLog().debug("SVG rendering complete!");
                 return renderletNexus.getSVG();
             }
@@ -400,10 +405,20 @@ public class SparqlPussycatSession extends AbstractPussycatSession {
     }
 
     private void dispatchRenderlet(RenderletNexus renderletNexus, URI individual) {
-        for (Renderlet r : getAvailableRenderlets()) {
-            if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
-                getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
-                r.render(renderletNexus, getSparqlTemplate(), individual);
+        dispatchRenderlet(renderletNexus, individual, null);
+    }
+
+    private void dispatchRenderlet(RenderletNexus renderletNexus, URI individual, Class renderer) {
+        Renderlet renderlet = getRenderlet(renderer);
+        if(renderer != null && renderlet != null){
+            getLog().trace("Dispatching render() request to renderlet '" + renderlet.getName() + "'");
+            renderlet.render(renderletNexus, getSparqlTemplate(), individual);
+        }else {
+            for (Renderlet r : getAvailableRenderlets()) {
+                if (r.canRender(renderletNexus, getSparqlTemplate(), individual)) {
+                    getLog().trace("Dispatching render() request to renderlet '" + r.getName() + "'");
+                    r.render(renderletNexus, getSparqlTemplate(), individual);
+                }
             }
         }
     }

@@ -34,5 +34,6 @@
         <module>goci-public-data-export</module>
         <module>goci-email-service</module>
         <module>goci-deposition-sync</module>
+        <module>goci-diagram-gen</module>
     </modules>
 </project>

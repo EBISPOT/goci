@@ -64,7 +64,6 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
             String message = mapper.writeValueAsString(depositionPublication);
             System.out.println(message);
             DepositionPublication response = template.postForObject(url, depositionPublication, DepositionPublication.class);
-            System.out.println("created " + response);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
