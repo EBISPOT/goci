@@ -104,17 +104,23 @@ public class PublicationController {
                     String matchTitle = submission.getTitle();
                     String matchAuthor = submission.getAuthor();
                     CharSequence matchString = buildSearch(matchAuthor, matchTitle);
-                    Double score = cosScore.apply(searchString, matchString) * 100;
-                    Integer ldScore = levenshteinDistance.apply(searchString, matchString);
-                    Double jwScore = jwDistance.apply(searchString, matchString) * 100;
                     props.put("submissionID", submission.getId());
-                    props.put("cosScore", normalizeScore(score.intValue()).toString());
-                    props.put("levDistance", normalizeScore(ldScore).toString());
-                    props.put("jwScore", new Integer(jwScore.intValue()).toString());
                     props.put("pubMedID", submission.getPubMedID());
                     props.put("author", submission.getAuthor());
                     props.put("title", submission.getTitle());
                     props.put("doi", submission.getDoi());
+                    if(matchString.equals("")){
+                        props.put("cosScore", new Integer(0).toString());
+                        props.put("levDistance", new Integer(0).toString());
+                        props.put("jwScore", new Integer(0).toString());
+                    }else{
+                        Double score = cosScore.apply(searchString, matchString) * 100;
+                        Integer ldScore = levenshteinDistance.apply(searchString, matchString);
+                        Double jwScore = jwDistance.apply(searchString, matchString) * 100;
+                        props.put("cosScore", normalizeScore(score.intValue()).toString());
+                        props.put("levDistance", normalizeScore(ldScore).toString());
+                        props.put("jwScore", new Integer(jwScore.intValue()).toString());
+                    }
                     data.add(props);
                 }
                 data.sort((o1, o2) -> Integer.decode(o2.get("cosScore")).compareTo(Integer.decode(o1.get("cosScore"))));
