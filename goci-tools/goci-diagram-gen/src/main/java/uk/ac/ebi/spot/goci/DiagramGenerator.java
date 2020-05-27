@@ -24,7 +24,7 @@ public class DiagramGenerator implements CommandLineRunner {
     private String outFile;
 
     public static void main(String[] args) {
-        System.out.println("Starting mapping service...");
+        System.out.println("Starting diagram generator...");
         SpringApplicationBuilder builder = new SpringApplicationBuilder(DiagramGenerator.class);
         SpringApplication app = builder.web(false).addCommandLineProperties(true).build(args);
         ApplicationContext ctx = app.run(args);
