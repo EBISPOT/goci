@@ -1,0 +1,670 @@
+[
+  {
+    "submissionId": "5ea6db67f024f20001796a95",
+    "manuscript": {
+      "bodyOfWorkId": "GCP000031",
+      "title": "title",
+      "description": "desc",
+      "journal": "Test Journal",
+      "correspondingAuthors": [
+        {
+          "firstName": "ca - first author",
+          "lastName": "ca - last author",
+          "email": "a@b.com"
+        }
+      ],
+      "embargoDate": "2020-04-30",
+      "pmids": [
+        "1234",
+        "33445566"
+      ],
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "BODY_OF_WORK",
+    "status": "STARTED",
+    "globusFolder": "c1cbaa9c-3cc7-4aa6-b01e-4f6c93c99d55",
+    "globusOriginId": "6f941c64-8889-11ea-b3ba-0ae144191ee3",
+    "created": {
+      "user": {
+        "name": "Trish Whetzel",
+        "email": "twhetzel@ebi.ac.uk",
+        "nickname": "cc1996a062dc96f648664d7891ed9a1c82d7b6c6",
+        "userReference": "usr-f3f2a645-735c-4e7e-a431-d0742c4eb9d5",
+        "domains": [
+          "self.GWAS",
+          "self.TEAM_EMBL-EBI_PORTAL_USR-36D0F1C6-527D-4408-AE6D-7C425A022087",
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-04-27T13:17:27.724Z"
+    }
+  },
+  {
+    "submissionId": "5ea74f5ef024f2000185b55c",
+    "publication": {
+      "pmid": "32005204",
+      "title": "Stratified analyses of genome wide association study data reveal haplotypes for a candidate gene on chromosome 2 (KIAA1211L) is associated with opioid use in patients of Arabian descent.",
+      "journal": "BMC Psychiatry",
+      "firstAuthor": "Alblooshi H",
+      "publicationDate": "2020-01-31",
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "SUBMITTED",
+    "globusFolder": "9b51c247-e1a0-4962-8b9f-85ae96512ce0",
+    "globusOriginId": "8e4c55f0-88ce-11ea-bf84-0e6cccbb0103",
+    "created": {
+      "user": {
+        "name": "Elizabeth Lewis",
+        "email": "earl@ebi.ac.uk",
+        "nickname": "ce54316fe1dbd24b465b9756ba179e9b914759a9",
+        "userReference": "usr-0b960189-2c9e-49f8-8d37-6b98bde67ca9",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-04-27T21:32:14.299Z"
+    }
+  },
+  {
+    "submissionId": "5ea75071f024f2000185d1ee",
+    "publication": {
+      "pmid": "32047268",
+      "title": "Alternate approach to stroke phenotyping identifies a genetic risk locus for small vessel stroke.",
+      "journal": "Eur J Hum Genet",
+      "firstAuthor": "von Berg J",
+      "publicationDate": "2020-02-11",
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "INVALID",
+    "globusFolder": "a31e7771-0d0d-4ad7-bbfd-23108ef07556",
+    "globusOriginId": "322dd158-88cf-11ea-8ec7-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "Elizabeth Lewis",
+        "email": "earl@ebi.ac.uk",
+        "nickname": "ce54316fe1dbd24b465b9756ba179e9b914759a9",
+        "userReference": "usr-0b960189-2c9e-49f8-8d37-6b98bde67ca9",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-04-27T21:36:49.147Z"
+    }
+  },
+  {
+    "submissionId": "5ea809d93fcadc0001f75cec",
+    "publication": {
+      "pmid": "30111768",
+      "title": "Genome-wide mapping of plasma protein QTLs identifies putatively causal genes and pathways for cardiovascular disease.",
+      "journal": "Nat Commun",
+      "firstAuthor": "Yao C",
+      "publicationDate": "2018-08-15",
+      "status": "UNDER_SUMMARY_STATS_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "STARTED",
+    "globusFolder": "1a619128-0bc0-4125-8f69-5f9477444ac2",
+    "globusOriginId": "b4b338de-893d-11ea-b3ba-0ae144191ee3",
+    "created": {
+      "user": {
+        "name": "Trish Whetzel",
+        "email": "twhetzel@ebi.ac.uk",
+        "nickname": "cc1996a062dc96f648664d7891ed9a1c82d7b6c6",
+        "userReference": "usr-f3f2a645-735c-4e7e-a431-d0742c4eb9d5",
+        "domains": [
+          "self.GWAS",
+          "self.TEAM_EMBL-EBI_PORTAL_USR-36D0F1C6-527D-4408-AE6D-7C425A022087",
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-04-28T10:47:53.274Z"
+    }
+  },
+  {
+    "submissionId": "5ea80a463fcadc0001f76880",
+    "publication": {
+      "pmid": "31697830",
+      "title": "Genetic modifiers of cystic fibrosis-related diabetes have extensive overlap with type 2 diabetes and related traits.",
+      "journal": "J Clin Endocrinol Metab",
+      "firstAuthor": "Aksit MA",
+      "publicationDate": "2019-10-19",
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "VALID",
+    "globusFolder": "ca13a39b-86d1-4dcc-aba6-00030ccfd671",
+    "globusOriginId": "f651fb5e-893d-11ea-b3ba-0ae144191ee3",
+    "created": {
+      "user": {
+        "name": "Trish Whetzel",
+        "email": "twhetzel@ebi.ac.uk",
+        "nickname": "cc1996a062dc96f648664d7891ed9a1c82d7b6c6",
+        "userReference": "usr-f3f2a645-735c-4e7e-a431-d0742c4eb9d5",
+        "domains": [
+          "self.GWAS",
+          "self.TEAM_EMBL-EBI_PORTAL_USR-36D0F1C6-527D-4408-AE6D-7C425A022087",
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-04-28T10:49:42.770Z"
+    }
+  },
+  {
+    "submissionId": "5eb12a51cbce5e0001a85e2d",
+    "publication": {
+      "pmid": "28011712",
+      "title": "Genome-wide association study of Parkinson's disease in East Asians.",
+      "journal": "Hum Mol Genet",
+      "firstAuthor": "Foo JN",
+      "publicationDate": "2016-12-22",
+      "status": "UNDER_SUMMARY_STATS_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "INVALID",
+    "globusFolder": "21f290d0-1f3f-4029-ae75-c563b60ab01b",
+    "globusOriginId": "56cfe700-8eae-11ea-b3bf-0ae144191ee3",
+    "created": {
+      "user": {
+        "name": "Jonathan Stewart",
+        "email": "jstewart@ebi.ac.uk",
+        "nickname": "60e4c62fe9e6c5445631f1abef19a041d8fba3b9",
+        "userReference": "usr-e35c6ccb-8e6f-45b7-a70c-6ec2a8d99c85",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-05T08:56:49.035Z"
+    }
+  },
+  {
+    "submissionId": "5eb14781cbce5e0001ab7324",
+    "manuscript": {
+      "bodyOfWorkId": "GCP000035",
+      "title": "gwas on COVID in Italians",
+      "description": "1000 Italians with COVID-19 genotyped with illumina Exome",
+      "firstAuthor": {
+        "firstName": "Annalisa",
+        "lastName": "Buniello",
+        "email": "buniello@ebi.ac.uk"
+      },
+      "lastAuthor": {
+        "firstName": "Alessandro",
+        "lastName": "Fucci"
+      },
+      "journal": "Nat Genet",
+      "correspondingAuthors": [
+        {
+          "firstName": "Annalisa",
+          "lastName": "Buniello",
+          "email": "buniello@ebi.ac.uk"
+        }
+      ],
+      "embargoUntilPublished": true,
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "BODY_OF_WORK",
+    "status": "SUBMITTED",
+    "globusFolder": "6736640b-3c5a-4e7d-b86c-f01a96c9b608",
+    "globusOriginId": "bf4bd2e2-8ebf-11ea-8ec8-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "Annalisa Buniello",
+        "email": "buniello@ebi.ac.uk",
+        "nickname": "3fcdb775086555b3052f0aef7a84d37c1c48958a",
+        "userReference": "usr-4faffaae-f7dd-4d4d-a776-05564fd06081",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-05T11:01:20.972Z"
+    }
+  },
+  {
+    "submissionId": "5eb17686cbce5e0001b066ab",
+    "manuscript": {
+      "bodyOfWorkId": "GCP000036",
+      "title": "TEST-Investigating regions of shared genetic variation in attention deficit/hyperactivity disorder and major depressive disorder: A GWAS meta-analysis",
+      "description": "desc",
+      "firstAuthor": {
+        "firstName": "Victoria",
+        "lastName": "Powell",
+        "email": "powellv@cardiff.ac.uk"
+      },
+      "lastAuthor": {
+        "firstName": "Richard",
+        "lastName": "Anney",
+        "email": "anneyr@cardiff.ac.uk"
+      },
+      "correspondingAuthors": [
+        {
+          "firstName": "Richard",
+          "lastName": "Anney",
+          "email": "anneyr@cardiff.ac.uk"
+        }
+      ],
+      "prePrintServer": "biorxv",
+      "preprintServerDOI": "https://doi.org/10.1101/2020.04.22.054908",
+      "embargoUntilPublished": true,
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "BODY_OF_WORK",
+    "status": "SUBMITTED",
+    "globusFolder": "fa15d7a7-dbc1-49ca-9317-2cf746d09a8f",
+    "globusOriginId": "c61a69e6-8edb-11ea-8ec8-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "Jonathan Stewart",
+        "email": "jstewart@ebi.ac.uk",
+        "nickname": "60e4c62fe9e6c5445631f1abef19a041d8fba3b9",
+        "userReference": "usr-e35c6ccb-8e6f-45b7-a70c-6ec2a8d99c85",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-05T14:21:58.372Z"
+    }
+  },
+  {
+    "submissionId": "5eb18b20cbce5e0001b294cc",
+    "manuscript": {
+      "bodyOfWorkId": "GCP000037",
+      "title": "Jackie's_test_GWAS",
+      "description": "GWAS on some random trait",
+      "firstAuthor": {
+        "firstName": "Jackie",
+        "lastName": "MacArthur",
+        "email": "jalm@ebi.ac.uk"
+      },
+      "lastAuthor": {
+        "firstName": "Jackie",
+        "lastName": "MacArthur",
+        "email": "jalm@ebi.ac.uk"
+      },
+      "journal": "Hum Mol Genet",
+      "correspondingAuthors": [
+        {
+          "firstName": "Jackie",
+          "lastName": "MacArthur",
+          "email": "jalm@ebi.ac.uk"
+        }
+      ],
+      "prePrintServer": "BioRxiv",
+      "preprintServerDOI": "https://doi.org/10.1101/129395",
+      "embargoUntilPublished": true,
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "BODY_OF_WORK",
+    "status": "SUBMITTED",
+    "globusFolder": "37bd4629-1c81-4ac7-be6d-b4e2e0050235",
+    "globusOriginId": "0decb2d6-8ee8-11ea-bf89-0e6cccbb0103",
+    "created": {
+      "user": {
+        "name": "Jackie MacArthur",
+        "email": "jalm@ebi.ac.uk",
+        "nickname": "20a4c283349df0f9e1f23b4bab4eb9b98ca4b9bf",
+        "userReference": "usr-31afe1bc-26c2-4762-a543-179637730b88",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-05T15:49:52.535Z"
+    }
+  },
+  {
+    "submissionId": "5eb192f1cbce5e0001b36668",
+    "publication": {
+      "pmid": "31518406",
+      "title": "Phenome-wide investigation of health outcomes associated with genetic predisposition to loneliness.",
+      "journal": "Hum Mol Genet",
+      "firstAuthor": "Abdellaoui A",
+      "publicationDate": "2019-09-13",
+      "status": "UNDER_SUMMARY_STATS_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "STARTED",
+    "globusFolder": "8a31e04c-074c-482a-8019-5ef085274146",
+    "globusOriginId": "b6c9de98-8eec-11ea-bf89-0e6cccbb0103",
+    "created": {
+      "user": {
+        "name": "James Hayhurst",
+        "email": "jhayhurst@ebi.ac.uk",
+        "nickname": "112799fe623c12d1c207d1cb09a17485ecdff7b7",
+        "userReference": "usr-360ce42b-35a4-4505-a0a0-a4ad3eb773d5",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-05T16:23:13.871Z"
+    }
+  },
+  {
+    "submissionId": "5eb1bafbcbce5e0001b7a3c4",
+    "manuscript": {
+      "bodyOfWorkId": "GCP000038",
+      "title": "The NHGRI-EBI GWAS Catalog of published genome-wide association studies, targeted arrays and summary statistics 2019.",
+      "description": "The GWAS Catalog delivers a high-quality curated collection of all published genome-wide association studies enabling investigations to identify causal variants, understand disease mechanisms, and establish targets for novel therapies. The scope of the Catalog has also expanded to targeted and exome arrays with 1000 new associations added for these technologies. As of September 2018, the Catalog contains 5687 GWAS comprising 71673 variant-trait associations from 3567 publications. New content includes 284 full P-value summary statistics datasets for genome-wide and new targeted array studies, representing 6 × 109 individual variant-trait statistics. In the last 12 months, the Catalog's user interface was accessed by ∼90000 unique users who viewed >1 million pages. We have improved data access with the release of a new RESTful API to support high-throughput programmatic access, an improved web interface and a new summary statistics database. Summary statistics provision is supported by a new format proposed as a community standard for summary statistics data representation. This format was derived from our experience in standardizing heterogeneous submissions, mapping formats and in harmonizing content. Availability: https://www.ebi.ac.uk/gwas/.",
+      "firstAuthor": {
+        "firstName": "Annalisa",
+        "lastName": "Buniello",
+        "email": "buniello@ebi.ac.uk"
+      },
+      "lastAuthor": {
+        "firstName": "Helen",
+        "lastName": "Parkinson",
+        "email": "parkinson@ebi.ac.uk"
+      },
+      "journal": "Nucleic Acids Research",
+      "url": "https://academic.oup.com/nar/",
+      "correspondingAuthors": [
+        {
+          "firstName": "Helen",
+          "lastName": "Parkinson",
+          "email": "parkinson@ebi.ac.uk"
+        }
+      ],
+      "prePrintServer": "Biorxiv",
+      "preprintServerDOI": "https://www.biorxiv.org/content/10.1101/2020.04.20.051631v1",
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "BODY_OF_WORK",
+    "status": "VALID",
+    "globusFolder": "1bb56cdf-3c94-4ecf-aaca-3cf18a037f9a",
+    "globusOriginId": "940be956-8f04-11ea-8ec8-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "Laura Harris",
+        "email": "ljwh@ebi.ac.uk",
+        "nickname": "38871394913dd77f1e5faecbacd280f4e8d54d40",
+        "userReference": "usr-f5075833-0540-4763-ac14-13f1d28d3470",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-05T19:14:03.671Z"
+    }
+  },
+  {
+    "submissionId": "5eb26d1fcbce5e0001ca63fd",
+    "publication": {
+      "pmid": "20921969",
+      "title": "Genome-wide association study of antipsychotic-induced QTc interval prolongation.",
+      "journal": "Pharmacogenomics J",
+      "firstAuthor": "Aberg K",
+      "publicationDate": "2010-10-05",
+      "status": "UNDER_SUMMARY_STATS_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "STARTED",
+    "globusFolder": "a8323bb8-d054-42e4-b30e-55d554e49b1f",
+    "globusOriginId": "c2154710-8f6e-11ea-bf8a-0e6cccbb0103",
+    "created": {
+      "user": {
+        "name": "James Hayhurst",
+        "email": "jhayhurst@ebi.ac.uk",
+        "nickname": "112799fe623c12d1c207d1cb09a17485ecdff7b7",
+        "userReference": "usr-360ce42b-35a4-4505-a0a0-a4ad3eb773d5",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-06T07:54:07.372Z"
+    }
+  },
+  {
+    "submissionId": "5eb28eeacbce5e0001cdf8b9",
+    "publication": {
+      "pmid": "19875103",
+      "title": "Genomewide association study of movement-related adverse antipsychotic effects.",
+      "journal": "Biol Psychiatry",
+      "firstAuthor": "Aberg K",
+      "publicationDate": "2009-10-27",
+      "status": "UNDER_SUMMARY_STATS_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "STARTED",
+    "globusFolder": "117c8a60-7e87-4976-a509-09c3ecdc5308",
+    "globusOriginId": "e685d3f8-8f82-11ea-8ec8-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "James Hayhurst",
+        "email": "jhayhurst@ebi.ac.uk",
+        "nickname": "112799fe623c12d1c207d1cb09a17485ecdff7b7",
+        "userReference": "usr-360ce42b-35a4-4505-a0a0-a4ad3eb773d5",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-06T10:18:18.525Z"
+    }
+  },
+  {
+    "submissionId": "5eb91c089a6e9400013bc86b",
+    "manuscript": {
+      "bodyOfWorkId": "GCP000041",
+      "title": "Mrs",
+      "description": "abcddd",
+      "firstAuthor": {
+        "firstName": "Annalisa",
+        "lastName": "Buniello",
+        "email": "buniello@ebi.ac.uk"
+      },
+      "lastAuthor": {
+        "firstName": "alessandro",
+        "lastName": "fucci",
+        "email": "buniello@ebi.ac.uk"
+      },
+      "correspondingAuthors": [
+        {
+          "firstName": "Annalisa",
+          "lastName": "Buniello",
+          "email": "buniello@ebi.ac.uk"
+        }
+      ],
+      "prePrintServer": "xxx",
+      "preprintServerDOI": "http://193.62.54.159/gwas/deposition/form",
+      "embargoUntilPublished": true,
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "BODY_OF_WORK",
+    "status": "STARTED",
+    "globusFolder": "8faedc8c-b3f6-4954-a72c-2069627b6f7e",
+    "globusOriginId": "89828516-936a-11ea-b3c2-0ae144191ee3",
+    "created": {
+      "user": {
+        "name": "Anna White",
+        "email": "aw047322@gmail.com",
+        "nickname": "9585dd965c4d587bbdd99dbbff69b340355aba38",
+        "userReference": "usr-63414ad1-4b4e-4307-9d58-9e5a3417802f",
+        "domains": []
+      },
+      "timestamp": "2020-05-11T09:34:00.506Z"
+    }
+  },
+  {
+    "submissionId": "5ebabffa9a6e9400017fcb57",
+    "publication": {
+      "pmid": "32205469",
+      "title": "Genome-wide association study identifies genetic factors that modify age at onset in Machado-Joseph disease.",
+      "journal": "Aging (Albany NY)",
+      "firstAuthor": "Akçimen F",
+      "publicationDate": "2020-03-23",
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "CURATION_COMPLETE",
+    "globusFolder": "c9a9e280-88b5-4016-83f2-d6137568a109",
+    "globusOriginId": "d8a9e2b0-9464-11ea-bf8c-0e6cccbb0103",
+    "created": {
+      "user": {
+        "name": "Jonathan Stewart",
+        "email": "jstewart@ebi.ac.uk",
+        "nickname": "60e4c62fe9e6c5445631f1abef19a041d8fba3b9",
+        "userReference": "usr-e35c6ccb-8e6f-45b7-a70c-6ec2a8d99c85",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-12T15:25:46.341Z"
+    }
+  },
+  {
+    "submissionId": "5ebbc2b79a6e940001abbb54",
+    "manuscript": {
+      "bodyOfWorkId": "GCP000044",
+      "title": "Genetic Susceptibility to Gestational Diabetes Mellitus in a Chinese Population.",
+      "description": "New genetic variants associated with susceptibility to obesity and metabolic diseases have been discovered in recent genome-wide association (GWA) studies.",
+      "firstAuthor": {
+        "firstName": "Minkai",
+        "lastName": "Cao",
+        "email": "minkai.cao@somewhere.edu"
+      },
+      "lastAuthor": {
+        "firstName": "Juan",
+        "lastName": "Wen",
+        "email": "juan.wen@somewhere.edu"
+      },
+      "journal": "Front Endocrinol (Lausanne)",
+      "correspondingAuthors": [
+        {
+          "firstName": "Jon",
+          "lastName": "Stewart",
+          "email": "jstewart@ebi.ac.uk"
+        }
+      ],
+      "preprintServerDOI": "https://doi.org/10.3389/fendo.2020.00247",
+      "embargoDate": "2020-05-13",
+      "pmids": [
+        "32390949"
+      ],
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "BODY_OF_WORK",
+    "status": "SUBMITTED",
+    "globusFolder": "fec3f26c-5aa8-4e65-bdbd-ca1fed404fb3",
+    "globusOriginId": "115a0ec4-94ff-11ea-8ec8-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "Jonathan Stewart",
+        "email": "jstewart@ebi.ac.uk",
+        "nickname": "60e4c62fe9e6c5445631f1abef19a041d8fba3b9",
+        "userReference": "usr-e35c6ccb-8e6f-45b7-a70c-6ec2a8d99c85",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-13T09:49:43.965Z"
+    }
+  },
+  {
+    "submissionId": "5ec24437b5c6140001c40da2",
+    "publication": {
+      "pmid": "32121467",
+      "title": "Shared Molecular Genetic Mechanisms Underlie Endometriosis and Migraine Comorbidity.",
+      "journal": "Genes (Basel)",
+      "firstAuthor": "Adewuyi EO",
+      "publicationDate": "2020-02-29",
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "CURATION_COMPLETE",
+    "globusFolder": "922abc2d-4400-4b04-9c26-bd9a62c761ad",
+    "globusOriginId": "c8303d56-98df-11ea-b3c4-0ae144191ee3",
+    "created": {
+      "user": {
+        "name": "Jonathan Stewart",
+        "email": "jstewart@ebi.ac.uk",
+        "nickname": "60e4c62fe9e6c5445631f1abef19a041d8fba3b9",
+        "userReference": "usr-e35c6ccb-8e6f-45b7-a70c-6ec2a8d99c85",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-18T08:15:51.514Z"
+    }
+  },
+  {
+    "submissionId": "5ec68812b5c6140001a698aa",
+    "publication": {
+      "pmid": "23894747",
+      "title": "A comprehensive family-based replication study of schizophrenia genes.",
+      "journal": "JAMA Psychiatry",
+      "firstAuthor": "Aberg KA",
+      "publicationDate": "2013-02-01",
+      "status": "UNDER_SUMMARY_STATS_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "STARTED",
+    "globusFolder": "b00c1ca0-2135-4910-98ad-5cd9792f962a",
+    "globusOriginId": "9451c634-9b6a-11ea-b3c7-0ae144191ee3",
+    "created": {
+      "user": {
+        "name": "James Hayhurst",
+        "email": "jhayhurst@ebi.ac.uk",
+        "nickname": "112799fe623c12d1c207d1cb09a17485ecdff7b7",
+        "userReference": "usr-360ce42b-35a4-4505-a0a0-a4ad3eb773d5",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-21T13:54:26.872Z"
+    }
+  },
+  {
+    "submissionId": "5ec68b5bb5c6140001a7488d",
+    "publication": {
+      "pmid": "27193062",
+      "title": "A genome-wide association scan implicates DCHS2, RUNX2, GLI3, PAX1 and EDAR in human facial variation.",
+      "journal": "Nat Commun",
+      "firstAuthor": "Adhikari K",
+      "publicationDate": "2016-05-19",
+      "status": "UNDER_SUMMARY_STATS_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "STARTED",
+    "globusFolder": "57dc439e-0d31-4d72-b169-b94deef346cb",
+    "globusOriginId": "8926d7ac-9b6c-11ea-8ece-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "Trish Whetzel",
+        "email": "twhetzel@ebi.ac.uk",
+        "nickname": "cc1996a062dc96f648664d7891ed9a1c82d7b6c6",
+        "userReference": "usr-f3f2a645-735c-4e7e-a431-d0742c4eb9d5",
+        "domains": [
+          "self.GWAS",
+          "self.TEAM_EMBL-EBI_PORTAL_USR-36D0F1C6-527D-4408-AE6D-7C425A022087",
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-21T14:08:27.474Z"
+    }
+  },
+  {
+    "submissionId": "5ec699ddb5c6140001aa4671",
+    "publication": {
+      "pmid": "31732942",
+      "title": "Biologically Defined or Biologically Informed Traits Are More Heritable Than Clinically Defined Ones: The Case of Oral and Dental Phenotypes.",
+      "journal": "Adv Exp Med Biol",
+      "firstAuthor": "Agler CS",
+      "publicationDate": "2019-01-01",
+      "status": "UNDER_SUBMISSION"
+    },
+    "provenanceType": "PUBLICATION",
+    "status": "STARTED",
+    "globusFolder": "fbf2cf17-5b09-4d47-944f-ed2250893f0f",
+    "globusOriginId": "2b187ef0-9b75-11ea-8ece-02c81b96a709",
+    "created": {
+      "user": {
+        "name": "Jackie MacArthur",
+        "email": "jalm@ebi.ac.uk",
+        "nickname": "20a4c283349df0f9e1f23b4bab4eb9b98ca4b9bf",
+        "userReference": "usr-31afe1bc-26c2-4762-a543-179637730b88",
+        "domains": [
+          "self.GWAS_Curator"
+        ]
+      },
+      "timestamp": "2020-05-21T15:10:21.917Z"
+    }
+  }
+]

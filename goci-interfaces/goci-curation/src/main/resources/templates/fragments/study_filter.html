@@ -35,7 +35,7 @@
                         <div class="form-group">
                             <label for="studyTypes" class="control-label"></label>
                             <select name="studyTypes" class="form-control  select2-select"
-                                    th:field="*{studyType}" id="studyTypes">
+                                    id="studyTypes">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
                                 <option th:each="studyType : ${studyTypes}"
@@ -68,7 +68,7 @@
                         <div class="form-group">
                             <label for="curationStatus" class="control-label"></label>
                             <select name="curationStatus" class="form-control select2-select"
-                                    th:field="*{statusSearchFilterId}" id="curationStatus">
+                                    id="curationStatus">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
                                 <option th:each="curationStatus : ${curationstatuses}"
@@ -79,7 +79,7 @@
 
                         <div class="form-group">
                             <label for="curator" class="control-label"></label>
-                            <select name="curator" th:field="*{curatorSearchFilterId}"
+                            <select name="curator"
                                     class="form-control select2-select" id="curator">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
@@ -109,7 +109,7 @@
                         <div class="form-group">
                             <label for="authors" class="control-label"></label>
                             <select name="authors" class="form-control select2-select"
-                                    th:field="*{author}" id="authors">
+                                    id="authors">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
                                 <option th:each="author : ${authors}"
@@ -167,7 +167,7 @@
                         <div class="form-group">
                             <label for="diseaseTraits" class="control-label"></label>
                             <select name="diseaseTraits" class="form-control select2-select"
-                                    th:field="*{diseaseTraitSearchFilterId}" id="diseaseTraits">
+                                    id="diseaseTraits">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
                                 <option th:each="diseaseTrait : ${diseaseTraits}"

@@ -1,0 +1,48 @@
+{
+  "submissionId": "5ebbc2b79a6e940001abbb54",
+  "bodyOfWork": {
+    "bodyOfWorkId": "GCP000044",
+    "title": "Genetic Susceptibility to Gestational Diabetes Mellitus in a Chinese Population.",
+    "description": "New genetic variants associated with susceptibility to obesity and metabolic diseases have been discovered in recent genome-wide association (GWA) studies.",
+    "firstAuthor": {
+      "firstName": "Minkai",
+      "lastName": "Cao",
+      "email": "minkai.cao@somewhere.edu"
+    },
+    "lastAuthor": {
+      "firstName": "Juan",
+      "lastName": "Wen",
+      "email": "juan.wen@somewhere.edu"
+    },
+    "journal": "Front Endocrinol (Lausanne)",
+    "correspondingAuthors": [
+      {
+        "firstName": "Jon",
+        "lastName": "Stewart",
+        "email": "jstewart@ebi.ac.uk"
+      }
+    ],
+    "preprintServerDOI": "https://doi.org/10.3389/fendo.2020.00247",
+    "embargoDate": "2020-05-13",
+    "pmids": [
+      "32390949"
+    ],
+    "status": "UNDER_SUBMISSION"
+  },
+  "provenanceType": "BODY_OF_WORK",
+  "status": "SUBMITTED",
+  "globusFolder": "fec3f26c-5aa8-4e65-bdbd-ca1fed404fb3",
+  "globusOriginId": "115a0ec4-94ff-11ea-8ec8-02c81b96a709",
+  "created": {
+    "user": {
+      "name": "Jonathan Stewart",
+      "email": "jstewart@ebi.ac.uk",
+      "nickname": "60e4c62fe9e6c5445631f1abef19a041d8fba3b9",
+      "userReference": "usr-e35c6ccb-8e6f-45b7-a70c-6ec2a8d99c85",
+      "domains": [
+        "self.GWAS_Curator"
+      ]
+    },
+    "timestamp": "2020-05-13T09:49:43.965Z"
+  }
+}
