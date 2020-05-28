@@ -159,27 +159,31 @@ public class DepositionSubmissionService {
         testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
         testSub.setSubmissionType(getSubmissionType(depositionSubmission));
         if(depositionSubmission.getBodyOfWork() != null){
-//            testSub.setPubMedID(depositionSubmission.getBodyOfWork().getPmids();
-            if(depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
-                if (depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
-                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
+            BodyOfWorkDto bodyOfWork = depositionSubmission.getBodyOfWork();
+            if(bodyOfWork.getPmids() != null && bodyOfWork.getPmids().size() != 0){
+                testSub.setPubMedID(String.join(",",bodyOfWork.getPmids()));
+            }
+            if(bodyOfWork.getFirstAuthor() != null) {
+                if (bodyOfWork.getFirstAuthor().getGroup() != null) {
+                    testSub.setAuthor(bodyOfWork.getFirstAuthor().getGroup());
                 } else {
-                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getFirstName() + ' ' +
-                            depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
+                    testSub.setAuthor(bodyOfWork.getFirstAuthor().getFirstName() + ' ' +
+                            bodyOfWork.getFirstAuthor().getLastName());
                 }
             }
-            testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
-            testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
-            testSub.setDoi(depositionSubmission.getBodyOfWork().getPreprintServerDOI());
+            testSub.setTitle(bodyOfWork.getTitle());
+            testSub.setPublicationStatus(bodyOfWork.getStatus());
+            testSub.setDoi(bodyOfWork.getPreprintServerDOI());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
         }else if(depositionSubmission.getPublication() != null) {
-            testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
-            testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
-            testSub.setTitle(depositionSubmission.getPublication().getTitle());
-            testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
-            testSub.setDoi(depositionSubmission.getPublication().getDoi());
+            DepositionPublication publication = depositionSubmission.getPublication();
+            testSub.setPubMedID(publication.getPmid());
+            testSub.setAuthor(publication.getFirstAuthor());
+            testSub.setTitle(publication.getTitle());
+            testSub.setPublicationStatus(publication.getStatus());
+            testSub.setDoi(publication.getDoi());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
