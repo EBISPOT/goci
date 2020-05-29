@@ -661,7 +661,11 @@ public class StudyController {
                               @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 //        xintodo edit study
-        study.getStudyExtension().setStudy(study);
+        if(study.getStudyExtension() == null){
+            StudyExtension extension = new StudyExtension();
+            extension.setStudy(study);
+            study.setStudyExtension(extension);
+        }
         studyUpdateService.updateStudy(studyId, study,
                 currentUserDetailsService.getUserFromRequest(request));
 
