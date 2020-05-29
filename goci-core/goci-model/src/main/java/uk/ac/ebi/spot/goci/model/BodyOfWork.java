@@ -42,7 +42,9 @@ public class BodyOfWork{
     public static BodyOfWork create(BodyOfWorkDto dto){
         BodyOfWork bodyOfWork = BeanMapper.MAPPER.convert(dto);
         bodyOfWork.setPublicationId(dto.getBodyOfWorkId());
-        bodyOfWork.setPubMedId(dto.getPmids() != null ? dto.getPmids().get(0) : null);
+        if(dto.getPmids() != null && dto.getPmids().size() != 0){
+            bodyOfWork.setPubMedId(String.join(",",dto.getPmids()));
+        }
         //bodyOfWork.setPublicationDate(dto.get);
         if(dto.getDoi() == null) {
             bodyOfWork.setDoi(dto.getPreprintServerDOI());

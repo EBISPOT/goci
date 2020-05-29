@@ -76,7 +76,7 @@ $(document).ready(function() {
 
     $('#pubmedIdDatatable').DataTable({
         "columns": [
-            { "mData": "pubmedId","sTitle": "pubmed ID" },
+            { "mData": "pubmedId","sTitle": "Pubmed ID" },
             { "mData": "study_id", "sDefaultContent": "", "sTitle": "Study",
                 "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                     if (sData != "") {

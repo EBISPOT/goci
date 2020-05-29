@@ -121,6 +121,7 @@ public class DepositionSyncService {
         List<Publication> gociPublications = publicationService.findAll();
         //if publication not in Deposition, insert
         Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
+        Map<String, BodyOfWorkDto> bomMap = depositionPublicationService.getAllBodyOfWork();
         for (Publication p : gociPublications) {
             String pubmedId = p.getPubmedId();
             //System.out.println("checking pmid " + pubmedId);
@@ -135,6 +136,9 @@ public class DepositionSyncService {
                         if(addSummaryStatsData(newPublication, p)){
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                         }
+                    }else if(isUnpublished(p, bomMap.values())){//check if this pubmed id is associated with a
+                        // prepublished submission
+                        newPublication.setStatus("UNDER_SUBMISSION");
                     }else {
                         newPublication.setStatus("ELIGIBLE");
                     }
@@ -147,6 +151,9 @@ public class DepositionSyncService {
                             System.out.println("adding published publication w/ sumstats " + pubmedId);
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
+                        }else if(isUnpublished(p, bomMap.values())){//check if this pubmed id is associated with a
+                            // prepublished submission
+                            newPublication.setStatus("UNDER_SUBMISSION");
                         }else {
                             System.out.println("adding published publication " + pubmedId + " to mongo");
                         }
@@ -359,5 +366,28 @@ public class DepositionSyncService {
         } else {
             return true;
         }
+    }
+
+    private boolean isUnpublished(Publication publication, Collection<BodyOfWorkDto> bomList){
+        if(bodyOfWorkRepository.findByPubMedId(publication.getPubmedId()) != null){
+            return true;
+        }else{
+            List<BodyOfWork> bodiesOfWork = bodyOfWorkRepository.findAll();
+            for (BodyOfWork bom : bodiesOfWork) {
+                if (publication.getPubmedId().equals(bom.getPubMedId())) {
+                    return true;
+                }else if(bom.getPubMedId() != null && bom.getPubMedId().contains(publication.getPubmedId())){
+                    return  true;
+                }
+            }
+            for(BodyOfWorkDto bom: bomList){
+                String bomId = String.join(",", bom.getPmids());
+                if (bomId.contains(publication.getPubmedId())){
+                    return  true;
+                }
+            }
+
+        }
+        return false;
     }
 }

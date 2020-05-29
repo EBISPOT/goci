@@ -138,7 +138,7 @@
                         <div class="form-group">
                             <label for="efoTraits" class="control-label"></label>
                             <select name="efoTraits" class="form-control select2-select"
-                                    id="efoTraits">
+                                    th:field="*{efoTraitSearchFilterId}" id="efoTraits">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
                                 <option th:each="efoTrait : ${efoTraits}"

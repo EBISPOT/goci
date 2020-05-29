@@ -271,7 +271,7 @@
                     <label for="curator" class="control-label col-md-2">Curator:</label>
 
                     <div class="col-md-4">
-                        <select id="curator" class="form-control select2-select">
+                        <select th:field="*{curator}" id="curator" class="form-control select2-select">
                             <option th:each="curator : ${curators}"
                                     th:value="${curator.id}"
                                     th:text="${curator.lastName}"></option>
@@ -283,7 +283,7 @@
                     <label for="curationStatus" class="control-label col-md-2">Curation Status:</label>
 
                     <div class="col-md-4">
-                        <select id="curationStatus" class="form-control select2-select">
+                        <select th:field="*{curationStatus}" id="curationStatus" class="form-control select2-select">
                             <option th:each="curationStatus : ${curationstatuses}"
                                     th:value="${curationStatus.id}"
                                     th:text="${curationStatus.status}"></option>
@@ -296,7 +296,7 @@
                     <label for="unpublishReason" class="control-label col-md-2">Reason for unpublishing:</label>
 
                     <div class="col-md-4">
-                        <select id="unpublishReason" class="form-control select2-select">
+                        <select th:field="*{unpublishReason}" id="unpublishReason" class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
                             <option th:each="unpublishReason : ${unpublishreasons}"

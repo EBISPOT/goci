@@ -196,7 +196,7 @@
 
                     <div class="form-group">
                         <label for="curator" class="control-label"></label>
-                        <select name="curator"
+                        <select name="curator" th:field="*{curatorId}"
                                 class="form-control select2-select" id="curator">
                             <!--Empty value for first entry-->
                             <option value=""></option>
@@ -231,7 +231,7 @@
                         <div class="form-group">
                             <label for="curationStatus" class="control-label"></label>
                             <select name="curationStatus" class="form-control select2-select"
-                                    id="curationStatus">
+                                    th:field="*{statusId}" id="curationStatus">
                                 <!--Empty value for first entry-->
                                 <option value=""></option>
                                 <option th:each="curationStatus : ${curationstatuses}"

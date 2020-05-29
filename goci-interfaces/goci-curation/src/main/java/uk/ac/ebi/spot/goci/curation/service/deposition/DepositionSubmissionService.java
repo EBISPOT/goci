@@ -159,27 +159,31 @@ public class DepositionSubmissionService {
         testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
         testSub.setSubmissionType(getSubmissionType(depositionSubmission));
         if(depositionSubmission.getBodyOfWork() != null){
-//            testSub.setPubMedID(depositionSubmission.getBodyOfWork().getPmids();
-            if(depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
-                if (depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
-                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
+            BodyOfWorkDto bodyOfWork = depositionSubmission.getBodyOfWork();
+            if(bodyOfWork.getPmids() != null && bodyOfWork.getPmids().size() != 0){
+                testSub.setPubMedID(String.join(",",bodyOfWork.getPmids()));
+            }
+            if(bodyOfWork.getFirstAuthor() != null) {
+                if (bodyOfWork.getFirstAuthor().getGroup() != null) {
+                    testSub.setAuthor(bodyOfWork.getFirstAuthor().getGroup());
                 } else {
-                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getFirstName() + ' ' +
-                            depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
+                    testSub.setAuthor(bodyOfWork.getFirstAuthor().getFirstName() + ' ' +
+                            bodyOfWork.getFirstAuthor().getLastName());
                 }
             }
-            testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
-            testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
-            testSub.setDoi(depositionSubmission.getBodyOfWork().getPreprintServerDOI());
+            testSub.setTitle(bodyOfWork.getTitle());
+            testSub.setPublicationStatus(bodyOfWork.getStatus());
+            testSub.setDoi(bodyOfWork.getPreprintServerDOI());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
         }else if(depositionSubmission.getPublication() != null) {
-            testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
-            testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
-            testSub.setTitle(depositionSubmission.getPublication().getTitle());
-            testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
-            testSub.setDoi(depositionSubmission.getPublication().getDoi());
+            DepositionPublication publication = depositionSubmission.getPublication();
+            testSub.setPubMedID(publication.getPmid());
+            testSub.setAuthor(publication.getFirstAuthor());
+            testSub.setTitle(publication.getTitle());
+            testSub.setPublicationStatus(publication.getStatus());
+            testSub.setDoi(publication.getDoi());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
@@ -289,50 +293,52 @@ public class DepositionSubmissionService {
     }
 
     public Submission.SubmissionType getSubmissionType(DepositionSubmission submission){
-        if(submission.getBodyOfWork() != null) {
+        if(submission.getBodyOfWork() != null && submission.getPublication() == null) {
             return Submission.SubmissionType.PRE_PUBLISHED;
         }
         else if(submission.getBodyOfWork() == null && submission.getPublication() == null) {
             return Submission.SubmissionType.UNKNOWN;
         }
-        String publicationStatus = submission.getPublication().getStatus();
-        boolean hasSumStats = false;
-        boolean hasMetadata = false;
-        boolean hasAssociations = false;
-        if(publicationStatus.equals("UNDER_SUBMISSION")){
-            hasMetadata = true;
-        }
-        else if(publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")){
-            hasSumStats = true;
-        }
-        if(submission.getStudies() != null) {
-            for (DepositionStudyDto studyDto : submission.getStudies()) {
-                if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")){
-                    hasSumStats = true;
+        else if(submission.getPublication() != null) {
+            String publicationStatus = submission.getPublication().getStatus();
+            boolean hasSumStats = false;
+            boolean hasMetadata = false;
+            boolean hasAssociations = false;
+            if (publicationStatus.equals("UNDER_SUBMISSION")) {
+                hasMetadata = true;
+            } else if (publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")) {
+                hasSumStats = true;
+            }
+            if (submission.getStudies() != null) {
+                for (DepositionStudyDto studyDto : submission.getStudies()) {
+                    if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") &&
+                            !studyDto.getSummaryStatisticsFile().equals("NR")) {
+                        hasSumStats = true;
+                    }
                 }
             }
-        }
-        if(submission.getAssociations() != null) {
-            for (DepositionAssociationDto associationDto : submission.getAssociations()) {
-                if (associationDto.getStudyTag() != null) {
-                    hasAssociations = true;
+            if (submission.getAssociations() != null) {
+                for (DepositionAssociationDto associationDto : submission.getAssociations()) {
+                    if (associationDto.getStudyTag() != null) {
+                        hasAssociations = true;
+                    }
                 }
             }
-        }
-        if(hasMetadata && hasSumStats && hasAssociations){
-            return Submission.SubmissionType.METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS;
-        }
-        if(hasMetadata && hasSumStats && !hasAssociations){
-            return Submission.SubmissionType.METADATA_AND_SUM_STATS;
-        }
-        if(hasMetadata && !hasSumStats && hasAssociations){
-            return Submission.SubmissionType.METADATA_AND_TOP_ASSOCIATIONS;
-        }
-        if(hasMetadata && !hasSumStats && !hasAssociations){
-            return Submission.SubmissionType.METADATA;
-        }
-        if(!hasMetadata && hasSumStats && !hasAssociations){
-            return Submission.SubmissionType.SUM_STATS;
+            if (hasMetadata && hasSumStats && hasAssociations) {
+                return Submission.SubmissionType.METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS;
+            }
+            if (hasMetadata && hasSumStats && !hasAssociations) {
+                return Submission.SubmissionType.METADATA_AND_SUM_STATS;
+            }
+            if (hasMetadata && !hasSumStats && hasAssociations) {
+                return Submission.SubmissionType.METADATA_AND_TOP_ASSOCIATIONS;
+            }
+            if (hasMetadata && !hasSumStats && !hasAssociations) {
+                return Submission.SubmissionType.METADATA;
+            }
+            if (!hasMetadata && hasSumStats && !hasAssociations) {
+                return Submission.SubmissionType.SUM_STATS;
+            }
         }
         return Submission.SubmissionType.UNKNOWN;
     }
