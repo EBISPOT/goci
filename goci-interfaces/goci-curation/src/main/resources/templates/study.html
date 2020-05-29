@@ -299,7 +299,7 @@
                     <label for="genotypingTechnology" class="control-label col-md-2">Genotyping technology</label>
 
                     <div class="col-md-10">
-                        <select name="genotypingTechnology" class="form-control select2-select"
+                        <select name="genotypingTechnology" th:field="*{genotypingTechnologies}" class="form-control select2-select"
                                 multiple="multiple" id="genotypingTechnology">
                             <option th:each="genotypingTechnology : ${genotypingTechnologies}"
                                     th:value="${genotypingTechnology.id}"
@@ -313,7 +313,7 @@
                     <label for="platform" class="control-label col-md-2">Array manufacturer</label>
 
                     <div class="col-md-10">
-                        <select name="platform" class="form-control select2-select"
+                        <select name="platform" th:field="*{platforms}" class="form-control select2-select"
                                 multiple="multiple" id="platform">
                             <option th:each="platform : ${platforms}"
                                     th:value="${platform.id}"
@@ -337,7 +337,7 @@
                             <tr>
                                 <td>
 
-                                    <select name="qualifier" class="form-control select2-select"
+                                    <select name="qualifier" th:field="*{qualifier}" class="form-control select2-select"
                                             id="qualifier">
                                         <option value=""></option>
                                         <option th:each="qualifier : ${qualifiers}"
@@ -376,7 +376,7 @@
                     <label for="diseaseTrait" class="control-label col-md-2">Reported trait</label>
 
                     <div class="col-md-10">
-                        <select name="diseaseTrait" id="diseaseTrait"
+                        <select name="diseaseTrait" th:field="*{diseaseTrait}" id="diseaseTrait"
                                 class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
@@ -392,7 +392,7 @@
                     <label for="EFOTrait" class="control-label col-md-2">Main EFO trait</label>
 
                     <div class="col-md-10">
-                        <select name="EFOTrait" class="form-control select2-select"
+                        <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
                                 multiple="multiple" id="EFOTrait">
                             <option th:each="efoTrait : ${efoTraits}"
                                     th:value="${efoTrait.id}"
@@ -405,7 +405,7 @@
                     <label for="mappedBackgroundTraits" class="control-label col-md-2">Background EFO Trait</label>
 
                     <div class="col-md-10">
-                        <select name="mappedBackgroundTraits"
+                        <select name="mappedBackgroundTraits" th:field="*{mappedBackgroundTraits}"
                                 class="form-control select2-select"
                                 multiple="multiple" id="mappedBackgroundTraits">
                             <option th:each="efoTrait : ${efoTraits}"
@@ -428,7 +428,7 @@
                     <label for="backgroundTrait" class="control-label col-md-2">Background trait (author submitted)</label>
 
                     <div class="col-md-10">
-                        <select name="backgroundTrait" id="backgroundTrait"
+                        <select name="backgroundTrait" th:field="*{backgroundTrait}" id="backgroundTrait"
                                 class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>

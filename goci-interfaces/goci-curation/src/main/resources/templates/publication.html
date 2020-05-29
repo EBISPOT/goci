@@ -222,7 +222,7 @@
             <div class="form-inline col-sm-6">
                 <label for="EFOTrait" class="control-label col-sm-2">Main EFO trait</label>
 
-                <select name="EFOTrait" class="form-control select2-select col-sm-2"
+                <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select col-sm-2"
                         style="width: 300px"
                         multiple="multiple" id="EFOTrait">
                     <option th:each="efoTrait : ${efoTraits}"
