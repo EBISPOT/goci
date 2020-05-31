@@ -1,5 +1,8 @@
 package uk.ac.ebi.spot.goci.pussycat.controller;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,11 +103,19 @@ public class PussycatGOCIController {
         }
     }
 
+    @RequestMapping(value = "/flush")
+    public @ResponseBody boolean flush(HttpSession session) throws PussycatSessionNotReadyException {
+            pussycatManager.unbindResources(session);
+            return true;
+    }
+
     @RequestMapping(value = "/gwasdiagram")
-    public @ResponseBody String renderGWASDiagram(HttpSession session)
-            throws PussycatSessionNotReadyException, NoRenderableDataException {
+    public void renderGWASDiagram(HttpSession session, HttpServletResponse response)
+            throws PussycatSessionNotReadyException, NoRenderableDataException, IOException {
         // render all data using the pussycat session for this http session
-        return getPussycatSession(session).performRendering(getRenderletNexus(session));
+        String svg = getPussycatSession(session).performRendering(getRenderletNexus(session));
+        //return svg;
+        IOUtils.write(svg.getBytes(), new BufferedOutputStream(response.getOutputStream()));
     }
 
     public void saveAssociationsFile(String pvalueMin, String pvalueMax, String dateMin, String dateMax, String outFile)
@@ -165,14 +176,14 @@ public class PussycatGOCIController {
         log.debug("done exporting file");
     }
     @RequestMapping(value = "/gwasdiagram/associations")
-    public @ResponseBody String renderAssociations(@RequestParam(value = "pvaluemin",
+    public void renderAssociations(@RequestParam(value = "pvaluemin",
                                                                  required = false) String pvalueMin,
                                                    @RequestParam(value = "pvaluemax",
                                                                  required = false) String pvalueMax,
                                                    @RequestParam(value = "datemin", required = false) String dateMin,
                                                    @RequestParam(value = "datemax", required = false) String dateMax,
-                                                   HttpSession session)
-            throws PussycatSessionNotReadyException, NoRenderableDataException {
+                                                   HttpSession session, HttpServletResponse response)
+            throws PussycatSessionNotReadyException, NoRenderableDataException, IOException {
 
         getLog().debug("Received a new rendering request - " +
                                "putting together the query from date '" + dateMin + "' to '" + dateMax +
@@ -203,21 +214,22 @@ public class PussycatGOCIController {
             getRenderletNexus(session).setRenderingContext(dateFilter);
         }
 
-
+        String svg = null;
         if (dateFilter == null && pvalueFilter == null) {
-            return getPussycatSession(session).performRendering(getRenderletNexus(session));
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session));
         }
         else if (dateFilter == null && pvalueFilter != null) {
-            return getPussycatSession(session).performRendering(getRenderletNexus(session), pvalueFilter);
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), pvalueFilter);
 
         }
         else if (pvalueFilter == null && dateFilter != null) {
-            return getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter);
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter);
 
         }
         else {
-            return getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
+            svg = getPussycatSession(session).performRendering(getRenderletNexus(session), dateFilter, pvalueFilter);
         }
+        IOUtils.write(svg.getBytes(), new BufferedOutputStream(response.getOutputStream()));
     }
 
     private Filter setDateFilter(String dateMin, String dateMax) {

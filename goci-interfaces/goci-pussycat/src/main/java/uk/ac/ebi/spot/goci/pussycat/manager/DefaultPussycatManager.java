@@ -30,20 +30,21 @@ import java.util.Set;
  * @date 04/06/14
  */
 @Component
+@Qualifier("pussycatManager")
 public class DefaultPussycatManager implements PussycatManager {
     private RenderletNexusFactory nexusFactory;
 
     private Set<PussycatSession> sessions;
-    private Map<HttpSession, PussycatSession> sessionMap;
+    private Map<String, PussycatSession> sessionMap;
 
-    private Map<HttpSession, RenderletNexus> nexusMap = new HashMap<HttpSession, RenderletNexus>();
+    private Map<String, RenderletNexus> nexusMap = new HashMap<String, RenderletNexus>();
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public DefaultPussycatManager() {
         this.sessions = new HashSet<PussycatSession>();
-        this.sessionMap = new HashMap<HttpSession, PussycatSession>();
-        this.nexusMap = new HashMap<HttpSession, RenderletNexus>();
+        this.sessionMap = new HashMap<String, PussycatSession>();
+        this.nexusMap = new HashMap<String, RenderletNexus>();
     }
 
     protected Logger getLog() {
@@ -70,39 +71,39 @@ public class DefaultPussycatManager implements PussycatManager {
     }
 
     public boolean hasAvailablePussycatSession(HttpSession session) {
-        return sessionMap.containsKey(session);
+        return sessionMap.containsKey(session.getId());
     }
 
     public PussycatSession getPussycatSession(HttpSession session) {
-        return sessionMap.get(session);
+        return sessionMap.get(session.getId());
     }
 
     public PussycatSession bindPussycatSession(HttpSession session, PussycatSession pussycatSession) {
         if (!sessions.contains(pussycatSession)) {
             sessions.add(pussycatSession);
         }
-        sessionMap.put(session, pussycatSession);
+        sessionMap.put(session.getId(), pussycatSession);
         return pussycatSession;
     }
 
     @Override public boolean hasAvailableRenderletNexus(HttpSession session) {
-        return nexusMap.containsKey(session);
+        return nexusMap.containsKey(session.getId());
     }
 
     @Override public RenderletNexus getRenderletNexus(HttpSession session) {
-        return nexusMap.get(session);
+        return nexusMap.get(session.getId());
     }
 
     @Override public RenderletNexus bindRenderletNexus(HttpSession session, RenderletNexus renderletNexus) {
-        nexusMap.put(session, renderletNexus);
+        nexusMap.put(session.getId(), renderletNexus);
         return renderletNexus;
     }
 
     @Override public boolean unbindResources(HttpSession session) {
         boolean sessionUnbound = false;
         boolean nexusUnbound = false;
-        if (sessionMap.containsKey(session)) {
-            PussycatSession ps = sessionMap.remove(session);
+        if (sessionMap.containsKey(session.getId())) {
+            PussycatSession ps = sessionMap.remove(session.getId());
             getLog().debug("PussycatSession '" + ps.getSessionID() + "' is no longer bound to " +
                                    "HttpSession '" + session.getId() + "'");
             sessionUnbound = true;
@@ -111,8 +112,8 @@ public class DefaultPussycatManager implements PussycatManager {
             getLog().debug("Cannot unbind PussycatSession for HttpSession '" + session.getId() + "' " +
                                    "- no linked PussycatSession resource");
         }
-        if (nexusMap.containsKey(session)) {
-            RenderletNexus rn = nexusMap.remove(session);
+        if (nexusMap.containsKey(session.getId())) {
+            RenderletNexus rn = nexusMap.remove(session.getId());
             getLog().debug("RenderletNexus '" + rn + "' is no longer bound to " +
                                    "HttpSession '" + session.getId() + "'");
             nexusUnbound = true;
