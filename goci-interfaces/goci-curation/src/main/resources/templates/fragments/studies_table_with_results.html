@@ -145,7 +145,7 @@
                         <span class="glyphicon glyphicon-print color-primary-bold"></span>
                     </a>
                     <a th:if="${study.publicationId?.activeSubmission}"
-                       th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}"
+                       th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.submissionId})}"
                        title="Note: This Publication has an active submission">
                         <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
                     </a>
