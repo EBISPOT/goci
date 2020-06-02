@@ -262,7 +262,8 @@
 
                     <label for="pubmed" class="control-label col-md-2">
                         <a th:if="${study.publicationId?.activeSubmission}"
-                           th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}" title="Note: This Publication has an active submission">
+                           th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.submissionId})}"
+                           title="Note: This Publication has an active submission">
                         <span class="glyphicon glyphicon-warning-sign text-danger col-md-1"
                               style="font-size: 25px"></span>
                         </a>

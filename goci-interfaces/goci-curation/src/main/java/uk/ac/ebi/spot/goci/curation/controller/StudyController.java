@@ -469,6 +469,7 @@ public class StudyController {
         studyPage.forEach(study->{
             if(pubmedMap.containsKey(study.getPublicationId().getPubmedId())){
                 study.getPublicationId().setActiveSubmission(true);
+                study.getPublicationId().setSubmissionId(pubmedMap.get(study.getPublicationId().getPubmedId()));
             }
         });
         return "studies";
@@ -641,6 +642,7 @@ public class StudyController {
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         if(pubmedMap.containsKey(studyToView.getPublicationId().getPubmedId())){
             studyToView.getPublicationId().setActiveSubmission(true);
+            studyToView.getPublicationId().setSubmissionId(pubmedMap.get(studyToView.getPublicationId().getPubmedId()));
         }
 
         model.addAttribute("study", studyToView);

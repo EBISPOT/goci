@@ -174,6 +174,7 @@ public class PublicationController {
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
             if(pubmedMap.containsKey(publication.getPubmedId())){
                 publication.setActiveSubmission(true);
+                publication.setSubmissionId(pubmedMap.get(publication.getPubmedId()));
             }
 
         model.addAttribute("publication", publication);
