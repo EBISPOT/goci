@@ -56,10 +56,18 @@ public class DepositionSyncService {
     }
 
     private boolean isPublished(Publication publication) {
-
         for (Study study : publication.getStudies()) {
+            boolean studyPublished = false;
             Housekeeping housekeeping = study.getHousekeeping();
-            if (!housekeeping.getIsPublished()) {
+            if (housekeeping.getIsPublished()) {
+                studyPublished = true;
+            }else if (!housekeeping.getIsPublished() || housekeeping.getCatalogUnpublishDate() != null) {
+                studyPublished = true;
+            }else if(housekeeping.getCurationStatus().getStatus().equals("Curation Abandoned")
+                    || housekeeping.getCurationStatus().getStatus().equals("Unpublished from catalog")){
+                studyPublished = true;
+            }
+            if(!studyPublished){
                 return false;
             }
         }
@@ -272,6 +280,11 @@ public class DepositionSyncService {
     }
 
     private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication){
+        return  addSummaryStatsData(depositionPublication, publication, true);
+    }
+
+    private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication,
+    boolean setStatus){
         boolean hasFiles = false;
         List<DepositionSummaryStatsDto> summaryStatsDtoList = new ArrayList<>();
         Collection<Study> studies = publication.getStudies();
@@ -294,7 +307,7 @@ public class DepositionSyncService {
         if(summaryStatsDtoList.size() != 0) {
             depositionPublication.setSummaryStatsDtoList(summaryStatsDtoList);
         }
-        if(hasFiles){
+        if(hasFiles && setStatus){
             depositionPublication.setStatus("PUBLISHED_WITH_SS");
         }
         return hasFiles;
@@ -309,17 +322,21 @@ public class DepositionSyncService {
         //read all publications from GOCI
         List<Publication> gociPublications = publicationService.findAll();
         //check status, set to PUBLISHED_SS if hasSummaryStats
-        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllBackendPublications();
+        Map<String, DepositionSubmission> submissions = submissionService.getSubmissions();
+        Map<String, DepositionPublication> publicationMap = buildPublicationMap(submissions);
+        Map<String, List<String>> sumStatsMap = buildSumStatsMap(submissions);
+        System.out.println("pmid\tis published\tdepo sum stats size\tgoci sum stats size");
         for (Publication p : gociPublications) {
-            boolean isPublished = isPublished(p);
             String pubmedId = p.getPubmedId();
-            //System.out.println("checking pmid " + pubmedId);
-            DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-            if(depositionPublication != null && isPublished) {
-                boolean hadSummaryStats = depositionPublication.getSummaryStatsDtoList() != null;
-                addSummaryStatsData(depositionPublication, p);
-                boolean hasSummaryStats = depositionPublication.getSummaryStatsDtoList() != null;
-                if (!hadSummaryStats && hasSummaryStats) {
+            List<String> accessionList = sumStatsMap.get(pubmedId);
+            DepositionPublication depositionPublication = publicationMap.get(pubmedId);
+            boolean isPublished = isPublished(p);
+            if(depositionPublication != null) {
+                addSummaryStatsData(depositionPublication, p, false);
+                int newSumStatsSize = depositionPublication.getSummaryStatsDtoList() != null ?
+                        depositionPublication.getSummaryStatsDtoList().size() : 0;
+                System.out.println(pubmedId + "\t" + isPublished + "\t" + accessionList.size() + "\t" + newSumStatsSize);
+                if (accessionList.size() != newSumStatsSize) {
                     System.out.println("adding summary stats to " + depositionPublication.getPmid());
                     depositionPublicationService.updatePublication(depositionPublication);
                     fixedPubs.add(pubmedId);
@@ -329,6 +346,33 @@ public class DepositionSyncService {
         System.out.println("fixed " + fixedPubs.size());
         System.out.println(Arrays.toString(fixedPubs.toArray()));
 
+    }
+
+    private Map<String, DepositionPublication> buildPublicationMap(Map<String, DepositionSubmission> submissions) {
+        Map<String, DepositionPublication> publicationMap = new HashMap<>();
+        submissions.forEach((s, submission) ->{
+            if(submission.getPublication() != null){
+            publicationMap.put(submission.getPublication().getPmid(),
+                submission.getPublication());
+            }
+        });
+        return publicationMap;
+    }
+
+    private Map<String, List<String>> buildSumStatsMap(Map<String, DepositionSubmission> submissions) {
+        Map<String, List<String>> sumStatsMap = new HashMap<>();
+        submissions.forEach((s, submission) ->{
+            if(submission.getPublication() != null){
+                List<String> sumStatsList = new ArrayList<>();
+                submission.getStudies().forEach(studyDto->{
+                    if(studyDto.getAccession() != null) {
+                        sumStatsList.add(studyDto.getAccession());
+                    }
+                });
+                sumStatsMap.put(submission.getPublication().getPmid(), sumStatsList);
+            }
+        });
+        return sumStatsMap;
     }
 
     private DepositionPublication createPublication(Publication p) {
