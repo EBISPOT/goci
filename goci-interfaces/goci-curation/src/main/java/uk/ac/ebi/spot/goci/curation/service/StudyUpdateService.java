@@ -5,10 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.EventType;
-import uk.ac.ebi.spot.goci.model.Housekeeping;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.repository.StudyExtensionRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
@@ -27,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class StudyUpdateService {
 
+    private final StudyExtensionRepository studyExtensionRepository;
     private StudyRepository studyRepository;
     private AttributeUpdateService attributeUpdateService;
     private TrackingOperationService trackingOperationService;
@@ -34,10 +33,12 @@ public class StudyUpdateService {
     @Autowired
     public StudyUpdateService(@Qualifier("studyTrackingOperationServiceImpl") TrackingOperationService trackingOperationService,
                               StudyRepository studyRepository,
-                              AttributeUpdateService attributeUpdateService) {
+                              AttributeUpdateService attributeUpdateService,
+                              StudyExtensionRepository studyExtensionRepository) {
         this.trackingOperationService = trackingOperationService;
         this.studyRepository = studyRepository;
         this.attributeUpdateService = attributeUpdateService;
+        this.studyExtensionRepository = studyExtensionRepository;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -66,7 +67,11 @@ public class StudyUpdateService {
         // Need to do this as we don't return housekeeping in form
         study.setHousekeeping(existingHousekeeping);
 
+        //study.getStudyExtension().setStudy(study);
         trackingOperationService.update(study, user, "STUDY_UPDATE", updateDescription);
+        //extension.setStudy(study);
+        //studyExtensionRepository.save(extension);
+        //study.setStudyExtension(extension);
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
     }

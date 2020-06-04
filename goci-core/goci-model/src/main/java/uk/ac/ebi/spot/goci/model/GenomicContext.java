@@ -44,6 +44,10 @@ public class GenomicContext {
     public GenomicContext() {
     }
 
+    public GenomicContext(Long id){
+        this.id = id;
+    }
+
     public GenomicContext(Boolean isIntergenic,
                           Boolean isUpstream,
                           Boolean isDownstream,

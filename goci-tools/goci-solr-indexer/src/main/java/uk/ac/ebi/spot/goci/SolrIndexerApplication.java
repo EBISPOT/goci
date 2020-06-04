@@ -2,12 +2,17 @@ package uk.ac.ebi.spot.goci;
 
 import org.apache.commons.cli.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
+import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 import uk.ac.ebi.spot.goci.service.SolrIndexer;
 
 import javax.mail.internet.AddressException;
@@ -18,13 +23,19 @@ import java.util.Collections;
 @SpringBootApplication
 public class SolrIndexerApplication implements CommandLineRunner {
     @Autowired SolrIndexer solrIndexer;
+    @Value("${solr_index.all_threads:false}")
+    private boolean allThreads = false;
+
+    @Autowired
+    private ReasonedOntologyLoader reasonedOntologyLoader;
 
     // list of publications to load
     private static String [] pmids = {};
 
     public static void main(String[] args) {
         System.out.println("Starting Solr indexing application...");
-        ApplicationContext ctx = SpringApplication.run(SolrIndexerApplication.class, args);
+        ApplicationContext ctx = new SpringApplicationBuilder(SolrIndexerApplication.class).web(false).run(args);
+        //ApplicationContext ctx = SpringApplicationBuilder.run(SolrIndexerApplication.class, args);
         System.out.println("Application executed successfully!");
         SpringApplication.exit(ctx);
     }
@@ -34,19 +45,27 @@ public class SolrIndexerApplication implements CommandLineRunner {
 
             // parse any command line arguments
             int parseArgs = parseArguments(args);
+            //reasonedOntologyLoader.init();
+            //reasonedOntologyLoader.waitUntilReady();
 
             long start_time = System.currentTimeMillis();
             System.out.println("Building indexes with supplied params: " + Arrays.toString(args));
             solrIndexer.enableSysOutLogging();
+            System.out.print("Converting all GWAS database objects...");
 
             int docCount = 0;
             if (pmids.length > 0) {
                 System.out.print("Loading selected publications..." + Arrays.toString(pmids));
-                docCount = solrIndexer.fetchAndIndexPublications(Arrays.asList(pmids));
+                //docCount = solrIndexer.fetchAndIndexPublications(Arrays.asList(pmids));
+                docCount = solrIndexer.fetchAndIndexAllThreads(Arrays.asList(pmids));
             }
             else {
                 System.out.print("Converting all GWAS database objects...");
-                docCount = solrIndexer.fetchAndIndex();
+                if(allThreads) {
+                    docCount = solrIndexer.fetchAndIndexAllThreads();
+                }else{
+                    docCount = solrIndexer.fetchAndIndex();
+                }
             }
             System.out.println("done!\n");
             long end_time = System.currentTimeMillis();

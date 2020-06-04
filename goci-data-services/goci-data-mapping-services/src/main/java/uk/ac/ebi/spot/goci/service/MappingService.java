@@ -133,7 +133,6 @@ public class MappingService {
         List<Long> associationsFailed = new ArrayList<Long>();
             for (Association association : associations) {
                 try {
-
                     getLog().debug("Start doMapping Association nr:" + String.valueOf(totalAssociationDone));
                     doMapping(association, eRelease);
 
@@ -147,11 +146,13 @@ public class MappingService {
                 } catch (EnsemblMappingException e) {
                     //throw new EnsemblMappingException("Attempt to map all associations failed", e);
                     associationsFailed.add(association.getId());
-
+                }catch (Throwable t){
+                    getLog().error(association.getId() + ": " + t.getMessage());
                 }
             }
         getLog().debug("Number of associations FAILED");
         getLog().debug(String.valueOf(associationsFailed.size()));
+        getLog().debug(Arrays.toString(associationsFailed.toArray(new Long[0])));
     }
 
     private void doMapping(Association association, String eRelease) throws EnsemblMappingException {
@@ -181,9 +182,11 @@ public class MappingService {
 
             // Get gene names
             Collection<String> authorReportedGeneNamesLinkedToSnp = new ArrayList<>();
-            for (Gene authorReportedGeneLinkedToSnp : authorReportedGenesLinkedToSnp) {
-                authorReportedGeneNamesLinkedToSnp.add(authorReportedGeneLinkedToSnp.getGeneName().trim());
-            }
+            authorReportedGenesLinkedToSnp.stream().forEach(g -> {
+                if (g.getGeneName() != null) {
+                    authorReportedGeneNamesLinkedToSnp.add(g.getGeneName().trim());
+                }
+            });
 
             // Pass rs_id and author reported genes to mapping component
             for (SingleNucleotidePolymorphism snpLinkedToLocus : snpsLinkedToLocus) {

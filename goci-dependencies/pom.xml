@@ -6,7 +6,7 @@
 
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-dependencies</artifactId>
-    <version>2.4.4</version>
+    <version>2.5.2</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -27,7 +27,7 @@
     <url>http://www.ebi.ac.uk/gwas</url>
 
     <properties>
-        <goci.version>2.4.4</goci.version>
+        <goci.version>2.5.2</goci.version>
         <hibernate.jpa.2.1.version>1.0.0.Final</hibernate.jpa.2.1.version>
         <oracle.version>12.1.0.2</oracle.version>
         <owlapi.version>3.5.6</owlapi.version>
@@ -36,6 +36,8 @@
         <asciidoctor.version>1.5.2</asciidoctor.version>
         <commons-cli.version>1.2</commons-cli.version>
         <commons-net.version>2.0</commons-net.version>
+        <commons-text.version>1.8</commons-text.version>
+        <commons-io.version>2.6</commons-io.version>
         <lode-virtuoso-impl.version>1.3</lode-virtuoso-impl.version>
         <!--<fluxion-spi.version>1.0-alpha-3</fluxion-spi.version>-->
         <jena-core.version>2.12.0</jena-core.version>
@@ -48,6 +50,7 @@
         <apache.poi.version>3.7</apache.poi.version>
         <commons.io.version>1.3.2</commons.io.version>
         <commons.logging.version>1.2</commons.logging.version>
+        <lucene.version>8.4.1</lucene.version>
     </properties>
 
     <build>
@@ -152,6 +155,12 @@
             </dependency>
             <dependency>
                 <groupId>uk.ac.ebi.spot</groupId>
+                <artifactId>goci-pussycat</artifactId>
+                <version>2.5.2</version>
+                <classifier>classes</classifier>
+            </dependency>
+            <dependency>
+                <groupId>uk.ac.ebi.spot</groupId>
                 <artifactId>goci-renderlets-core</artifactId>
                 <version>${goci.version}</version>
             </dependency>
@@ -237,6 +246,17 @@
                 <version>${commons-net.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>ebi-lode</groupId>
                 <artifactId>lode-virtuoso-impl</artifactId>
                 <version>${lode-virtuoso-impl.version}</version>
@@ -311,6 +331,11 @@
                 <groupId>commons-logging</groupId>
                 <artifactId>commons-logging</artifactId>
                 <version>${commons.logging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers-common</artifactId>
+                <version>${lucene.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

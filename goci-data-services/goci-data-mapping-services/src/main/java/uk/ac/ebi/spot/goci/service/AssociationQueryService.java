@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.service;
 
-import com.sun.javafx.binding.SelectBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -14,15 +13,15 @@ import java.util.Collection;
  * Created by emma on 14/08/2015.
  *
  * @author emma
- *         <p>
- *         Based on classes in  goci-core/goci-service/src/main/java/uk/ac/ebi/spot/goci/service/
- *         <p>
- *         A facade service around a {@link uk.ac.ebi.spot.goci.repository.AssociationRepository} that retrieves all
- *         associations, and then within the same datasource transaction additionally loads other objects referenced by
- *         this association like Loci.
- *         <p>
- *         Use this when you know you will need deep information about a association and do not have an open session
- *         that can be used to lazy load extra data.
+ * <p>
+ * Based on classes in  goci-core/goci-service/src/main/java/uk/ac/ebi/spot/goci/service/
+ * <p>
+ * A facade service around a {@link uk.ac.ebi.spot.goci.repository.AssociationRepository} that retrieves all
+ * associations, and then within the same datasource transaction additionally loads other objects referenced by
+ * this association like Loci.
+ * <p>
+ * Use this when you know you will need deep information about a association and do not have an open session
+ * that can be used to lazy load extra data.
  */
 @Service
 public class AssociationQueryService {
@@ -44,11 +43,10 @@ public class AssociationQueryService {
 
     public void loadAssociatedData(Association association) {
         association.getLoci();
-        association.getLoci().forEach(
-                locus -> {
-                    locus.getAuthorReportedGenes().size();
-                    locus.getStrongestRiskAlleles().size();
-                });
+        association.getLoci().forEach(locus -> {
+            locus.getAuthorReportedGenes().size();
+            locus.getStrongestRiskAlleles().size();
+        });
 
         association.getEvents();
 
@@ -56,10 +54,10 @@ public class AssociationQueryService {
 
     @Transactional(readOnly = true)
     public Collection<Association> findLSFAssociations(Integer numJob, Integer lenghtInterval) {
-        Integer min = (lenghtInterval*(numJob-1))+1;
-        Integer max = (lenghtInterval*numJob);
-        System.out.println("Association rows: " + min + " - " + max );
-        Collection<Association> allAssociations = associationRepository.findAllLSF(min,max);
+        Integer min = (lenghtInterval * (numJob - 1)) + 1;
+        Integer max = (lenghtInterval * numJob);
+        System.out.println("Association rows: " + min + " - " + max);
+        Collection<Association> allAssociations = associationRepository.findAllLSF(min, max);
         allAssociations.forEach(this::loadAssociatedData);
         return allAssociations;
     }

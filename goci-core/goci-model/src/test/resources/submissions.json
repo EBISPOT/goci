@@ -1,0 +1,151 @@
+{
+  "_embedded" : {
+    "submissions" : [ {
+      "submissionId" : "5d514e99dcf21d0001eee221",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e2fd",
+        "pmid" : "21044949",
+        "title" : "ELF1 is associated with systemic lupus erythematosus in Asian populations.",
+        "journal" : "Hum Mol Genet",
+        "firstAuthor" : "Yang J",
+        "publicationDate" : "2010-11-02",
+        "correspondingAuthor" : {
+          "firstName" : "Jing",
+          "lastName" : "Yang"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "status" : "STARTED",
+      "metadata_status" : "NA",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-12T11:33:45.005Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d514e99dcf21d0001eee221"
+        }
+      }
+    }, {
+      "submissionId" : "5d515077dcf21d0001eee22b",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e2fe",
+        "pmid" : "17690259",
+        "title" : "Common sequence variants in the LOXL1 gene confer susceptibility to exfoliation glaucoma.",
+        "journal" : "Science",
+        "firstAuthor" : "Thorleifsson G",
+        "publicationDate" : "2007-08-09",
+        "correspondingAuthor" : {
+          "firstName" : "Gudmar",
+          "lastName" : "Thorleifsson"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5150ffdcf21d0001eee22e",
+        "status" : "VALID",
+        "type" : "METADATA",
+        "fileName" : "file",
+        "fileSize" : 13600
+      } ],
+      "study_count" : 2,
+      "sample_count" : 7,
+      "association_count" : 4,
+      "status" : "SUBMITTED",
+      "metadata_status" : "VALID",
+      "summary_statistics_status" : "NA",
+      "date_submitted" : "2019-08-12",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-12T11:41:43.861Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d515077dcf21d0001eee22b"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/uploads"
+        },
+        "studies" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/studies"
+        },
+        "samples" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/samples"
+        },
+        "associations" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d515077dcf21d0001eee22b/associations"
+        }
+      }
+    }, {
+      "submissionId" : "5d51572edcf21d0001eee23c",
+      "publication" : {
+        "publicationId" : "5d403399218e4cbdf409e2ff",
+        "pmid" : "19561606",
+        "title" : "Sequence variants in the CLDN14 gene associate with kidney stones and bone mineral density.",
+        "journal" : "Nat Genet",
+        "firstAuthor" : "Thorleifsson G",
+        "publicationDate" : "2009-06-28",
+        "correspondingAuthor" : {
+          "firstName" : "Gudmar",
+          "lastName" : "Thorleifsson"
+        },
+        "status" : "UNDER_SUBMISSION"
+      },
+      "files" : [ {
+        "fileUploadId" : "5d5519470e4fb100016c395b",
+        "status" : "INVALID",
+        "type" : "METADATA",
+        "fileName" : "incorrect_accepted_value.xlsx",
+        "fileSize" : 13611,
+        "errors" : [ "Samples: Column 'Stage' in row '1' contains incorrect value. Accepted values are: 'discovery; replication'" ]
+      } ],
+      "study_count" : 0,
+      "sample_count" : 0,
+      "association_count" : 0,
+      "status" : "INVALID",
+      "metadata_status" : "INVALID",
+      "summary_statistics_status" : "NA",
+      "created" : {
+        "user" : {
+          "name" : "Test User",
+          "email" : "test@test.com",
+          "domains" : [ ]
+        },
+        "timestamp" : "2019-08-12T12:10:22.527Z"
+      },
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/submissions/5d51572edcf21d0001eee23c"
+        },
+        "files" : {
+          "href" : "http://193.62.54.159/v1/submissions/5d51572edcf21d0001eee23c/uploads"
+        }
+      }
+    }
+    ]
+  },
+  "_links" : {
+    "self" : {
+      "href" : "http://193.62.54.159/backend/v1/submissions"
+    }
+  },
+  "page" : {
+    "size" : 20,
+    "totalElements" : 18,
+    "totalPages" : 1,
+    "number" : 0
+  }
+}

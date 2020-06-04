@@ -1,15 +1,12 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,9 +33,10 @@ import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.*;
-import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +46,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.Map.Entry.*;
 
 /**
  * Created by emma on 20/11/14.
@@ -62,7 +59,11 @@ import java.util.Map.Entry.*;
 @Controller
 @RequestMapping("/studies")
 public class StudyController {
+    @Value("${deposition.ui.uri}")
+    private String depositionUiURL;
 
+    private final StudyExtensionRepository studyExtensionRepository;
+    private final DepositionSubmissionService submissionService;
     // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
     private HousekeepingRepository housekeepingRepository;
@@ -116,7 +117,9 @@ public class StudyController {
                            StudyDeletionService studyDeletionService,
                            @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
                            StudyUpdateService studyUpdateService,
-                           PublicationOperationsService publicationOperationsService) {
+                           PublicationOperationsService publicationOperationsService,
+                           StudyExtensionRepository studyExtensionRepository,
+                           DepositionSubmissionService submissionService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
         this.diseaseTraitRepository = diseaseTraitRepository;
@@ -137,6 +140,8 @@ public class StudyController {
         this.eventsViewService = eventsViewService;
         this.studyUpdateService = studyUpdateService;
         this.publicationOperationsService = publicationOperationsService;
+        this.studyExtensionRepository = studyExtensionRepository;
+        this.submissionService = submissionService;
     }
 
     /* All studies and various filtered lists */
@@ -148,6 +153,8 @@ public class StudyController {
                                  @RequestParam(value = "studytype", required = false) String studyType,
                                  @RequestParam(value = "efotraitid", required = false) Long efoTraitId,
                                  @RequestParam(value = "notesquery", required = false) String notesQuery,
+                                 @RequestParam(required = false) String gcstId,
+                                 @RequestParam(required = false) String studyId,
                                  @RequestParam(required = false) Long status,
                                  @RequestParam(required = false) Long curator,
                                  @RequestParam(value = "sorttype", required = false) String sortType,
@@ -155,6 +162,7 @@ public class StudyController {
                                  @RequestParam(required = false) Integer year,
                                  @RequestParam(required = false) Integer month) {
 
+        model.addAttribute("baseUrl", depositionUiURL);
 
         // This is passed back to model and determines if pagination is applied
         Boolean pagination = true;
@@ -363,17 +371,34 @@ public class StudyController {
             }
         }
         // If user entered curator
-        else {
-            if (curator != null) {
-                studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
-                        page - 1,
-                        sort));
-                filters = filters + "&curator=" + curator;
+        else if (curator != null) {
+            studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
+                    page - 1,
+                    sort));
+            filters = filters + "&curator=" + curator;
 
-                // Return this value so it appears in filter result
-                studySearchFilter.setCuratorSearchFilterId(curator);
-            }
+            // Return this value so it appears in filter result
+            studySearchFilter.setCuratorSearchFilterId(curator);
+        }
 
+        else if (gcstId != null) {
+            studyPage = studyRepository.findByAccessionId(gcstId, constructPageSpecification(
+                    page - 1,
+                    sort));
+            filters = filters + "&gcstId=" + gcstId;
+
+            // Return this value so it appears in filter result
+            studySearchFilter.setGcstId(gcstId);
+        }
+
+        else if (studyId != null) {
+            studyPage = studyRepository.findById(Long.valueOf(studyId), constructPageSpecification(
+                    page - 1,
+                    sort));
+            filters = filters + "&studyId=" + studyId;
+
+            // Return this value so it appears in filter result
+            studySearchFilter.setStudyId(studyId);
         }
 
         // Return URI, this will build thymeleaf links using by sort buttons.
@@ -440,6 +465,13 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
+        Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
+        studyPage.forEach(study->{
+            if(pubmedMap.containsKey(study.getPublicationId().getPubmedId())){
+                study.getPublicationId().setActiveSubmission(true);
+                study.getPublicationId().setSubmissionId(pubmedMap.get(study.getPublicationId().getPubmedId()));
+            }
+        });
         return "studies";
     }
 
@@ -456,6 +488,8 @@ public class StudyController {
         Long efoTraitId = studySearchFilter.getEfoTraitSearchFilterId();
         String notesQuery = studySearchFilter.getNotesQuery();
         Long diseaseTraitId = studySearchFilter.getDiseaseTraitSearchFilterId();
+        String gcstId = studySearchFilter.getGcstId();
+        String studyId = studySearchFilter.getStudyId();
 
         // Search by pubmed ID option available from landing page
         if (pubmedId != null && !pubmedId.isEmpty()) {
@@ -500,6 +534,12 @@ public class StudyController {
         // If user entered curator
         else if (curator != null) {
             return "redirect:/studies?page=1&curator=" + curator;
+        }
+        else if(gcstId != null){
+            return "redirect:/studies?page=1&gcstId=" + gcstId;
+        }
+        else if(studyId != null){
+            return "redirect:/studies?page=1&studyId=" + studyId;
         }
 
         // If all else fails return all studies
@@ -599,7 +639,19 @@ public class StudyController {
     public String viewStudy(Model model, @PathVariable Long studyId) {
 
         Study studyToView = studyRepository.findOne(studyId);
+        Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
+        if(pubmedMap.containsKey(studyToView.getPublicationId().getPubmedId())){
+            studyToView.getPublicationId().setActiveSubmission(true);
+            studyToView.getPublicationId().setSubmissionId(pubmedMap.get(studyToView.getPublicationId().getPubmedId()));
+        }
+
         model.addAttribute("study", studyToView);
+        if(studyToView.getStudyExtension() == null){
+            StudyExtension extension = new StudyExtension();
+            extension.setStudy(studyToView);
+            studyToView.setStudyExtension(extension);
+        }
+        model.addAttribute("extension", studyToView.getStudyExtension());
 
         return "study";
     }
@@ -607,10 +659,17 @@ public class StudyController {
     // Edit an existing study
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study, @PathVariable Long studyId,
+    public String updateStudy(@ModelAttribute Study study,
+                              @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 //        xintodo edit study
-        studyUpdateService.updateStudy(studyId, study, currentUserDetailsService.getUserFromRequest(request));
+        if(study.getStudyExtension() == null){
+            StudyExtension extension = new StudyExtension();
+            extension.setStudy(study);
+            study.setStudyExtension(extension);
+        }
+        studyUpdateService.updateStudy(studyId, study,
+                currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
@@ -1007,6 +1066,12 @@ public class StudyController {
         return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
+//    // Background traits
+//    @ModelAttribute("studyExtensions")
+//    public List<StudyExtension> populateBackgroundTraits() {
+//        return studyExtensionRepository.findAll(sortByTraitAsc());
+//    }
+//
     // Curators
     @ModelAttribute("curators")
     public List<Curator> populateCurators() {

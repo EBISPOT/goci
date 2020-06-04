@@ -21,6 +21,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
@@ -51,6 +52,9 @@ public class StudyControllerTest {
 
     @Mock
     private StudyRepository studyRepository;
+
+    @Mock
+    private StudyExtensionRepository extensionRepository;
 
     @Mock
     private HousekeepingRepository housekeepingRepository;
@@ -111,6 +115,9 @@ public class StudyControllerTest {
 
     @Mock
     private PublicationOperationsService publicationOperationsService;
+
+    @Mock
+    private DepositionSubmissionService depositionSubmissionService;
 
     private MockMvc mockMvc;
 
@@ -188,7 +195,9 @@ public class StudyControllerTest {
                                                               studyDuplicationService,
                                                               studyDeletionService,
                                                               eventsViewService, studyUpdateService,
-                                                              publicationOperationsService);
+                                                              publicationOperationsService,
+                                                              extensionRepository,
+                                                              depositionSubmissionService);
         mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
     }
 

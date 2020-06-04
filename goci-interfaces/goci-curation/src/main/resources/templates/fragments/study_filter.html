@@ -231,6 +231,46 @@
                         </form>
                     </div>
                 </div>
+                <div class="row">
+                    <div id="gcstIdFilterParametersForm">
+                        <form class="form-inline" name="gcstIdFilterParametersForm" role="form" method="post"
+                              th:action="@{/studies(filters=true)}"
+                              th:object="${studySearchFilter}">
+
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text"
+                                           class="form-control"
+                                           th:field="*{gcstId}"
+                                           placeholder="Search for..."/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-primary btn-sm" type="submit">Search GCST</button></span>
+                                </div>
+                            </div>
+                            <br/>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="studyIdFilterParametersForm">
+                        <form class="form-inline" name="studyIdFilterParametersForm" role="form" method="post"
+                              th:action="@{/studies(filters=true)}"
+                              th:object="${studySearchFilter}">
+
+                            <div class="col-md-8">
+                                <div class="input-group">
+                                    <input type="text"
+                                           class="form-control"
+                                           th:field="*{studyId}"
+                                           placeholder="Search for..."/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-primary btn-sm" type="submit">Search Study ID</button></span>
+                                </div>
+                            </div>
+                            <br/>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

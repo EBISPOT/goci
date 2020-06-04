@@ -87,9 +87,26 @@ public class Study implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits;
 
+    @ManyToOne(optional = true)
+    @JoinTable(name = "STUDY_BACKGROUND_TRAIT",
+            joinColumns = @JoinColumn(name = "STUDY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
+    private DiseaseTrait backgroundTrait;
+
+    @ManyToMany()
+    @JoinTable(name = "STUDY_BACKGROUND_EFO_TRAIT",
+            joinColumns = @JoinColumn(name = "STUDY_ID"),
+            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<EfoTrait> mappedBackgroundTraits;
+
+
     @OneToOne(orphanRemoval = true)
     @JsonIgnore
     private Housekeeping housekeeping;
+
+    @OneToOne(mappedBy = "study", orphanRemoval = true, optional=true, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private StudyExtension studyExtension;
 
     @JsonIgnore
     @OneToOne(mappedBy = "study", orphanRemoval = true)
@@ -117,6 +134,7 @@ public class Study implements Trackable {
     @JoinColumn(name = "publication_id")
     private Publication publicationId;
 
+    private String studyTag;
 
 
 
@@ -168,6 +186,8 @@ public class Study implements Trackable {
                  Collection<Ancestry> ancestries,
                  DiseaseTrait diseaseTrait,
                  Collection<EfoTrait> efoTraits,
+                 DiseaseTrait backgroundTrait,
+                 Collection<EfoTrait> mappedBackgroundTraits,
                  Housekeeping housekeeping,
                  StudyReport studyReport, Collection<Event> events,
                  Collection<SingleNucleotidePolymorphism> snps,
@@ -193,6 +213,8 @@ public class Study implements Trackable {
         this.ancestries = ancestries;
         this.diseaseTrait = diseaseTrait;
         this.efoTraits = efoTraits;
+        this.backgroundTrait = backgroundTrait;
+        this.mappedBackgroundTraits = mappedBackgroundTraits;
         this.housekeeping = housekeeping;
         this.studyReport = studyReport;
         this.events = events;
@@ -288,12 +310,36 @@ public class Study implements Trackable {
         this.efoTraits = efoTraits;
     }
 
+    public DiseaseTrait getBackgroundTrait() {
+        return backgroundTrait;
+    }
+
+    public void setBackgroundTrait(DiseaseTrait backgroundTrait) {
+        this.backgroundTrait = backgroundTrait;
+    }
+
+    public Collection<EfoTrait> getMappedBackgroundTraits() {
+        return mappedBackgroundTraits;
+    }
+
+    public void setMappedBackgroundTraits(Collection<EfoTrait> mappedBackgroundTraits) {
+        this.mappedBackgroundTraits = mappedBackgroundTraits;
+    }
+
     public Housekeeping getHousekeeping() {
         return housekeeping;
     }
 
     public void setHousekeeping(Housekeeping housekeeping) {
         this.housekeeping = housekeeping;
+    }
+
+    public StudyExtension getStudyExtension() {
+        return studyExtension;
+    }
+
+    public void setStudyExtension(StudyExtension studyExtension) {
+        this.studyExtension = studyExtension;
     }
 
     public StudyReport getStudyReport() {
@@ -446,4 +492,12 @@ public class Study implements Trackable {
 
     @JsonProperty("publicationInfo")
     public void setPublicationId(Publication publicationId) { this.publicationId = publicationId; }
+
+    public String getStudyTag(){
+        return studyTag;
+    }
+
+    public void setStudyTag(String studyTag){
+        this.studyTag = studyTag;
+    }
 }

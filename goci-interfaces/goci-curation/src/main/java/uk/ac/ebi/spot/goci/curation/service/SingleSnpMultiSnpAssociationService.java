@@ -54,6 +54,7 @@ public class SingleSnpMultiSnpAssociationService implements SnpAssociationFormSe
 
         // Set association ID
         form.setAssociationId(association.getId());
+        form.setAssociationExtension(association.getAssociationExtension());
 
         // Set simple string and float association attributes
         form.setRiskFrequency(association.getRiskFrequency());

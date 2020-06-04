@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.model.Location;
 import uk.ac.ebi.spot.goci.model.Region;
 import uk.ac.ebi.spot.goci.model.RestResponseResult;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.service.EnsemblDbService;
 import uk.ac.ebi.spot.goci.service.EnsemblRestService;
 import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 import uk.ac.ebi.spot.goci.service.EnsemblRestcallHistoryService;
@@ -68,6 +69,8 @@ public class EnsemblMappingPipeline {
 
     private EnsemblRestcallHistoryService ensemblRestcallHistoryService;
 
+    //private EnsemblDbService ensemblDbService;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
@@ -79,6 +82,7 @@ public class EnsemblMappingPipeline {
                                   EnsemblRestcallHistoryService ensemblRestcallHistoryService) {
         this.ensemblRestTemplateService = ensemblRestTemplateService;
         this.ensemblRestcallHistoryService = ensemblRestcallHistoryService;
+        //this.ensemblDbService = ensemblDbService;
     }
 
     // Run the pipeline for a given SNP
@@ -183,6 +187,7 @@ public class EnsemblMappingPipeline {
                     reportedGeneApiResult = ensemblRestTemplateService.getRestCall(webservice, reportedGene, "");
                     ensemblRestcallHistoryService.create(reportedGeneApiResult, "lookup_symbol", reportedGene, eRelease);
                 }
+//                RestResponseResult reportedGeneApiResult = ensemblDbService.getLookupSymbol(reportedGene);
                 // Check for errors
                 if (reportedGeneApiResult.getError() != null && !reportedGeneApiResult.getError().isEmpty()) {
                     getEnsemblMappingResult().addPipelineErrors(reportedGeneApiResult.getError());
@@ -270,7 +275,8 @@ public class EnsemblMappingPipeline {
 
         // REST Call
         JSONArray cytogenetic_band_result = getOverlapRegionCalls(chromosome, position, position, rest_opt, eRelease);
-
+//        JSONArray cytogenetic_band_result = ensemblDbService.getOverlapRegion(chromosome, position, position,
+//                EnsemblDbService.FeatureType.BAND).getRestResult().getArray();
         if (cytogenetic_band_result.length() != 0 && !cytogenetic_band_result.getJSONObject(0).has("overlap_error")) {
             String cytogenetic_band = cytogenetic_band_result.getJSONObject(0).getString("id");
 
@@ -345,6 +351,15 @@ public class EnsemblMappingPipeline {
 
         // Check if there are overlap genes
         JSONArray overlap_gene_result = getOverlapRegionCalls(chromosome, position, position, rest_opt, eRelease);
+//        if(rest_opt.equals("feature=gene")){
+//            overlap_gene_result = ensemblDbService.getOverlapRegion(chromosome, position, position,
+//                    EnsemblDbService.FeatureType.GENE).getRestResult().getArray();
+//        }else if(rest_opt.equals("feature=band")){
+//            overlap_gene_result = ensemblDbService.getOverlapRegion(chromosome, position, position,
+//                    EnsemblDbService.FeatureType.BAND).getRestResult().getArray();
+//        }else{
+//            overlap_gene_result = getOverlapRegionCalls(chromosome, position, position, rest_opt, eRelease);
+//        }
 
         if (overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) {
             for (int i = 0; i < overlap_gene_result.length(); ++i) {
@@ -388,6 +403,16 @@ public class EnsemblMappingPipeline {
 
         // Check if there are overlap genes
         JSONArray overlap_gene_result = getOverlapRegionCalls(chromosome, pos_up, position, rest_opt, eRelease);
+//        JSONArray overlap_gene_result = null;
+//        if(rest_opt.equals("feature=gene")){
+//            overlap_gene_result = ensemblDbService.getOverlapRegion(chromosome, pos_up, position,
+//                    EnsemblDbService.FeatureType.GENE).getRestResult().getArray();
+//        }else if(rest_opt.equals("feature=band")){
+//            overlap_gene_result = ensemblDbService.getOverlapRegion(chromosome, pos_up, position,
+//                    EnsemblDbService.FeatureType.BAND).getRestResult().getArray();
+//        }else{
+//            overlap_gene_result = getOverlapRegionCalls(chromosome, pos_up, position, rest_opt, eRelease);
+//        }
 
         if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) ||
                 overlap_gene_result.length() == 0) {
@@ -431,6 +456,17 @@ public class EnsemblMappingPipeline {
 
             // Check if there are overlap genes
             JSONArray overlap_gene_result = getOverlapRegionCalls(chromosome, position, pos_down, rest_opt, eRelease);
+//            JSONArray overlap_gene_result = null;
+//            if(rest_opt.equals("feature=gene")){
+//                overlap_gene_result = ensemblDbService.getOverlapRegion(chromosome, position, pos_down,
+//                        EnsemblDbService.FeatureType.GENE).getRestResult().getArray();
+//            }else if(rest_opt.equals("feature=band")){
+//                overlap_gene_result = ensemblDbService.getOverlapRegion(chromosome, position, pos_down,
+//                        EnsemblDbService.FeatureType.BAND).getRestResult().getArray();
+//            }else{
+//                overlap_gene_result = getOverlapRegionCalls(chromosome, position, pos_down, rest_opt, eRelease);
+//            }
+
 
             if ((overlap_gene_result.length() != 0 && !overlap_gene_result.getJSONObject(0).has("overlap_error")) ||
                     overlap_gene_result.length() == 0) {
@@ -472,6 +508,9 @@ public class EnsemblMappingPipeline {
         SingleNucleotidePolymorphism snp_tmp =
                 new SingleNucleotidePolymorphism();
         snp_tmp.setRsId(getEnsemblMappingResult().getRsId());
+        if(getEnsemblMappingResult().getRsId() == null){
+            throw new IllegalArgumentException("error, no RS ID found for location " + snp_location.getId());
+        }
 
         // Get closest gene
         if (intergenic) {
@@ -733,6 +772,7 @@ public class EnsemblMappingPipeline {
         String data = chromosome + ":" + position1 + "-" + position2;
         String param = data.concat("?").concat(rest_opt);
 
+
         RestResponseResult restResponseResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion("overlap_region", param, eRelease);
         if (restResponseResult == null) {
             restResponseResult = ensemblRestTemplateService.getRestCall("overlap_region", data, rest_opt);
@@ -742,7 +782,7 @@ public class EnsemblMappingPipeline {
         JsonNode result = restResponseResult.getRestResult();
         JSONArray overlap_result = new JSONArray();
 
-        if (result.isArray()) {
+        if (result != null && result.isArray()) {
             overlap_result = result.getArray();
         }
 

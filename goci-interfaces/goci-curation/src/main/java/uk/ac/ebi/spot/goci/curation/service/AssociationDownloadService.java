@@ -6,9 +6,12 @@ import uk.ac.ebi.spot.goci.model.Association;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.model.RiskAllele;
 import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -21,29 +24,36 @@ import java.util.stream.Collectors;
 @Service
 public class AssociationDownloadService {
 
+    private AssociationRepository associationRepository;
     private AssociationOperationsService associationOperationsService;
 
     @Autowired
-    public AssociationDownloadService(AssociationOperationsService associationOperationsService) {
+    public AssociationDownloadService(AssociationOperationsService associationOperationsService,
+                                      AssociationRepository associationRepository) {
         this.associationOperationsService = associationOperationsService;
+        this.associationRepository = associationRepository;
     }
 
     public void createDownloadFile(OutputStream outputStream, Collection<Association> associations)
             throws IOException {
 
-        String file = processAssociations(associations);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+        processAssociations(associations, bufferedOutputStream);
 
         // Write file
-        outputStream.write(file.getBytes("UTF-8"));
-        outputStream.flush();
-        outputStream.close();
+        //outputStream.write(file.getBytes("UTF-8"));
+        bufferedOutputStream.flush();
+        bufferedOutputStream.close();
     }
 
-    private String processAssociations(Collection<Association> associations) {
+    private void processAssociations(Collection<Association> associations, OutputStream outputStream)
+            throws IOException {
 
         String header =
                 "Gene(s)\tStrongest SNP-Risk Allele\tSNP\tProxy SNP" +
                         "\tIndependent SNP risk allele frequency in controls" +
+                        "\tEffect allele "+
+                        "\tOther allele "+
                         "\tRisk element (allele, haplotype or SNPxSNP interaction) frequency in controls" +
                         "\tP-value mantissa\tP-value exponent\tP-value description" +
                         "\tOR\tOR reciprocal" +
@@ -53,11 +63,11 @@ public class AssociationDownloadService {
                         "\tMulti-SNP Haplotype?\tSNP:SNP interaction?\tSNP Status\tSNP type\tEFO traits\r\n";
 
 
-        StringBuilder output = new StringBuilder();
-        output.append(header);
+        outputStream.write(header.getBytes("UTF-8"));
 
 
-        for (Association association : associations) {
+        for (Association a : associations) {
+            Association association = associationRepository.findOne(a.getId());
             StringBuilder line = new StringBuilder();
 
             extractGeneticData(association, line);
@@ -215,9 +225,9 @@ public class AssociationDownloadService {
             }
             line.append("\r\n");
 
-            output.append(line.toString());
+            outputStream.write(line.toString().getBytes("UTF-8"));
         }
-        return output.toString();
+//        return output.toString();
     }
 
     private void extractSNPStatus(Association association, StringBuilder line) {
@@ -277,6 +287,8 @@ public class AssociationDownloadService {
 
     private void extractGeneticData(Association association, StringBuilder line) {
         final StringBuilder strongestAllele = new StringBuilder();
+        final StringBuilder effectAllele = new StringBuilder();
+        final StringBuilder otherAllele = new StringBuilder();
         final StringBuilder reportedGenes = new StringBuilder();
         final StringBuilder rsId = new StringBuilder();
         final StringBuilder proxySnpsRsIds = new StringBuilder();
@@ -401,8 +413,10 @@ public class AssociationDownloadService {
 
                 }
         );
-
-
+        if(association.getAssociationExtension() != null) {
+            setOrAppend(effectAllele, association.getAssociationExtension().getEffectAllele(), delimiter);
+            setOrAppend(otherAllele, association.getAssociationExtension().getOtherAllele(), delimiter);
+        }
         line.append(reportedGenes.toString());
         line.append("\t");
         line.append(strongestAllele.toString());
@@ -412,6 +426,10 @@ public class AssociationDownloadService {
         line.append(proxySnpsRsIds.toString());
         line.append("\t");
         line.append(riskAlleleFrequency.toString());
+        line.append("\t");
+        line.append(effectAllele);
+        line.append("\t");
+        line.append(otherAllele.toString());
         line.append("\t");
     }
 

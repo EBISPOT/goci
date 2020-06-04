@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
 
 /**
@@ -26,7 +27,7 @@ public class DiagramConversionService {
 
 
     public Document loadSVGFromString(String svg) throws org.xml.sax.SAXException, java.io.IOException {
-        return loadSVGFromString(new java.io.ByteArrayInputStream(svg.getBytes()));
+        return loadSVGFromString(new BufferedInputStream(new java.io.ByteArrayInputStream(svg.getBytes())));
 //        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 //
 //        factory.setNamespaceAware(true);

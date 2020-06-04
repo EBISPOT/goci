@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.ParentList;
 import uk.ac.ebi.spot.goci.model.TraitEntity;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import java.util.ArrayList;
@@ -32,8 +35,8 @@ public class ParentMappingService {
     private ReasonedOntologyLoader ontologyLoader;
 
     @Autowired
-    public ParentMappingService(@Qualifier("parentTermOntologyLoader") ReasonedOntologyLoader ontologyLoader){
-          this.ontologyLoader = ontologyLoader;
+    public ParentMappingService(@Qualifier("parentTermOntologyLoader") OntologyLoader ontologyLoader){
+          this.ontologyLoader = (ReasonedOntologyLoader) ontologyLoader;
 
     }
 
@@ -62,6 +65,7 @@ public class ParentMappingService {
         else {
             getLog().debug("OntologyLoader not ready yet");
             try {
+                ontologyLoader.init();
                 ontologyLoader.waitUntilReady();
                 getLog().debug("Now the OntologyLoader is ready");
                 mappedTraits = mapTraits(unmappedTraits);

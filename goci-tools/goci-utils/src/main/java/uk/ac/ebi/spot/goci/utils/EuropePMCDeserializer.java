@@ -154,12 +154,14 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
         //JsonNode node = jp.getCodec().readTree(jp);
         //node.get("resultList");
         if (node.get("resultList").get("result").size() > 0) {
+            JsonNode root = node.get("resultList").get("result").get(0);
             record.setError(false);
             record.setPublication(getPublicatonInfo(node));
             ArrayList<Author> listAuthors = getAuthorsInfo(node);
             record.setAuthors(listAuthors);
             Author firstAuthor = listAuthors.get(0);
             record.setFirstAuthor(firstAuthor);
+            record.setDoi(root.get("doi").asText());
         }
         else { record.setError(true);}
 

@@ -1,9 +1,7 @@
 package uk.ac.ebi.spot.goci.utils;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import uk.ac.ebi.spot.goci.model.Author;
 import uk.ac.ebi.spot.goci.model.Publication;
-import uk.ac.ebi.spot.goci.model.Study;
 
 import java.util.Collection;
 
@@ -19,6 +17,8 @@ public class EuropePMCData {
     private Collection<Author> authors = null;
 
     private Author firstAuthor = null;
+
+    private String doi = null;
 
     public Boolean getError() { return error; }
 
@@ -41,4 +41,12 @@ public class EuropePMCData {
     public void setFirstAuthor(Author firstAuthor) { this.firstAuthor = firstAuthor; }
 
     public Author getFirstAuthor() { return firstAuthor; }
+
+    public void setDoi(String doi){
+        this.doi = doi;
+    }
+
+    public String getDoi(){
+        return doi;
+    }
 }

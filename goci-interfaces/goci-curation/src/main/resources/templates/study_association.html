@@ -69,7 +69,8 @@
     <ol class="breadcrumb pull-right">
         <li><a th:href="@{/studies}">Studies</a></li>
         <li><span th:text="${study.publicationId.firstAuthor.fullname + '_' + study.id} ?: '' "></span>
-            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span></li>
+            <span th:text="${study.getTagDuplicatedNote()} != '' ? '_'+${study.getTagDuplicatedNote()} : ''"></span>
+            <span th:text="${study.getStudyTag()} != null ? '_'+${study.getStudyTag()} : ''"></span></li>
         <li class="active">SNP Associations</li>
     </ol>
 </div>
@@ -169,6 +170,8 @@
                     <th style="font-size: small">Mapping</th>
                     <th style="font-size: small">Gene(s)</th>
                     <th style="font-size: small">Strongest SNP-Risk Allele</th>
+                    <th style="font-size: small">Effect Allele</th>
+                    <th style="font-size: small">Other Allele</th>
                     <th style="font-size: small">SNP</th>
                     <th style="font-size: small">Proxy SNP</th>
                     <th style="font-size: small; width: 5%">Independent SNP risk allele frequency in controls</th>
@@ -221,6 +224,11 @@
                             <!--Strongest risk allele-->
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
+
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                            <td style="background-color: darkgrey"
+                                th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
 
                             <!--SNPs-->
                             <td style="background-color: darkgrey" th:text="${snpAssociationTableView.snps}?: '' "></td>
@@ -334,6 +342,11 @@
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                                <td style="background-color: lightyellow"
+                                    th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
+
                                 <!--SNPs-->
                                 <td style="background-color: lightyellow"
                                     th:text="${snpAssociationTableView.snps}?: '' "></td>
@@ -445,6 +458,9 @@
                                 <!--Strongest risk allele-->
                                 <td th:text="${snpAssociationTableView.strongestRiskAlleles}?: '' "></td>
 
+                                <td th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.effectAllele} : '' "></td>
+                                <td th:text="${snpAssociationTableView.associationExtension} ? ${snpAssociationTableView.associationExtension.otherAllele}: '' "></td>
+
                                 <!--SNPs-->
                                 <td th:text="${snpAssociationTableView.snps}?: '' "></td>
 
@@ -534,13 +550,16 @@
         /*<![CDATA[*/
         var total_associations = /*[[${totalAssociations}]]*/;
         /*]]>*/
-        var total_pages = total_associations/page_size + 1;
+        var total_pages = Math.ceil(total_associations/page_size);
 
         /*<![CDATA[*/
         var page_number = 1;
         while(page_number < total_pages) {
             page_number++;
             appendData(page_number);
+        }
+        if(1 >= total_pages){
+            $("#loadingResults").hide();
         }
         /*]]>*/
 
@@ -560,13 +579,14 @@
     });
 
     function appendData(page_number) {
+        console.log(contextPath);
         /*<![CDATA[*/
         var studyid = /*[[${study.id}]]*/;
         var contextPath = /*[[@{/}]]*/'';
         /*]]>*/
         $.ajax({
             type: "GET",
-            url: contextPath+"/studies/"+studyid+"/associations",
+            url: window.location,
             data: {
                 page: page_number,
             },

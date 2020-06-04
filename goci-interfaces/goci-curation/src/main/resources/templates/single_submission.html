@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
+    <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        var contextPath = /*[[@{/}]]*/'';
+        console.log(contextPath);
+
+        /*]]>*/
+    </script>
+
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+
+<div class="container-fluid">
+    <div class="row" th:if="${!#strings.isEmpty(changesSaved)}">
+        <div class="col-md-8">
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <strong th:utext="${changesSaved}">Success!</strong>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+<!--        <form class="form-inline" name="testMessageForm" role="form" method="post"-->
+<!--              th:action="@{/submissions/{submissionID}/testError(submissionID=${submission.id})}"-->
+<!--            th:object="${submission}" style="display:none;">-->
+<!--            <button id="testButton" type="submit" class="btn btn-sm">Test Error</button>-->
+<!--        </form>-->
+        <form class="form-inline" name="importForm" role="form" method="post" id="importForm"
+              th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
+              th:object="${submission}">
+            <button id="importButton" type="submit" class="btn btn-sm col-sm-1"
+                    th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
+                    th:disabled="${submission.submissionType.toString().equals('CURATION_COMPLETE') || submission.submissionType.toString().equals('UNKNOWN') || submission.submissionType.toString().equals('PRE_PUBLISHED')}"
+                    th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import"></button>
+        </form>
+        <button class="btn btn-sm btn-primary col-sm-1" id="toggleSubmission">Show/Hide Submission</button>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <textarea name="submissionData" id="submissionData" style="width:100%; height:400px;display: none;"
+                      th:text="${submissionString}"></textarea>
+        </div>
+    </div>
+    <div class="row">
+        <div id="loadingResults" class="col-md-offset-4">
+            <button class="btn btn-lg">
+                                <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                      style="margin-right: 1em;"></span>
+            </button>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+        <div id="submission-info" class="panel panel-default"  style="padding-left:0px">
+            <div class="panel-heading background-color-primary-accent">
+                <h3 class="panel-title">Submission Information</h3>
+            </div>
+            <div class="clearfix panel-body" id="submission-info-loading">
+                <div class="col-sm-12">
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Created Date</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-created"
+                         th:text="${#dates.format(submission.created,'yyyy-MM-dd')}">created
+                        date</div>
+
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Created By</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-created-by"
+                         th:text="${submissionData.created.user.name}">created by</div>
+                </div>
+                <div class="clearfix col-sm-12">
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Id</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-id">
+                        <a th:href="@{{baseURL}/submission/{submissionId}(baseURL=${@environment.getProperty('deposition.ui.uri')},submissionId=${submission.id})}"
+                           th:text="${submission.id}" target="_blank"></a>
+
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Type</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-type"
+                         th:text="${submission.submissionType}">type
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Status</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-status"
+                         th:text="${submission.status}">status
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+        <div id="summary-info" class="panel panel-default"  style="padding-left:0px">
+            <div class="panel-heading background-color-primary-accent">
+                <h3 class="panel-title">Publication information</h3>
+            </div>
+            <div class="clearfix" id="summary-panel-loading">
+                <div class="panel-body">
+                    <div class="clearfix col-sm-12">
+                        <div class="col-sm-2">
+                            <span class="item-left-bold">Title</span>
+                        </div>
+                        <div class="col-sm-10" id="publication-title"
+                             th:text="${submission.title}">-</div>
+                    </div>
+                    <div class="clearfix col-sm-12">
+                        <div class="col-sm-2">
+                            <span class="item-left-bold">PubMed ID</span>
+                        </div>
+                        <div class="col-sm-4">
+                            <a th:href="@{/publication/{pubmedId}(pubmedId=${submission.pubMedID})}" th:text="${submission.pubMedID}"></a>
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="item-left-bold">First author</span>
+                        </div>
+                        <div class="col-sm-4" id="publication-author"
+                             th:text="${submission.author}">first author
+                        </div>
+                    </div>
+                    <div class="clearfix col-sm-12">
+                        <div class="col-sm-2">
+                            <span class="item-left-bold">Journal</span>
+                        </div>
+                        <div class="col-sm-4" id="publication-journal"
+                             th:text="${submission.journal}">journal
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="item-left-bold">Publication date</span>
+                        </div>
+                        <div class="col-sm-4" id="publication-datepublication"
+                             th:text="${submission.publicationDate}">pub date
+                        </div>
+                    </div>
+                    <div class="clearfix col-sm-12">
+                        <div class="col-sm-2">
+                            <span class="item-left-bold">Publication Status</span>
+                        </div>
+                        <div class="col-sm-4"
+                             id="publication-status"
+                             th:text="${submission.status}">status
+                        </div>
+                        <div class="col-sm-2">
+                            <span class="item-left-bold">Corresponding Author</span>
+                        </div>
+                        <div class="col-sm-4"
+                             id="publication-corresponding-author"
+                             th:text="${submission.correspondingAuthor}">corresponding author
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row col-sm-12">
+        <table id="studyTable" th:name="studyTable" class="table"><caption class="item-left-bold">Studies</caption>
+            <thead>
+            <tr>
+                <th>Study Tag</th>
+                <th>Variant Count</th>
+                <th>Genotyping Technology</th>
+                <th>Array Manufacturer</th>
+                <th>Array Information</th>
+                <th>Imputation</th>
+                <th>Statistical Model</th>
+                <th>Study Description</th>
+                <th>Sample Description</th>
+                <th>Trait</th>
+                <th>EFO Trait</th>
+                <th>Background Trait</th>
+                <th>Background EFO Trait</th>
+                <th>Summary Stats File</th>
+                <th>Summary Stats Assembly</th>
+                <th>Checksum</th>
+                <th>Cohort</th>
+                <th>Cohort ID</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="study: ${submissionData.studies}">
+                <td th:text="${study.studyTag}"></td>
+                <td th:text="${study.variantCount}"></td>
+                <td th:text="${study.genotypingTechnology}"></td>
+                <td th:text="${study.arrayManufacturer}"></td>
+                <td th:text="${study.arrayInformation}"></td>
+                <td th:text="${study.imputation}"></td>
+                <td th:text="${study.statisticalModel}"></td>
+                <td th:text="${study.studyDescription}"></td>
+                <td th:text="${study.sampleDescription}"></td>
+                <td th:text="${study.trait}"></td>
+                <td th:text="${study.efoTrait}"></td>
+                <td th:text="${study.backgroundTrait}"></td>
+                <td th:text="${study.backgroundEfoTrait}"></td>
+                <td th:text="${study.summaryStatisticsFile}"></td>
+                <td th:text="${study.summaryStatisticsAssembly}"></td>
+                <td th:text="${study.checksum}"></td>
+                <td th:text="${study.cohort}"></td>
+                <td th:text="${study.cohortId}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row col-sm-12">
+        <table id="sampleTable" th:name="sampleTable" class="table"><caption class="item-left-bold">Samples</caption>
+            <thead>
+            <tr>
+                <th>Study Tag</th>
+                <th>Ancestry</th>
+                <th>Ancestry Category</th>
+                <th>Ancestry Description</th>
+                <th>Size</th>
+                <th>Cases</th>
+                <th>Controls</th>
+                <th>Country Recruitement</th>
+                <th>Stage</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="sample: ${submissionData.samples}">
+                <td th:text="${sample.studyTag}"></td>
+                <td th:text="${sample.ancestry}"></td>
+                <td th:text="${sample.ancestryCategory}"></td>
+                <td th:text="${sample.ancestryDescription}"></td>
+                <td th:text="${sample.size}"></td>
+                <td th:text="${sample.cases}"></td>
+                <td th:text="${sample.controls}"></td>
+                <td th:text="${sample.countryRecruitement}"></td>
+                <td th:text="${sample.stage}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row col-sm-12">
+        <table id="assocTable" th:name="assocTable" class="table"><caption class="item-left-bold">Associations</caption>
+            <thead>
+            <tr>
+                <th>Study Tag</th>
+                <th>pValue</th>
+                <th>pValue Text</th>
+                <th>Effect Allele</th>
+                <th>Effect Allele Freq</th>
+                <th>Other Allele</th>
+                <th>Haplotype ID</th>
+                <th>Variant ID</th>
+                <th>Standard Error</th>
+                <th>OR</th>
+                <th>CI Lower</th>
+                <th>CI Upper</th>
+                <th>Beta</th>
+                <th>Beta Direction</th>
+                <th>Beta Unit</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="assoc: ${submissionData.associations}">
+                <td th:text="${assoc.studyTag}"></td>
+                <td th:text="${assoc.PValue}"></td>
+                <td th:text="${assoc.PValueText}"></td>
+                <td th:text="${assoc.effectAllele}"></td>
+                <td th:text="${assoc.effectAlleleFrequency}"></td>
+                <td th:text="${assoc.otherAllele}"></td>
+                <td th:text="${assoc.haplotypeId}"></td>
+                <td th:text="${assoc.variantID}"></td>
+                <td th:text="${assoc.standardError}"></td>
+                <td th:text="${assoc.oddsRatio}"></td>
+                <td th:text="${assoc.ciLower}"></td>
+                <td th:text="${assoc.ciUpper}"></td>
+                <td th:text="${assoc.beta}"></td>
+                <td th:text="${assoc.betaDirection}"></td>
+                <td th:text="${assoc.betaUnit}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script th:src="@{/js/goci-single-submission.js}"></script>
+</body>
+
+</html>

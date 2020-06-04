@@ -15,13 +15,21 @@ import uk.ac.ebi.spot.goci.model.StudyDocument;
  */
 @Service
 public class AssociationEnrichmentService implements DocumentEnrichmentService<AssociationDocument> {
+    private final DiseaseTraitDocumentCache diseaseTraitCache;
+    private final StudyDocumentCache studyCache;
     private StudyService studyService;
     private TraitService traitService;
+    private EfoDocumentCache efoCache;
 
     @Autowired
-    public AssociationEnrichmentService(StudyService studyService, TraitService traitService) {
+    public AssociationEnrichmentService(StudyService studyService, TraitService traitService,
+                                        EfoDocumentCache efoCache, DiseaseTraitDocumentCache diseaseTraitCache,
+                                        StudyDocumentCache studyCache) {
         this.studyService = studyService;
         this.traitService = traitService;
+        this.efoCache = efoCache;
+        this.diseaseTraitCache = diseaseTraitCache;
+        this.studyCache = studyCache;
     }
 
     @Override public int getPriority() {
@@ -33,14 +41,24 @@ public class AssociationEnrichmentService implements DocumentEnrichmentService<A
 
         studyService.findByAssociationId(id).forEach(
                 study -> {
+                    StudyDocument studyDocument = studyCache.getDocument(study.getId());
+                    if(studyDocument == null){
+                        studyDocument = new StudyDocument(study);
+                        studyCache.addDocument(study.getId(), studyDocument);
+                    }
                     document.addStudyId(String.valueOf(study.getId()));
-                    document.embed(new StudyDocument(study));
+                    document.embed(studyDocument);
                 });
 
+//        traitService.findReportedTraitByAssociationId(id).forEach(
+//                trait -> document.embed(new DiseaseTraitDocument(trait)));
         traitService.findReportedTraitByAssociationId(id).forEach(
-                trait -> document.embed(new DiseaseTraitDocument(trait)));
+                trait -> document.embed(diseaseTraitCache.getDocument(trait.getTrait())));
 
-        traitService.findMappedTraitByAssociationId(id).forEach(
-                trait -> document.embed(new EfoDocument(trait)));
+//        traitService.findMappedTraitByAssociationId(id).forEach(
+//                trait -> document.embed(new EfoDocument(trait)));
+        traitService.findMappedTraitNamesByAssociationId(id).forEach(
+                trait -> document.embed(efoCache.getDocument(trait)));
+
     }
 }

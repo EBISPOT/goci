@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.GenomicContext;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -69,11 +67,13 @@ public abstract class SnpAssociationForm {
 
     private String betaDirection;
 
+    private AssociationExtension associationExtension;
+
     // Constructors
     public SnpAssociationForm() {
     }
 
-    public SnpAssociationForm(Long associationId,
+    public SnpAssociationForm(Association association,
                               String riskFrequency,
                               String pvalueDescription,
                               Integer pvalueMantissa,
@@ -93,7 +93,7 @@ public abstract class SnpAssociationForm {
                               Float betaNum,
                               String betaUnit,
                               String betaDirection) {
-        this.associationId = associationId;
+        this.associationId = association.getId();
         this.riskFrequency = riskFrequency;
         this.pvalueDescription = pvalueDescription;
         this.pvalueMantissa = pvalueMantissa;
@@ -113,6 +113,7 @@ public abstract class SnpAssociationForm {
         this.betaNum = betaNum;
         this.betaUnit = betaUnit;
         this.betaDirection = betaDirection;
+        this.associationExtension = association.getAssociationExtension();
     }
 
     public Long getAssociationId() {
@@ -273,6 +274,14 @@ public abstract class SnpAssociationForm {
 
     public void setSnps(Collection<SingleNucleotidePolymorphism> snps) {
         this.snps = snps;
+    }
+
+    public AssociationExtension getAssociationExtension() {
+        return associationExtension;
+    }
+
+    public void setAssociationExtension(AssociationExtension associationExtension) {
+        this.associationExtension = associationExtension;
     }
 }
 

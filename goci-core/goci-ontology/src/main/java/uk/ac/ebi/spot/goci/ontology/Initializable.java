@@ -64,7 +64,7 @@ public abstract class Initializable {
     }
 
     public synchronized void waitUntilReady() throws IllegalStateException, InterruptedException {
-        while (!isReady()) {
+        while (!isReady() && initializationException == null) {
             getLog().debug("Waiting until " + getClass().getSimpleName() + " is ready...");
             wait();
         }

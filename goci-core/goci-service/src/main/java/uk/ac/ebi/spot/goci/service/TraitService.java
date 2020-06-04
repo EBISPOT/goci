@@ -48,6 +48,9 @@ public class TraitService {
         return efoTraitRepository.findByAssociationsId(associationId);
     }
 
+    public Collection<String> findMappedTraitNamesByAssociationId(Long associationId) {
+        return efoTraitRepository.findTraitNamesByAssociationsId(associationId);
+    }
 
     @Transactional(readOnly = true)
     public List<EfoTrait> findAllEfoTraits() {

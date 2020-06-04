@@ -3,6 +3,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +26,7 @@ public class Publication {
     private Long id;
 
     @NotBlank(message = "Please enter a pubmed id")
+    @Column(unique = true)
     private String pubmedId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -57,6 +59,10 @@ public class Publication {
     @JsonIgnore
     private Date updatedAt;
 
+    @OneToMany(mappedBy = "publicationId", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Collection<PublicationExtension> correspondingAuthors;
+
     @PrePersist
     protected void onCreate() {
         createdAt = new Date();
@@ -79,6 +85,13 @@ public class Publication {
     @OneToMany(mappedBy="publication",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<PublicationAuthors> publicationAuthors;
+
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String submissionId;
+
+    @Transient
+    private boolean activeSubmission = false;
 
     // JPA no-args constructor
     public Publication() {
@@ -130,6 +143,17 @@ public class Publication {
 
     public void setAuthors(Collection<Author> authors) { this.authors = authors; }
 
+    public PublicationExtension getCorrespondingAuthor(){
+        if(correspondingAuthors != null && correspondingAuthors.size() != 0){
+            return correspondingAuthors.iterator().next();
+        }
+        return null;
+    }
+    public Collection<PublicationExtension> getCorrespondingAuthors() { return correspondingAuthors; }
+
+    public void setCorrespondingAuthors(Collection<PublicationExtension> correspondingAuthors) { this.correspondingAuthors =
+            correspondingAuthors; }
+
     public Collection<Study> getStudies() { return studies; }
 
     public void setStudies(Collection<Study> studies) { this.studies = studies; }
@@ -153,4 +177,16 @@ public class Publication {
     public void setPublicationAuthors(List<PublicationAuthors> publicationAuthors) {
         this.publicationAuthors = publicationAuthors;
     }
+
+    public String getSubmissionId(){
+        return submissionId;
+    }
+
+    public void setSubmissionId(String submissionId){
+        this.submissionId = submissionId;
+    }
+
+    public boolean getActiveSubmission(){ return activeSubmission;}
+
+    public void setActiveSubmission(boolean activeSubmission){this.activeSubmission = activeSubmission;}
 }

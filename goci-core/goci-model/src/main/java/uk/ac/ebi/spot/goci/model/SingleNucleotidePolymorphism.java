@@ -77,6 +77,10 @@ public class SingleNucleotidePolymorphism {
     public SingleNucleotidePolymorphism() {
     }
 
+    public SingleNucleotidePolymorphism(Long id){
+        this.id = id;
+    }
+
     public SingleNucleotidePolymorphism(String rsId,
                                         Long merged,
                                         String functionalClass,

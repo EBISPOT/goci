@@ -154,6 +154,12 @@ public class AssociationRowProcessor {
                                               newAssociation.getSnpInteraction(),
                                               newAssociation.getMultiSnpHaplotype()));
         }
+        if(row.getOtherAllele() != null){
+            newAssociation.getAssociationExtension().setOtherAllele(row.getOtherAllele());
+        }
+        if(row.getEffectAllele() != null){
+            newAssociation.getAssociationExtension().setEffectAllele(row.getEffectAllele());
+        }
         return newAssociation;
     }
 

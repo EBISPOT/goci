@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.ontology.exception.OntologyIndexingException;
+import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 import uk.ac.ebi.spot.goci.ontology.owl.ReasonedOntologyLoader;
 
 import javax.validation.constraints.NotNull;
@@ -32,10 +33,9 @@ import java.util.Set;
 @Service
 public class OntologyService {
 
-    @NotNull
-    @Value("${efo.location}")
-    private Resource efoResource;
-
+//    @NotNull
+//    @Value("${efo.location:file:///C:/Users/jstewart/IdeaProjects/EBI/goci-new/efo.owl}")
+//    private Resource efoResource;
 
     private ReasonedOntologyLoader ontologyLoader;
 
@@ -52,16 +52,16 @@ public class OntologyService {
     }
 
     @Autowired
-    public OntologyService(ReasonedOntologyLoader ontologyLoader) {
-        this.ontologyLoader = ontologyLoader;
-        ontologyLoader.setOntologyName("efo");
-        ontologyLoader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));
-        ontologyLoader.setOntologyResource(efoResource);
-        ontologyLoader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
-        ontologyLoader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
-        ontologyLoader.setSynonymURIs(Collections.singleton(URI.create("http://www.ebi.ac.uk/efo/alternative_term")));
-        ontologyLoader.init();
-        setObsoleteClass();
+    public OntologyService(OntologyLoader ontologyLoader) {
+        this.ontologyLoader = (ReasonedOntologyLoader) ontologyLoader;
+//        ontologyLoader.setOntologyName("efo");
+//        ontologyLoader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));
+//        ontologyLoader.setOntologyResource(efoResource);
+//        ontologyLoader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
+//        ontologyLoader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
+//        ontologyLoader.setSynonymURIs(Collections.singleton(URI.create("http://www.ebi.ac.uk/efo/alternative_term")));
+        this.ontologyLoader.init();
+        //setObsoleteClass();
         this.labelToClassMap = new HashMap<String, Set<OWLClass>>();
         this.classToLabelMap = new HashMap<OWLClass, List<String>>();
         this.iriToClassMap = new HashMap<IRI, OWLClass>();

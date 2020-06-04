@@ -224,6 +224,7 @@ public class DefaultGWASOWLConverter implements GWASOWLConverter {
     }
 
     protected void convertSNP(SingleNucleotidePolymorphism snp, OWLOntology ontology) {
+        log.debug("converting snp: " + snp.getId() + ", rsid: " + snp.getRsId());
         // get the snp class
         OWLClass snpClass = getDataFactory().getOWLClass(IRI.create(OntologyConstants.SNP_CLASS_IRI));
 

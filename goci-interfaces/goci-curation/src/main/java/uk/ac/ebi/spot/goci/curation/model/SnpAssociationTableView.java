@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.model;
 
+import uk.ac.ebi.spot.goci.model.AssociationExtension;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -75,6 +77,8 @@ public class SnpAssociationTableView {
     private String lastMappingDate;
 
     private String mappingStatus;
+
+    private AssociationExtension associationExtension;
 
     // Constructors
     public SnpAssociationTableView() {
@@ -364,4 +368,12 @@ public class SnpAssociationTableView {
     public String getMappingStatus() { return mappingStatus; }
 
     public void setMappingStatus(String mappingStatus) { this.mappingStatus = mappingStatus; }
+
+    public AssociationExtension getAssociationExtension() {
+        return associationExtension;
+    }
+
+    public void setAssociationExtension(AssociationExtension associationExtension) {
+        this.associationExtension = associationExtension;
+    }
 }

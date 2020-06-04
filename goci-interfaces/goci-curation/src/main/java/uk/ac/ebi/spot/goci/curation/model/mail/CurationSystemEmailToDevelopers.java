@@ -12,7 +12,7 @@ import uk.ac.ebi.spot.goci.model.GenericEmail;
 public class CurationSystemEmailToDevelopers extends GenericEmail {
 
     public void createReleaseChangeEmail(Integer currentEnsemblReleaseNumberInDatabase,
-                                         int latestEnsemblReleaseNumber) {
+                                         int latestEnsemblReleaseNumber, String ensemblRestServer, String ensemblDbVersion) {
 
         this.setSubject("New Ensembl Release Identified");
         this.setBody(
@@ -22,7 +22,7 @@ public class CurationSystemEmailToDevelopers extends GenericEmail {
                         + "\n"
                         + "The GWAS catalog is mapped to Ensembl release "
                         + currentEnsemblReleaseNumberInDatabase
-                        + "."
+                        + ".\nUsing " + ensemblRestServer + " and database schema " + ensemblDbVersion + "."
                         + "\n\n"
                         + "Please remap all catalog associations."
                         + "\n\n"

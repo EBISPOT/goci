@@ -33,8 +33,8 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("orDescription") @NonEmbeddableField private String description;
     @Field @NonEmbeddableField private String range;
     //    @Field @NonEmbeddableField private String orType;
-    @Field @NonEmbeddableField private Boolean snpInteraction;
-    @Field @NonEmbeddableField private Boolean multiSnpHaplotype;
+    @Field @NonEmbeddableField private Boolean snpInteraction = false;
+    @Field @NonEmbeddableField private Boolean multiSnpHaplotype = false;
 
     // additional included genetic data...
     // capture loci/risk alleles for association;

@@ -18,6 +18,8 @@ import uk.ac.ebi.spot.goci.repository.DeletedAssociationRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by emma on 06/07/2016.
@@ -84,7 +86,7 @@ public class AssociationDeletionService {
     }
 
     private DeletedAssociation createDeletedAssociation(Association association) {
-        Collection<Event> events = association.getEvents();
+        List<Event> events = new ArrayList<>(association.getEvents());
         Long id = association.getId();
         Long studyId = association.getStudy().getId();
         return new DeletedAssociation(id, studyId, events);

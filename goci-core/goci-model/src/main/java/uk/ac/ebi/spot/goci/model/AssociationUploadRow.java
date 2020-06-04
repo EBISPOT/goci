@@ -19,6 +19,8 @@ public class AssociationUploadRow {
 
     private String strongestAllele;
 
+    private String effectAllele;
+
     private String otherAllele;
 
     private String snp;
@@ -265,6 +267,14 @@ public class AssociationUploadRow {
 
     public void setOtherAllele(String otherAllele) {
         this.otherAllele = otherAllele;
+    }
+
+    public String getEffectAllele() {
+        return effectAllele;
+    }
+
+    public void setEffectAllele(String effectAllele) {
+        this.effectAllele = effectAllele;
     }
 
     public Collection<ValidationError> getListErrorCellType() { return this.listErrorCellType; }

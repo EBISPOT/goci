@@ -1,0 +1,145 @@
+{
+  "_embedded" : {
+    "publications" : [ {
+      "publicationId" : "5d403399218e4cbdf409e2fd",
+      "pmid" : "21044949",
+      "title" : "ELF1 is associated with systemic lupus erythematosus in Asian populations.",
+      "journal" : "Hum Mol Genet",
+      "firstAuthor" : "Yang J",
+      "publicationDate" : "2010-11-02",
+      "correspondingAuthor" : {
+        "firstName" : "Jing",
+        "lastName" : "Yang"
+      },
+      "status" : "UNDER_SUBMISSION",
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e2fd?pmid=false"
+        }
+      }
+    }, {
+      "publicationId" : "5d403399218e4cbdf409e2fe",
+      "pmid" : "17690259",
+      "title" : "Common sequence variants in the LOXL1 gene confer susceptibility to exfoliation glaucoma.",
+      "journal" : "Science",
+      "firstAuthor" : "Thorleifsson G",
+      "publicationDate" : "2007-08-09",
+      "correspondingAuthor" : {
+        "firstName" : "Gudmar",
+        "lastName" : "Thorleifsson"
+      },
+      "status" : "UNDER_SUBMISSION",
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e2fe?pmid=false"
+        }
+      }
+    }, {
+      "publicationId" : "5d403399218e4cbdf409e2ff",
+      "pmid" : "19561606",
+      "title" : "Sequence variants in the CLDN14 gene associate with kidney stones and bone mineral density.",
+      "journal" : "Nat Genet",
+      "firstAuthor" : "Thorleifsson G",
+      "publicationDate" : "2009-06-28",
+      "correspondingAuthor" : {
+        "firstName" : "Gudmar",
+        "lastName" : "Thorleifsson"
+      },
+      "status" : "UNDER_SUBMISSION",
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e2ff?pmid=false"
+        }
+      }
+    }, {
+      "publicationId" : "5d403399218e4cbdf409e300",
+      "pmid" : "19079260",
+      "title" : "Genome-wide association yields new sequence variants at seven loci that associate with measures of obesity.",
+      "journal" : "Nat Genet",
+      "firstAuthor" : "Thorleifsson G",
+      "publicationDate" : "2008-12-14",
+      "correspondingAuthor" : {
+        "firstName" : "Gudmar",
+        "lastName" : "Thorleifsson"
+      },
+      "status" : "UNDER_SUBMISSION",
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e300?pmid=false"
+        }
+      }
+    }, {
+      "publicationId" : "5d403399218e4cbdf409e301",
+      "pmid" : "17460697",
+      "title" : "A variant in CDKAL1 influences insulin response and risk of type 2 diabetes.",
+      "journal" : "Nat Genet",
+      "firstAuthor" : "Steinthorsdottir V",
+      "publicationDate" : "2007-04-26",
+      "correspondingAuthor" : {
+        "firstName" : "Valgerdur",
+        "lastName" : "Steinthorsdottir"
+      },
+      "status" : "UNDER_SUBMISSION",
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e301?pmid=false"
+        }
+      }
+    }, {
+      "publicationId" : "5d403399218e4cbdf409e302",
+      "pmid" : "21983786",
+      "title" : "Identification of low-frequency variants associated with gout and serum uric acid levels.",
+      "journal" : "Nat Genet",
+      "firstAuthor" : "Sulem P",
+      "publicationDate" : "2011-10-09",
+      "correspondingAuthor" : {
+        "firstName" : "Patrick",
+        "lastName" : "Sulem"
+      },
+      "status" : "UNDER_SUBMISSION",
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e302?pmid=false"
+        }
+      }
+    }, {
+      "publicationId" : "5d403399218e4cbdf409e303",
+      "pmid" : "19448622",
+      "title" : "Genome-wide association study identifies sequence variants on 6q21 associated with age at menarche.",
+      "journal" : "Nat Genet",
+      "firstAuthor" : "Sulem P",
+      "publicationDate" : "2009-05-15",
+      "correspondingAuthor" : {
+        "firstName" : "Patrick",
+        "lastName" : "Sulem"
+      },
+      "status" : "UNDER_SUBMISSION",
+      "_links" : {
+        "self" : {
+          "href" : "http://193.62.54.159/backend/v1/publications/5d403399218e4cbdf409e303?pmid=false"
+        }
+      }
+    }
+    ]
+  },
+  "_links" : {
+    "first" : {
+      "href" : "http://193.62.54.159/backend/v1/publications?page=0&size=20"
+    },
+    "self" : {
+      "href" : "http://193.62.54.159/backend/v1/publications"
+    },
+    "next" : {
+      "href" : "http://193.62.54.159/backend/v1/publications?page=1&size=20"
+    },
+    "last" : {
+      "href" : "http://193.62.54.159/backend/v1/publications?page=4&size=20"
+    }
+  },
+  "page" : {
+    "size" : 20,
+    "totalElements" : 95,
+    "totalPages" : 5,
+    "number" : 0
+  }
+}
