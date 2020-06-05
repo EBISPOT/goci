@@ -420,9 +420,11 @@ public class DepositionSyncService {
                 }
             }
             for(BodyOfWorkDto bom: bomList){
-                String bomId = String.join(",", bom.getPmids());
-                if (bomId.contains(publication.getPubmedId())){
-                    return  true;
+                if(bom.getPmids() != null) {
+                    String bomId = String.join(",", bom.getPmids());
+                    if (bomId.contains(publication.getPubmedId())) {
+                        return true;
+                    }
                 }
             }
 
