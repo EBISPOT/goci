@@ -12,6 +12,8 @@ import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
 public interface BeanMapper {
     BeanMapper MAPPER = Mappers.getMapper(BeanMapper.class);
 
+    @Mapping(source = "summaryStatisticsAssembly", target = "sumStatsAssembly")
+    @Mapping(source = "summaryStatisticsFile", target = "summaryStatsFile")
     UnpublishedStudy convert(DepositionStudyDto studyDto);
 
     @Mapping(source = "size", target = "sampleSize")
