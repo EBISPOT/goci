@@ -153,7 +153,7 @@ public class DepositionSyncService {
                     }else {
                         newPublication.setStatus("ELIGIBLE");
                     }
-                    depositionPublicationService.addPublication(newPublication);
+                    //depositionPublicationService.addPublication(newPublication);
                 }
             }else {
                 if(depositionPublication == null && newPublication != null) { // add new publication
@@ -172,7 +172,7 @@ public class DepositionSyncService {
                         newPublication.setStatus("ELIGIBLE");
                         System.out.println("adding eligible publication " + pubmedId + " to mongo");
                     }
-                    depositionPublicationService.addPublication(newPublication);
+                    //depositionPublicationService.addPublication(newPublication);
                     newPubs.add(newPublication.getPmid());
                 }else if(newPublication != null){//check publication status, update if needed
                     if (isPublished && (depositionPublication.getStatus().equals("ELIGIBLE") || depositionPublication.getStatus().equals("CURATION_STARTED"))) { //sync newly
@@ -182,7 +182,7 @@ public class DepositionSyncService {
                         System.out.println("setting publication status to " + newPublication.getStatus() + " for " +
                                 " " + pubmedId);
                         newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                        depositionPublicationService.updatePublication(newPublication);
+                        //depositionPublicationService.updatePublication(newPublication);
                         updatePubs.add(newPublication.getPmid());
                     }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         //published summary stats
@@ -190,7 +190,7 @@ public class DepositionSyncService {
                             System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                            depositionPublicationService.updatePublication(newPublication);
+                            //depositionPublicationService.updatePublication(newPublication);
                             sumStatsPubs.add(newPublication.getPmid());
                         }
                     }
@@ -219,7 +219,7 @@ public class DepositionSyncService {
         //else if accession exists, check publication for change, update
         //curation import will need to prune unpublished_studies, ancestry and body_of_work
         submissions.forEach((s, submission) -> {
-            if(submission.getStatus().equals("SUBMITTED") && submission.getPublication() == null){
+            if(submission.getStatus().equals("SUBMITTED") && submission.getProvenanceType().equals("BODY_OF_WORK")){
                 BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
                 if(isEligible(bodyOfWorkDto)) {
                     Set<UnpublishedStudy> studies = new HashSet<>();
