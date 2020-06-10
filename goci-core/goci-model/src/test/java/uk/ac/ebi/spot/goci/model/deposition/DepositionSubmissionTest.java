@@ -81,11 +81,13 @@ public class DepositionSubmissionTest {
                     objectMapper.readValue(resource.getFile(), DepositionSubmission.class);
             assertNotNull(submission);
             assertTrue(submission.getCreated().getTimestamp().toString()
-                    .equals("2020-05-13T09:49:43.965Z"));
+                    .equals("2020-06-09T11:44:33.972Z"));
             assertNotNull(submission.getStatus());
             assertNotNull(submission.getBodyOfWork());
-            assertNotNull(submission.getBodyOfWork().getPreprintServerDOI());
+            assertEquals(submission.getBodyOfWork().getTitle(), "Test piece of work");
             assertNull(submission.getPublication());
+            assertNotNull(submission.getStudies().get(0).getSummaryStatisticsFile());
+            assertEquals(submission.getStudies().get(0).getSummaryStatisticsFile(), "abc123.tsv");
         } catch (IOException e) {
             e.printStackTrace();
             fail(e.getMessage());
