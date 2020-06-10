@@ -35,6 +35,7 @@ public class UnpublishedAncestry {
     @JsonProperty("ancestry_category")
     private String ancestryCategory;
     private String ancestry;
+
     @JsonProperty("ancestry_description")
     private String ancestryDescription;
     @JsonProperty("country_recruitment")
