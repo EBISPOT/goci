@@ -174,7 +174,16 @@ public class StudyOperationsService {
         }
 
         // If the current and new status are different
+        return updateHousekeepingStatus(study, housekeeping, newStatus, user);
+    }
+
+    public String updateHousekeepingStatus(Study study, Housekeeping housekeeping, CurationStatus newStatus,
+                                           SecureUser user){
         String message = null;
+        CurationStatus currentStudyStatus = study.getHousekeeping().getCurationStatus();
+        if(housekeeping == null) {
+            housekeeping = study.getHousekeeping();
+        }
         if (newStatus != null && newStatus != currentStudyStatus) {
             if (newStatus.getStatus().equals("Publish study")) {
 

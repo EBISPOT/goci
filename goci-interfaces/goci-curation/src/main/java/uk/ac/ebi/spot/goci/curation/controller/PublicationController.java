@@ -15,6 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +76,8 @@ public class PublicationController {
     private DepositionSubmissionService submissionService;
     @Autowired
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
+    @Autowired
+    private UnpublishReasonRepository unpublishReasonRepository;
 
 
     @RequestMapping(value = "/match", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
@@ -206,6 +209,7 @@ public class PublicationController {
         return curatorRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "lastName").ignoreCase()));
     }
 
+    @Transactional
     @RequestMapping(value = "/status_update",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST)
@@ -223,13 +227,24 @@ public class PublicationController {
            studyIds.forEach(node -> {
                Long studyId = node.asLong();
                Study study = studyRepository.getOne(studyId);
-               studyOperationsService.assignStudyStatus(study, status, user);
-               result.put(studyId.toString(), "Updated");
+               String message = null;
+               if(study.getHousekeeping().getCurationStatus().getStatus().equals("Publish study")){
+                   message = "cannot unpublish studies without reason, please use the unpublish study page.";
+               }else {
+                   message = studyOperationsService.updateHousekeepingStatus(study, null,
+                           curationStatusRepository.findOne(status.getStatusId()), user);
+               }
+               if(message == null){
+                   message = "Updated ";
+               }
+               result.put(studyId.toString(), message);
            });
             // Return success message to view
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -258,6 +273,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -287,6 +304,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -316,6 +335,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -350,6 +371,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -384,6 +407,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -413,6 +438,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -440,6 +467,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }
@@ -474,6 +503,8 @@ public class PublicationController {
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
             e.printStackTrace();
+        }catch(Throwable t){
+            t.printStackTrace();
         }
         return result;
     }

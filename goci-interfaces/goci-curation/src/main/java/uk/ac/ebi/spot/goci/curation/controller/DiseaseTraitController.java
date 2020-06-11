@@ -1,24 +1,33 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.apache.commons.text.similarity.CosineDistance;
+import org.apache.commons.text.similarity.JaroWinklerSimilarity;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
+import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by emma on 09/01/15.
@@ -35,11 +44,13 @@ public class DiseaseTraitController {
     // Repositories allowing access to disease traits in database
     private DiseaseTraitRepository diseaseTraitRepository;
     private StudyRepository studyRepository;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    public DiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository, StudyRepository studyRepository) {
+    public DiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository, StudyRepository studyRepository, ObjectMapper objectMapper) {
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.studyRepository = studyRepository;
+        this.objectMapper = objectMapper;
     }
 
     //Return all disease traits
@@ -158,8 +169,74 @@ public class DiseaseTraitController {
         }
     }
 
+    /*            {"mData": "newdiseasetrait", "sDefaultContent": "", "sTitle": "New Disease Trait", "bSearchable": true},
+            {"mData": "match", "sDefaultContent": "", "sTitle": "Best Match", "bSearchable": true},
+            {"mData": "matchscore", "sDefaultContent": "", "sTitle": "Best Match Score", "bSearchable": true} ],
+*/
+    @RequestMapping(value="/check_new_traits", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<List<Map<String, String>>> checkDiseaseTraits(Model model, @RequestBody String[] data) {
+        List<Map<String, String>> results = new ArrayList<>();
+        LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
+        List<DiseaseTrait> traits = diseaseTraitRepository.findAll();
+        try {
+//            ArrayNode jsonObject = (ArrayNode) objectMapper.readTree(data);
+//            jsonObject.forEach(newTrait -> {
+            for(String newTrait: data){
+                if(!newTrait.trim().equals("")) {
+                    Map<String, String> row = new HashMap<>();
+                    row.put("newdiseasetrait", newTrait);
+                    Integer highScore = 0;
+                    String bestMatch = "";
+                    for (DiseaseTrait trait : traits) {
+                        Integer ldScore = levenshteinDistance.apply(trait.getTrait().toLowerCase(),
+                                newTrait.toLowerCase().trim());
+                        ldScore = 100 - ldScore > 0 ? 100 - ldScore : 0;
+                        if (ldScore > highScore) {
+                            highScore = ldScore;
+                            bestMatch = trait.getTrait();
+                        }
+                    }
+                    row.put("match", bestMatch);
+                    row.put("matchscore", highScore.toString());
+                    results.add(row);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-    /* Model Attributes :
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
+
+        return new ResponseEntity<>(results,responseHeaders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value="/create_disease_traits", produces = MediaType.APPLICATION_JSON_VALUE, method =
+            RequestMethod.POST)
+    public @ResponseBody Map<String, String> createDiseaseTraits(Model model, @RequestBody String[] data) {
+        Map<String, String> result = new HashMap<>();
+        try{
+            for(String newTrait: data){
+                newTrait = newTrait.trim();
+                if(!newTrait.equals("")) {
+                    DiseaseTrait dbTrait = diseaseTraitRepository.findByTraitIgnoreCase(newTrait);
+                    if (dbTrait == null) {
+                        dbTrait = new DiseaseTrait();
+                        dbTrait.setTrait(newTrait);
+                        diseaseTraitRepository.save(dbTrait);
+                        result.put(newTrait, "Created");
+                    } else {
+                        result.put(newTrait, "Exists");
+                    }
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+        /* Model Attributes :
     *  Used for dropdowns in HTML forms
     */
 

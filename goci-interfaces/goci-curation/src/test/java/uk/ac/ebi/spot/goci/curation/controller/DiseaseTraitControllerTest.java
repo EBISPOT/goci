@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,7 +76,7 @@ public class DiseaseTraitControllerTest {
     @Before
     public void setUpMock() {
         DiseaseTraitController diseaseTraitController =
-                new DiseaseTraitController(diseaseTraitRepository, studyRepository);
+                new DiseaseTraitController(diseaseTraitRepository, studyRepository, new ObjectMapper());
         mockMvc = MockMvcBuilders.standaloneSetup(diseaseTraitController).build();
     }
 

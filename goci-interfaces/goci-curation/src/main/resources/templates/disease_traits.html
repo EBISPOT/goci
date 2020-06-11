@@ -35,6 +35,10 @@
           href="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/css/selectize.bootstrap3.min.css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/js/standalone/selectize.min.js"></script>
 
+    <!--https://www.datatables.net/-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"/>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -49,6 +53,14 @@
 <div th:include="fragments/header :: navbar"></div>
 
 <!--Alert if data is deleted-->
+<div class="row">
+    <div id="loadingResults" class="col-md-offset-4">
+        <button class="btn btn-lg">
+                                    <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
+                                          style="margin-right: 1em;"></span>
+        </button>
+    </div>
+</div>
 <div class="container-fluid" th:if="${!#strings.isEmpty(diseaseTraitExists)}">
     <div class="row">
         <div class="col-md-6">
@@ -75,50 +87,31 @@
 <!--Add new disease trait-->
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-6">
             <form id="selectizeForm" method="post" class="form-vertical" th:object="${diseaseTrait}">
                 <div class="form-group">
                     <label for="addDiseaseTrait" class="control-label"></label>
+                    <select name="addDiseaseTrait" class="form-control"
+                            th:field="*{trait}" id="addDiseaseTrait">
+                        <option value="">Enter new disease/trait</option>
+                        <option th:each="trait : ${diseaseTraits}"
+                                th:value="${trait.trait}"
+                                th:text="${trait.trait}"></option>
+                    </select>
 
-                    <div>
-                        <select name="addDiseaseTrait" class="form-control"
-                                th:field="*{trait}" id="addDiseaseTrait">
-                            <option value="">Enter new disease/trait</option>
-                            <option th:each="trait : ${diseaseTraits}"
-                                    th:value="${trait.trait}"
-                                    th:text="${trait.trait}"></option>
-                        </select>
-
-                        <!--Catch an empty value being added-->
-                        <p th:if="${#fields.hasErrors('trait')}" class="label label-danger"
-                           th:errors="*{trait}"></p>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div>
-                        <button type="submit" class="btn btn-default">Add Disease / Trait</button>
-                    </div>
+                    <!--Catch an empty value being added-->
+                    <p th:if="${#fields.hasErrors('trait')}" class="label label-danger"
+                       th:errors="*{trait}"></p>
+                    <button type="submit" class="btn btn-default">Add Disease / Trait</button>
                 </div>
             </form>
-        </div>
-    </div>
-</div>
-
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <table id="diseaseTraitTable" class="table table-hover table-bordered"
-                   data-toggle="table"
-                   data-search="true"
-                   data-sort-order="desc">
+            <table id="diseaseTraitTable" class="table table-hover table-bordered">
                 <caption th:text="'Total: '+ ${totaldiseaseTraits}"></caption>
                 <thead>
                 <tr>
-                    <th data-field="edit" data-switchable="false"></th>
-                    <th data-field="diseasetrait" data-sortable="true">Disease / Trait</th>
-                    <th data-field="delete" data-switchable="false"></th>
+                    <th>Edit</th>
+                    <th>Disease / Trait</th>
+                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -133,10 +126,36 @@
                 </tbody>
             </table>
         </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <textarea rows="10" name="new_disease_traits" id="new_disease_traits" class="form-control"></textarea>
+                <button type="button" id="check_new_disease_traits" name="check_new_disease_traits"
+                    class="btn btn-default form-control">Check New Disease
+                Traits</button>
+            </div>
+            <table id="newDiseaseTraitTable" class="table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th><input type="checkbox" id="select_all" class="checkbox"/>Select All            <button
+                            class="btn button"  id="remove_button" name="remove_button">Remove</button>
+                        <button class="btn button" id="save_new_traits_button" name="save_new_traits_button">Save
+                        </button>
+                    </th>
+                    <th>New Disease / Trait</th>
+                    <th>Closest Disease / Trait</th>
+                    <th>Score</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
+
 <div th:include="fragments/footer :: page_footer"></div>
+<script th:src="@{/js/goci-disease-trait-page.js}"></script>
 
 <script>
     $('#addDiseaseTrait').selectize({
