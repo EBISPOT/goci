@@ -63,7 +63,7 @@ public class ObjectConverter {
                             return des1.getPriority() - des2.getPriority();
                         }
                     })
-                    .forEach(documentEnrichmentService -> documentEnrichmentService.doEnrichment(document));
+                    .forEach(documentEnrichmentService -> documentEnrichmentService.doEnrichment(document, object));
 
             // and return
             return document;

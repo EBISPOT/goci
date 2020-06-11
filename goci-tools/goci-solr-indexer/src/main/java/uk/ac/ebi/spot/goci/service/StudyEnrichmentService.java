@@ -2,11 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.AssociationDocument;
-import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
-import uk.ac.ebi.spot.goci.model.EfoDocument;
-import uk.ac.ebi.spot.goci.model.StudyDocument;
+import uk.ac.ebi.spot.goci.model.*;
 
 import java.util.Collection;
 
@@ -17,7 +13,7 @@ import java.util.Collection;
  * @date 13/02/15
  */
 @Service
-public class StudyEnrichmentService implements DocumentEnrichmentService<StudyDocument> {
+public class StudyEnrichmentService implements DocumentEnrichmentService<StudyDocument, Study> {
     private final EfoDocumentCache efoCache;
     private final DiseaseTraitDocumentCache diseaseTraitCache;
     private final StudyDocumentCache studyDocumentCache;
@@ -39,19 +35,24 @@ public class StudyEnrichmentService implements DocumentEnrichmentService<StudyDo
         return 1;
     }
 
-    @Override public void doEnrichment(StudyDocument document) {
+    @Override public void doEnrichment(StudyDocument document, Study study) {
         long id = Long.valueOf(document.getId().split(":")[1]);
-        if(!studyDocumentCache.hasDocument(id)){
-            studyDocumentCache.addDocument(id, document);
-        }
+//        if(!studyDocumentCache.hasDocument(id)){
+//            studyDocumentCache.addDocument(id, document);
+//        }
 
-        Collection<Association> associations = associationService.findPublishedAssociationsByStudyId(id);
+        Collection<Association> associations = study.getAssociations();
         document.setAssociationCount(associations.size());
         associations.forEach(association -> document.embed(new AssociationDocument(association)));
 
-        traitService.findReportedTraitByStudyId(id).forEach(
-                trait -> document.embed(diseaseTraitCache.getDocument(trait.getTrait())));
-        traitService.findMappedTraitByStudyId(id).forEach(
+        document.embed(diseaseTraitCache.getDocument(study.getDiseaseTrait().getTrait()));
+        study.getEfoTraits().forEach(
                 trait -> document.embed(efoCache.getDocument(trait.getTrait())));
+        document.addBackgroundTraitName(study.getBackgroundTrait().getTrait());
+        study.getMappedBackgroundTraits().forEach(efoTrait -> {
+                document.addBackgroundEfoLabel(efoTrait.getTrait());
+                document.addBackgroundEfoUri(efoTrait.getUri());
+            }
+        );
     }
 }

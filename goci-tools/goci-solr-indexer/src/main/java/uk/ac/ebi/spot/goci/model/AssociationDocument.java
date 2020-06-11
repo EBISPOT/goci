@@ -105,6 +105,13 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedLabel") private Collection<String> mappedLabels;
     @Field("mappedUri") private Collection<String> mappedUris;
 
+    // embedded DiseaseTrait info
+    @Field("backgroundTraitName") private Collection<String> backgroundTraitNames;
+
+    // embedded EfoTrait info
+    @Field("backgroundEfoLabel") private Collection<String> backgroundEfoLabels;
+    @Field("backgroundEfoUri") private Collection<String> backgroundEfoUris;
+
     public AssociationDocument(Association association) {
         super(association);
         this.riskFrequency = association.getRiskFrequency();
@@ -151,6 +158,11 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
+
+        this.backgroundTraitNames = new LinkedHashSet<>();
+
+        this.backgroundEfoLabels = new LinkedHashSet<>();
+        this.backgroundEfoUris = new LinkedHashSet<>();
 
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfOrigin = new LinkedHashSet<>();
@@ -349,6 +361,18 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addMappedUri(String mappedUri) {
         this.mappedUris.add(mappedUri);
+    }
+
+    public void addBackgroundTraitName(String traitName) {
+        this.backgroundTraitNames.add(traitName);
+    }
+
+    public void addBackgroundEfoLabel(String mappedLabel) {
+        this.backgroundEfoLabels.add(mappedLabel);
+    }
+
+    public void addBackgroundEfoUri(String mappedUri) {
+        this.backgroundEfoUris.add(mappedUri);
     }
 
     public void addStudyId(String studyId) {

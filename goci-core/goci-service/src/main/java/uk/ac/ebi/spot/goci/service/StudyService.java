@@ -214,6 +214,12 @@ public class StudyService {
         int efoTraitCount = study.getEfoTraits().size();
         int associationCount = study.getAssociations().size();
         int ancestryCount = study.getAncestries().size();
+        if(study.getBackgroundTrait() != null) {
+            study.getBackgroundTrait().getTrait();
+        }
+        if(study.getMappedBackgroundTraits() != null) {
+            study.getMappedBackgroundTraits().size();
+        }
 
         study.getAncestries().forEach(
                 ancestry -> {
@@ -272,6 +278,8 @@ public class StudyService {
         int associationCount = study.getAssociations().size();
 //        int snpCount = study.getSingleNucleotidePolymorphisms().size();
         int platformCount = study.getPlatforms().size();
+        study.getMappedBackgroundTraits().size();
+        study.getBackgroundTrait().getTrait();
 
         int ancestryCount = study.getAncestries().size();
 
@@ -329,6 +337,8 @@ public class StudyService {
             for (Association association : study.getAssociations()) {
                 int lociCount = association.getLoci().size();
                 int associationEfoTraitCount = association.getEfoTraits().size();
+                study.getBackgroundTrait().getTrait();
+                study.getMappedBackgroundTraits().size();
                 getLog().trace("Association '" + association.getId() + "' is linked to " + lociCount + " loci and " +
                                        associationEfoTraitCount + "efo traits.");
                 for (Locus locus : association.getLoci()) {

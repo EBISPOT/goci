@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.OntologyEnabledDocument;
 import uk.ac.ebi.spot.goci.ontology.owl.OntologyLoader;
 
@@ -18,7 +19,7 @@ import java.net.URI;
  * @date 19/01/15
  */
 @Service
-public class OntologyExpansionService implements DocumentEnrichmentService<OntologyEnabledDocument<?>> {
+public class OntologyExpansionService implements DocumentEnrichmentService<OntologyEnabledDocument<?>, Object> {
     private OntologyLoader ontologyLoader;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -36,7 +37,7 @@ public class OntologyExpansionService implements DocumentEnrichmentService<Ontol
         return 4;
     }
 
-    @Override public void doEnrichment(OntologyEnabledDocument<?> document) {
+    @Override public void doEnrichment(OntologyEnabledDocument<?> document, Object o) {
         // improve trait document with parent and child terms etc here
         for (String traitUriString : document.getTraitUris()) {
             traitUriString = traitUriString.trim();
