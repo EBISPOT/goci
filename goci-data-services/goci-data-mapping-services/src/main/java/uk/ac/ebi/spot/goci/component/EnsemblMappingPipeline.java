@@ -69,7 +69,7 @@ public class EnsemblMappingPipeline {
 
     private EnsemblRestcallHistoryService ensemblRestcallHistoryService;
 
-    private EnsemblDbService ensemblDbService;
+    //private EnsemblDbService ensemblDbService;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -79,11 +79,10 @@ public class EnsemblMappingPipeline {
     
     @Autowired
     public EnsemblMappingPipeline(EnsemblRestTemplateService ensemblRestTemplateService,
-                                  EnsemblRestcallHistoryService ensemblRestcallHistoryService,
-                                  EnsemblDbService ensemblDbService) {
+                                  EnsemblRestcallHistoryService ensemblRestcallHistoryService) {
         this.ensemblRestTemplateService = ensemblRestTemplateService;
         this.ensemblRestcallHistoryService = ensemblRestcallHistoryService;
-        this.ensemblDbService = ensemblDbService;
+        //this.ensemblDbService = ensemblDbService;
     }
 
     // Run the pipeline for a given SNP
@@ -180,15 +179,15 @@ public class EnsemblMappingPipeline {
             // Skip the iteration if the gene name is in the "gene-to-ignore" list
             if (!getReportedGenesToIgnore().contains(reportedGene)) {
 
-//                String webservice = "lookup_symbol";
-//                RestResponseResult reportedGeneApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
-//                        "lookup_symbol", reportedGene, eRelease);
-//
-//                if (reportedGeneApiResult == null) {
-//                    reportedGeneApiResult = ensemblRestTemplateService.getRestCall(webservice, reportedGene, "");
-//                    ensemblRestcallHistoryService.create(reportedGeneApiResult, "lookup_symbol", reportedGene, eRelease);
-//                }
-                RestResponseResult reportedGeneApiResult = ensemblDbService.getLookupSymbol(reportedGene);
+                String webservice = "lookup_symbol";
+                RestResponseResult reportedGeneApiResult = ensemblRestcallHistoryService.getEnsemblRestCallByTypeAndParamAndVersion(
+                        "lookup_symbol", reportedGene, eRelease);
+
+                if (reportedGeneApiResult == null) {
+                    reportedGeneApiResult = ensemblRestTemplateService.getRestCall(webservice, reportedGene, "");
+                    ensemblRestcallHistoryService.create(reportedGeneApiResult, "lookup_symbol", reportedGene, eRelease);
+                }
+//                RestResponseResult reportedGeneApiResult = ensemblDbService.getLookupSymbol(reportedGene);
                 // Check for errors
                 if (reportedGeneApiResult.getError() != null && !reportedGeneApiResult.getError().isEmpty()) {
                     getEnsemblMappingResult().addPipelineErrors(reportedGeneApiResult.getError());
@@ -509,6 +508,9 @@ public class EnsemblMappingPipeline {
         SingleNucleotidePolymorphism snp_tmp =
                 new SingleNucleotidePolymorphism();
         snp_tmp.setRsId(getEnsemblMappingResult().getRsId());
+        if(getEnsemblMappingResult().getRsId() == null){
+            throw new IllegalArgumentException("error, no RS ID found for location " + snp_location.getId());
+        }
 
         // Get closest gene
         if (intergenic) {

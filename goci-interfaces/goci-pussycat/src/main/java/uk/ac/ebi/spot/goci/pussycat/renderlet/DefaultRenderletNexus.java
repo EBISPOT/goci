@@ -115,32 +115,32 @@ public class DefaultRenderletNexus implements RenderletNexus {
     }
 
     @Override
-    public void setRenderedBand(BandInformation bandInformation, SVGArea svgArea) {
+    public synchronized void setRenderedBand(BandInformation bandInformation, SVGArea svgArea) {
         renderedBands.put(bandInformation, svgArea);
     }
 
     @Override
-    public SVGArea getRenderedBand(BandInformation bandInformation) {
+    public synchronized SVGArea getRenderedBand(BandInformation bandInformation) {
         return renderedBands.get(bandInformation);
     }
 
     @Override
-    public boolean alreadyRendered(BandInformation bandInformation) {
+    public synchronized boolean alreadyRendered(BandInformation bandInformation) {
         return renderedBands.containsKey(bandInformation);
     }
 
     @Override
-    public <C> void setBandContext(C context, Map<BandInformation, BandInformation> bandMap) {
+    public synchronized <C> void setBandContext(C context, Map<BandInformation, BandInformation> bandMap) {
         previousBandMapByContext.put(context, bandMap);
     }
 
     @Override
-    public <C> Map<BandInformation, BandInformation> getBandContext(C context) {
+    public synchronized <C> Map<BandInformation, BandInformation> getBandContext(C context) {
         return previousBandMapByContext.get(context);
     }
 
     @Override
-    public <C> boolean bandContextExists(C context) {
+    public synchronized <C> boolean bandContextExists(C context) {
         return previousBandMapByContext.containsKey(context);
     }
 

@@ -45,17 +45,22 @@
         <div class="col-md-8">
             <div class="alert alert-success">
                 <a href="#" class="close" data-dismiss="alert">&times;</a>
-                <strong th:text="${changesSaved}">Success!</strong>
+                <strong th:utext="${changesSaved}">Success!</strong>
             </div>
         </div>
     </div>
     <div class="row">
+<!--        <form class="form-inline" name="testMessageForm" role="form" method="post"-->
+<!--              th:action="@{/submissions/{submissionID}/testError(submissionID=${submission.id})}"-->
+<!--            th:object="${submission}" style="display:none;">-->
+<!--            <button id="testButton" type="submit" class="btn btn-sm">Test Error</button>-->
+<!--        </form>-->
         <form class="form-inline" name="importForm" role="form" method="post" id="importForm"
               th:action="@{/submissions/{submissionID}(submissionID=${submission.id})}"
               th:object="${submission}">
             <button id="importButton" type="submit" class="btn btn-sm col-sm-1"
                     th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-                    th:disabled="${submission.submissionType.toString().equals('UNKNOWN') || submission.submissionType.toString().equals('PRE_PUBLISHED')}"
+                    th:disabled="${submission.submissionType.toString().equals('CURATION_COMPLETE') || submission.submissionType.toString().equals('UNKNOWN') || submission.submissionType.toString().equals('PRE_PUBLISHED')}"
                     th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import"></button>
         </form>
         <button class="btn btn-sm btn-primary col-sm-1" id="toggleSubmission">Show/Hide Submission</button>
@@ -79,33 +84,45 @@
             <div class="panel-heading background-color-primary-accent">
                 <h3 class="panel-title">Submission Information</h3>
             </div>
-            <div class="clearfix" id="submission-info-loading">
-                <div class="panel-body col-sm-12">
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
-                            <span class="item-left-bold">Created Date</span>
-                        </div>
-                        <div class="col-sm-3" id="submission-created"
-                             th:text="${#dates.format(submission.created,'yyyy-MM-dd')}">created
-                            date</div>
+            <div class="clearfix panel-body" id="submission-info-loading">
+                <div class="col-sm-12">
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Created Date</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-created"
+                         th:text="${#dates.format(submission.created,'yyyy-MM-dd')}">created
+                        date</div>
+
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Created By</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-created-by"
+                         th:text="${submissionData.created.user.name}">created by</div>
+                </div>
+                <div class="clearfix col-sm-12">
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Id</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-id">
+                        <a th:href="@{{baseURL}/submission/{submissionId}(baseURL=${@environment.getProperty('deposition.ui.uri')},submissionId=${submission.id})}"
+                           th:text="${submission.id}" target="_blank"></a>
 
                     </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
-                            <span class="item-left-bold">Created By</span>
-                        </div>
-                        <div class="col-sm-3" id="submission-created-by"
-                             th:text="${submissionData.created.user.name}">created by</div>
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Type</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-type"
+                         th:text="${submission.submissionType}">type
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-2">
+                        <span class="item-left-bold">Submission Status</span>
+                    </div>
+                    <div class="col-sm-4" id="submission-status"
+                         th:text="${submission.status}">status
+                    </div>
 
-                    </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
-                            <span class="item-left-bold">Submission Status</span>
-                        </div>
-                        <div class="col-sm-3" id="submission-status"
-                             th:text="${submission.status}">status
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -116,7 +133,7 @@
                 <h3 class="panel-title">Publication information</h3>
             </div>
             <div class="clearfix" id="summary-panel-loading">
-                <div class="panel-body col-sm-12">
+                <div class="panel-body">
                     <div class="clearfix col-sm-12">
                         <div class="col-sm-2">
                             <span class="item-left-bold">Title</span>
@@ -124,54 +141,46 @@
                         <div class="col-sm-10" id="publication-title"
                              th:text="${submission.title}">-</div>
                     </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                    <div class="clearfix col-sm-12">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">PubMed ID</span>
                         </div>
-                        <div class="col-sm-3" id="publication-pubmedid"
-                             th:text="${submission.pubMedID}">pubmed id
+                        <div class="col-sm-4">
+                            <a th:href="@{/publication/{pubmedId}(pubmedId=${submission.pubMedID})}" th:text="${submission.pubMedID}"></a>
                         </div>
-                    </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">First author</span>
                         </div>
-                        <div class="col-sm-3" id="publication-author"
+                        <div class="col-sm-4" id="publication-author"
                              th:text="${submission.author}">first author
                         </div>
                     </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                    <div class="clearfix col-sm-12">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">Journal</span>
                         </div>
-                        <div class="col-sm-3" id="publication-journal"
+                        <div class="col-sm-4" id="publication-journal"
                              th:text="${submission.journal}">journal
                         </div>
-                    </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">Publication date</span>
-                            <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
-                                  title="Journal publication date YYYY-MM-DD"></span>
                         </div>
-                        <div class="col-sm-3" id="publication-datepublication"
+                        <div class="col-sm-4" id="publication-datepublication"
                              th:text="${submission.publicationDate}">pub date
                         </div>
                     </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                    <div class="clearfix col-sm-12">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">Publication Status</span>
                         </div>
-                        <div class="col-sm-3"
+                        <div class="col-sm-4"
                              id="publication-status"
                              th:text="${submission.status}">status
                         </div>
-                    </div>
-                    <div class="clearfix col-sm-6">
-                        <div class="col-sm-3">
+                        <div class="col-sm-2">
                             <span class="item-left-bold">Corresponding Author</span>
                         </div>
-                        <div class="col-sm-3"
+                        <div class="col-sm-4"
                              id="publication-corresponding-author"
                              th:text="${submission.correspondingAuthor}">corresponding author
                         </div>

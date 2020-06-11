@@ -30,8 +30,8 @@
     <!-- Include Select2 JS -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
-    <script src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
-    <script th:src="@{/js/goci-print-page.js}"></script>
+    <script async="async" src="../static/js/goci-editing.js" th:src="@{../js/goci-editing.js}"></script>
+    <script async="async" th:src="@{/js/goci-print-page.js}"></script>
 
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
@@ -114,7 +114,6 @@
 </div>
 
 
-<div class="container-fluid">
     <div class="row">
         <div class="col-md-8 dataForm">
 
@@ -212,26 +211,18 @@
 
                 </div>
                 <div class="form-group">
-                    <label for="correspondingAuthor" class="control-label col-md-2">Corresponding Author</label>
-
-                    <div class="col-md-10 static-field">
-                        <b
-                                id="correspondingAuthor"><span
-                                th:utext="*{publicationId.getCorrespondingAuthor()} ? *{publicationId.getCorrespondingAuthor().getCorrespondingAuthorName()} : ''" >
-                            Description</span></b>
-                    </div>
-
+                    <label for="correspondingAuthors" class="control-label col-md-2">Corresponding authors
+                    </label>
+                    <span id="correspondingAuthors" th:each="author: ${study.publicationId.correspondingAuthors}">
+                                    <span th:text="${author.fullname}"/>
+                            </span>
                 </div>
                 <div class="form-group">
-                    <label for="correspondingAuthorEmail" class="control-label col-md-2">Corresponding Author
-                        Email</label>
-
-                    <div class="col-md-10 static-field">
-                        <b
-                                id="correspondingAuthorEmail"><span
-                                th:utext="*{publicationId.getCorrespondingAuthor()} ? *{publicationId.getCorrespondingAuthor().correspondingAuthorEmail} : ''" >Description</span></b>
-                    </div>
-
+                    <label for="correspondingAuthorsEmail" class="control-label col-md-2">Corresponding author emails
+                    </label>
+                    <span id="correspondingAuthorsEmail" th:each="author: ${study.publicationId.correspondingAuthors}">
+                                    <span th:text="${author.correspondingAuthorEmail}"/>
+                            </span>
                 </div>
 
                 <div class="form-group">
@@ -268,14 +259,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <a th:if="${study.publicationId?.activeSubmission}"
-                       th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.pubmedId})}" title="Note: This Publication has an active submission">
+
+                    <label for="pubmed" class="control-label col-md-2">
+                        <a th:if="${study.publicationId?.activeSubmission}"
+                           th:href="@{/submissions/{submissionId}(submissionId=${study.publicationId?.submissionId})}"
+                           title="Note: This Publication has an active submission">
                         <span class="glyphicon glyphicon-warning-sign text-danger col-md-1"
                               style="font-size: 25px"></span>
-                    </a>
-
-                    <label for="pubmed" class="control-label col-md-1">Pubmed</label>
-
+                        </a>
+                        Pubmed</label>
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}" readonly="readonly" />
 
@@ -382,7 +374,7 @@
 
 
                 <div class="form-group">
-                    <label for="diseaseTrait" class="control-label col-md-2">Disease Trait</label>
+                    <label for="diseaseTrait" class="control-label col-md-2">Reported trait</label>
 
                     <div class="col-md-10">
                         <select name="diseaseTrait" th:field="*{diseaseTrait}" id="diseaseTrait"
@@ -398,7 +390,7 @@
 
 
                 <div class="form-group">
-                    <label for="EFOTrait" class="control-label col-md-2">EFO Trait</label>
+                    <label for="EFOTrait" class="control-label col-md-2">Main EFO trait</label>
 
                     <div class="col-md-10">
                         <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
@@ -409,6 +401,21 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="mappedBackgroundTraits" class="control-label col-md-2">Background EFO Trait</label>
+
+                    <div class="col-md-10">
+                        <select name="mappedBackgroundTraits" th:field="*{mappedBackgroundTraits}"
+                                class="form-control select2-select"
+                                multiple="multiple" id="mappedBackgroundTraits">
+                            <option th:each="efoTrait : ${efoTraits}"
+                                    th:value="${efoTrait.id}"
+                                    th:text="${efoTrait.trait}"></option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group">
 
                     <div class="col-md-offset-10 col-md-2">
@@ -419,7 +426,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="backgroundTrait" class="control-label col-md-2">Background Trait</label>
+                    <label for="backgroundTrait" class="control-label col-md-2">Background trait (author submitted)</label>
 
                     <div class="col-md-10">
                         <select name="backgroundTrait" th:field="*{backgroundTrait}" id="backgroundTrait"
@@ -434,26 +441,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="mappedBackgroundTraits" class="control-label col-md-2">Mapped Background Trait</label>
-
-                    <div class="col-md-10">
-                        <select name="mappedBackgroundTraits" th:field="*{mappedBackgroundTraits}"
-                                class="form-control select2-select"
-                                multiple="multiple" id="mappedBackgroundTraits">
-                            <option th:each="efoTrait : ${efoTraits}"
-                                    th:value="${efoTrait.id}"
-                                    th:text="${efoTrait.trait}"></option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
                     <label for="statisticalModel" class="control-label col-md-2">Statistical Model</label>
 
                     <div class="col-md-10">
                         <input type="text"
                                class="form-control"
                                id="statisticalModel"
-                               th:field="${study.studyExtension.statisticalModel}"/>
+                               th:field="${extension.statisticalModel}"/>
                     </div>
                 </div>
 
@@ -515,7 +509,7 @@
 
                     <div class="col-md-10">
                     <input id="summaryStatisticsFile" type="text"
-                           class="form-control" th:field="${study.studyExtension.summaryStatisticsFile}"/>
+                           class="form-control" th:field="${extension.summaryStatisticsFile}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -524,7 +518,7 @@
 
                     <div class="col-md-10">
                     <input id="summaryStatisticsAssembly" type="text"
-                           class="form-control" th:field="${study.studyExtension.summaryStatisticsAssembly}"/>
+                           class="form-control" th:field="${extension.summaryStatisticsAssembly}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -532,7 +526,7 @@
 
                     <div class="col-md-10">
                     <input id="cohort" type="text"
-                           class="form-control" th:field="${study.studyExtension.cohort}"/>
+                           class="form-control" th:field="${extension.cohort}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -540,7 +534,7 @@
 
                     <div class="col-md-10">
                         <input id="cohortSpecificReference" type="text"
-                               class="form-control" th:field="${study.studyExtension.cohortSpecificReference}"/>
+                               class="form-control" th:field="${extension.cohortSpecificReference}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -548,7 +542,7 @@
 
                     <div class="col-md-10">
                         <input id="studyDescription" type="text"
-                               class="form-control" th:field="${study.studyExtension.studyDescription}"/>
+                               class="form-control" th:field="${extension.studyDescription}"/>
                     </div>
                 </div>
 
@@ -561,85 +555,12 @@
 
             </form>
         </div>
-    </div>
 </div>
 
 <div th:include="fragments/footer :: page_footer"></div>
 
 <script src="../static/js/study/study-init.js" th:src="@{../js/study/study-init.js}"></script>
-<script th:src="@{/js/study/study-authors.js}"></script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#EFOTrait').select2({
-                                   placeholder: "Select an EFO trait",
-                                   allowClear: true
-                               });
-    });
-</script>
-
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#diseaseTrait').select2({
-                                       placeholder: "Select a disease/trait",
-                                       allowClear: true
-                                   });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#mappedBackgroundTraits').select2({
-            placeholder: "Select an background EFO trait",
-            allowClear: true
-        });
-    });
-</script>
-
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#backgroundTrait').select2({
-            placeholder: "Select a background disease/trait",
-            allowClear: true
-        });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#genotypingTechnology').select2({
-                                   placeholder: "Select a genotyping technology",
-                                   allowClear: true
-                               });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#platform').select2({
-                                   placeholder: "Select an array manufacturer",
-                                   allowClear: true
-                               });
-    });
-</script>
-
-<script>
-    $(function() {
-        // turn the element to select2 select style
-        $('#qualifier').select2({
-                                    placeholder: "Select a qualifier",
-                                    allowClear: true
-                                });
-    });
-</script>
+<script async="async" th:src="@{/js/study/study-authors.js}"></script>
 
 </body>
 </html>

@@ -10,13 +10,7 @@ import uk.ac.ebi.spot.goci.pussycat.lang.Filter;
 import uk.ac.ebi.spot.goci.pussycat.layout.BandInformation;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Convenience singleton class to access common SPARQL queries required in rendering and to cache the results for
@@ -30,7 +24,7 @@ public class QueryManager {
         return instance;
     }
 
-    private final Map<List<Object>, Object> requestCache;
+    private final Map<CacheKey, Object> requestCache;
     private final Logger log = LoggerFactory.getLogger("rendering");
 
     protected Logger getLog() {
@@ -38,7 +32,7 @@ public class QueryManager {
     }
 
     private QueryManager() {
-        this.requestCache = new HashMap<List<Object>, Object>();
+        this.requestCache = new TreeMap<CacheKey, Object>();
     }
 
     public URI getCytogeneticBandForAssociation(SparqlTemplate sparqlTemplate, URI association) throws
@@ -823,9 +817,7 @@ public class QueryManager {
 
     private Object checkCache(String methodName, Object... arguments) {
         synchronized (requestCache) {
-            List<Object> key = new ArrayList<Object>();
-            key.add(methodName);
-            Collections.addAll(key, arguments);
+            CacheKey key = new CacheKey(methodName, arguments);
             if (requestCache.containsKey(key)) {
                 return requestCache.get(key);
             }
@@ -837,11 +829,23 @@ public class QueryManager {
 
     private <O> O cache(O result, String methodName, Object... arguments) {
         synchronized (requestCache) {
-            List<Object> key = new ArrayList<Object>();
-            key.add(methodName);
-            Collections.addAll(key, arguments);
+            CacheKey key = new CacheKey(methodName, arguments);
             requestCache.put(key, result);
             return result;
+        }
+    }
+
+    class CacheKey implements Comparable<CacheKey>{
+
+        String compareKey = null;
+        public CacheKey(String methodName, Object...arguments){
+            StringBuilder builder = new StringBuilder();
+            builder.append(methodName).append(":").append(Arrays.toString(arguments));
+            compareKey = builder.toString();
+        }
+        @Override
+        public int compareTo(CacheKey o) {
+            return compareKey.compareTo(o.compareKey);
         }
     }
 }

@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.pussycat.session;
 
+import ch.qos.logback.core.util.FileUtil;
+import org.apache.axiom.attachments.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.pussycat.utils.StringUtils;

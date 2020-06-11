@@ -1,0 +1,70 @@
+{
+  "submissionId": "5edf762193a31d000189ab6f",
+  "bodyOfWork": {
+    "bodyOfWorkId": "GCP000049",
+    "title": "Test piece of work",
+    "description": "something",
+    "firstAuthor": {
+      "firstName": "James",
+      "lastName": "Hayhuesr",
+      "email": "jhayhurst@ebi.ac.uk"
+    },
+    "correspondingAuthors": [
+      {
+        "firstName": "James",
+        "lastName": "Hayhuesr",
+        "email": "jhayhurst@ebi.ac.uk"
+      }
+    ],
+    "embargoDate": "2020-06-09",
+    "status": "UNDER_SUBMISSION"
+  },
+  "provenanceType": "BODY_OF_WORK",
+  "status": "SUBMITTED",
+  "globusFolder": "0d2ad99f-3127-4e77-9be4-81001025a909",
+  "globusOriginId": "95557608-aa46-11ea-bee5-0e716405a293",
+  "studies": [
+    {
+      "study_tag": "t1",
+      "study_accession": "GCST90000116",
+      "genotyping_technology": "Genome-wide genotyping array",
+      "imputation": false,
+      "variant_count": 4,
+      "trait": "bmi",
+      "summary_statistics_file": "abc123.tsv",
+      "checksum": "a1195761f082f8cbc2f5a560743077cc",
+      "summary_statistics_assembly": "GRCh38",
+      "readme_file": "some text"
+    }
+  ],
+  "associations": [
+    {
+      "study_tag": "t1",
+      "variant_id": "rs560885260",
+      "pvalue": "7.037E-6",
+      "effect_allele": "A"
+    }
+  ],
+  "samples": [
+    {
+      "study_tag": "t1",
+      "size": 2000,
+      "ancestry_category": "European",
+      "country_recruitement": "UK",
+      "stage": "discovery"
+    }
+  ],
+  "notes": [],
+  "created": {
+    "user": {
+      "name": "James Hayhurst",
+      "email": "jhayhurst@ebi.ac.uk",
+      "nickname": "112799fe623c12d1c207d1cb09a17485ecdff7b7",
+      "userReference": "usr-360ce42b-35a4-4505-a0a0-a4ad3eb773d5",
+      "domains": [
+        "self.GWAS_Curator"
+      ]
+    },
+    "timestamp": "2020-06-09T11:44:33.972Z"
+  }
+}

@@ -27,7 +27,7 @@ public class DepositionSubmissionTest {
             DepositionSubmissionListWrapper submissionList =
                     objectMapper.readValue(resource.getFile(), DepositionSubmissionListWrapper.class);
             assertNotNull(submissionList);
-            assertNotNull(submissionList.getWrapper().getSubmissions().get(0).getCreated().getTimestamp().toString()
+            assertTrue(submissionList.getWrapper().getSubmissions().get(0).getCreated().getTimestamp().toString()
                     .equals("2019-08-12T11:33:45.005Z"));
             assertNotNull(submissionList.getWrapper().getSubmissions().get(0).getStatus());
         } catch (IOException e) {
@@ -46,7 +46,7 @@ public class DepositionSubmissionTest {
             DepositionSubmission submission =
                     objectMapper.readValue(resource.getFile(), DepositionSubmission.class);
             assertNotNull(submission);
-            assertNotNull(submission.getCreated().getTimestamp().toString()
+            assertTrue(submission.getCreated().getTimestamp().toString()
                     .equals("2019-08-12T11:41:43.861Z"));
             assertNotNull(submission.getStatus());
         } catch (IOException e) {
@@ -65,6 +65,48 @@ public class DepositionSubmissionTest {
             String json = new ObjectMapper().writeValueAsString(wrapper);
             assertNotNull(json);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testReadBodyOfWorkSubmission() {
+        try {
+            Resource resource = new ClassPathResource("bom-submission.json");
+            assertTrue(resource.exists());
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JodaModule());
+            DepositionSubmission submission =
+                    objectMapper.readValue(resource.getFile(), DepositionSubmission.class);
+            assertNotNull(submission);
+            assertTrue(submission.getCreated().getTimestamp().toString()
+                    .equals("2020-06-09T11:44:33.972Z"));
+            assertNotNull(submission.getStatus());
+            assertNotNull(submission.getBodyOfWork());
+            assertEquals(submission.getBodyOfWork().getTitle(), "Test piece of work");
+            assertNull(submission.getPublication());
+            assertNotNull(submission.getStudies().get(0).getSummaryStatisticsFile());
+            assertEquals(submission.getStudies().get(0).getSummaryStatisticsFile(), "abc123.tsv");
+        } catch (IOException e) {
+            e.printStackTrace();
+            fail(e.getMessage());
+        }
+    }
+
+    @Test
+    public void testReadSubmissionEnvelopes() {
+        try {
+            Resource resource = new ClassPathResource("envelope-submissions.json");
+            assertTrue(resource.exists());
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JodaModule());
+            DepositionSubmission[] submission =
+                    objectMapper.readValue(resource.getFile(), DepositionSubmission[].class);
+            assertNotNull(submission);
+            assertEquals("2020-04-27T13:17:27.724Z", submission[0].getCreated().getTimestamp().toString());
+            assertNotNull(submission[0].getStatus());
+        } catch (IOException e) {
             e.printStackTrace();
             fail(e.getMessage());
         }

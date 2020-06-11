@@ -115,7 +115,7 @@ public abstract class TraitRenderlet<C, E> implements Renderlet<C, E> {
                         svg.append("stroke='black' ");
                         svg.append("stroke-width='0.5' ");
 
-                        String traitName = getTraitLabel(context, trait);
+                        String traitName = getTraitLabel(context, trait).replace('"', '\'');
                         svg.append("gwasname=\"").append(traitName).append("\" ");
 
                         String traitAttribute = getTraitAttribute(context, trait);

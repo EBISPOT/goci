@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -64,7 +65,7 @@ public abstract class ChromosomeRenderlet<C, E> implements Renderlet<C, E> {
 
         InputStream in = null;
         try {
-            in = getSVGFile().openStream();
+            in = new BufferedInputStream(getSVGFile().openStream());
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();

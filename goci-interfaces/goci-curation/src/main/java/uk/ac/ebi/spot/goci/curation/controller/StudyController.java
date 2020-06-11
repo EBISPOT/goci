@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
@@ -58,6 +59,8 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/studies")
 public class StudyController {
+    @Value("${deposition.ui.uri}")
+    private String depositionUiURL;
 
     private final StudyExtensionRepository studyExtensionRepository;
     private final DepositionSubmissionService submissionService;
@@ -159,6 +162,7 @@ public class StudyController {
                                  @RequestParam(required = false) Integer year,
                                  @RequestParam(required = false) Integer month) {
 
+        model.addAttribute("baseUrl", depositionUiURL);
 
         // This is passed back to model and determines if pagination is applied
         Boolean pagination = true;
@@ -465,6 +469,7 @@ public class StudyController {
         studyPage.forEach(study->{
             if(pubmedMap.containsKey(study.getPublicationId().getPubmedId())){
                 study.getPublicationId().setActiveSubmission(true);
+                study.getPublicationId().setSubmissionId(pubmedMap.get(study.getPublicationId().getPubmedId()));
             }
         });
         return "studies";
@@ -637,15 +642,16 @@ public class StudyController {
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         if(pubmedMap.containsKey(studyToView.getPublicationId().getPubmedId())){
             studyToView.getPublicationId().setActiveSubmission(true);
+            studyToView.getPublicationId().setSubmissionId(pubmedMap.get(studyToView.getPublicationId().getPubmedId()));
         }
 
         model.addAttribute("study", studyToView);
-//        if(studyToView.getStudyExtension() == null){
-//            StudyExtension extension = new StudyExtension();
-//            extension.setStudy(studyToView);
-//            studyToView.setStudyExtension(extension);
-//        }
-        //model.addAttribute("extension", studyToView.getStudyExtension());
+        if(studyToView.getStudyExtension() == null){
+            StudyExtension extension = new StudyExtension();
+            extension.setStudy(studyToView);
+            studyToView.setStudyExtension(extension);
+        }
+        model.addAttribute("extension", studyToView.getStudyExtension());
 
         return "study";
     }
@@ -657,7 +663,11 @@ public class StudyController {
                               @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 //        xintodo edit study
-        study.getStudyExtension().setStudy(study);
+        if(study.getStudyExtension() == null){
+            StudyExtension extension = new StudyExtension();
+            extension.setStudy(study);
+            study.setStudyExtension(extension);
+        }
         studyUpdateService.updateStudy(studyId, study,
                 currentUserDetailsService.getUserFromRequest(request));
 

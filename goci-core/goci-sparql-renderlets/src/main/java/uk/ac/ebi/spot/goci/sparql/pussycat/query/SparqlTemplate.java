@@ -23,10 +23,7 @@ import uk.ac.ebi.spot.goci.sparql.exception.SparqlQueryException;
 
 import javax.annotation.Resource;
 import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Javadocs go here!
@@ -43,6 +40,10 @@ public class SparqlTemplate {
 
     @Resource(name = "prefixProperties")
     private Properties prefixProperties;
+
+    private Map<String, Boolean> askCache = new TreeMap<>();
+    private Map<String, String> labelCache = new TreeMap<>();
+    private Map<String, URI> typeCache = new TreeMap<>();
 
     public JenaQueryExecutionService getJenaQueryExecutionService() {
         return jenaQueryExecutionService;
@@ -99,12 +100,17 @@ public class SparqlTemplate {
 
     public boolean ask(String sparql) {
         sparql = getPrefixString().concat(sparql);
+        if(askCache.containsKey(sparql)){
+            return askCache.get(sparql);
+        }
         Graph g = getJenaQueryExecutionService().getDefaultGraph();
         Query q1 = QueryFactory.create(sparql, Syntax.syntaxARQ);
         QueryExecution execute = null;
         try {
             execute = getJenaQueryExecutionService().getQueryExecution(g, q1, false);
-            return execute.execAsk();
+            boolean result = execute.execAsk();
+            askCache.put(sparql, result);
+            return result;
         }
         catch (LodeException e) {
             throw new SparqlQueryException("Failed to execute ask '" + sparql + "'", e);
@@ -216,24 +222,29 @@ public class SparqlTemplate {
     public String label(final URI entity) {
         String sparql = getPrefixString().concat(
                 "SELECT DISTINCT ?label WHERE { <" + entity.toString() + "> rdfs:label ?label . }");
-        return query(sparql,
-                     new ResultSetMapper<String>() {
-                         @Override public String mapResultSet(ResultSet rs) {
-                             String result = null;
-                             while (rs.hasNext()) {
-                                 if (result != null) {
-                                     throw new SparqlQueryException(new DataIntegrityViolationException(
-                                             "More than one rdfs:label for' " + entity.toString() + "'"));
-                                 }
-                                 QuerySolution qs = rs.next();
-                                 result = qs.getLiteral("label").getLexicalForm();
-                             }
-                             if (result == null) {
-                                 result = "Annotation tbc";
-                             }
-                             return result;
-                         }
-                     });
+        if(labelCache.containsKey(sparql)){
+            return labelCache.get(sparql);
+        }
+        String result = query(sparql, new ResultSetMapper<String>() {
+            @Override
+            public String mapResultSet(ResultSet rs) {
+                String result = null;
+                while (rs.hasNext()) {
+                    if (result != null) {
+                        throw new SparqlQueryException(new DataIntegrityViolationException(
+                                "More than one rdfs:label for' " + entity.toString() + "'"));
+                    }
+                    QuerySolution qs = rs.next();
+                    result = qs.getLiteral("label").getLexicalForm();
+                }
+                if (result == null) {
+                    result = "Annotation tbc";
+                }
+                return result;
+            }
+        });
+        labelCache.put(sparql, result);
+        return result;
     }
 
     public URI type(final URI entity) {
@@ -241,21 +252,26 @@ public class SparqlTemplate {
                 getPrefixString().concat("SELECT DISTINCT ?type WHERE { <" + entity.toString() + "> rdf:type ?type . " +
                                                  "FILTER ( ?type != owl:Class ) . " +
                                                  "FILTER ( ?type != owl:NamedIndividual ) }");
-        return query(sparql,
-                     new ResultSetMapper<URI>() {
-                         @Override public URI mapResultSet(ResultSet rs) {
-                             URI result = null;
-                             while (rs.hasNext()) {
-                                 if (result != null) {
-                                     throw new SparqlQueryException(new DataIntegrityViolationException(
-                                             "More than one non-owl rdf:type for' " + entity.toString() + "'"));
-                                 }
-                                 QuerySolution qs = rs.next();
-                                 result = URI.create(qs.getResource("type").getURI());
-                             }
-                             return result;
-                         }
-                     });
+        if(typeCache.containsKey(sparql)){
+            return typeCache.get(sparql);
+        }
+        URI result = query(sparql, new ResultSetMapper<URI>() {
+            @Override
+            public URI mapResultSet(ResultSet rs) {
+                URI result = null;
+                while (rs.hasNext()) {
+                    if (result != null) {
+                        throw new SparqlQueryException(new DataIntegrityViolationException(
+                                "More than one non-owl rdf:type for' " + entity.toString() + "'"));
+                    }
+                    QuerySolution qs = rs.next();
+                    result = URI.create(qs.getResource("type").getURI());
+                }
+                return result;
+            }
+        });
+        typeCache.put(sparql, result);
+        return result;
     }
 
     public List<URI> types(final URI entity) {

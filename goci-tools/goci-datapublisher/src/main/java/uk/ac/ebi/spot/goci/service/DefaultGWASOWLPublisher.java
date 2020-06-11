@@ -78,12 +78,18 @@ public class DefaultGWASOWLPublisher implements GWASOWLPublisher {
                                    AssociationService associationService,
                                    SingleNucleotidePolymorphismService singleNucleotidePolymorphismService,
                                    GWASOWLConverter converter,
-                                   OntologyLoader ontologyLoader) {
+                                   OntologyLoader ontologyLoader,
+                                   AssociationRepository associationRepository,
+                                   StudyRepository studyRepository,
+                                   SingleNucleotidePolymorphismRepository singleNucleotidePolymorphismRepository) {
         this.studyService = studyService;
         this.associationService = associationService;
         this.singleNucleotidePolymorphismService = singleNucleotidePolymorphismService;
         this.converter = converter;
         this.ontologyLoader = ontologyLoader;
+        this.associationRepository = associationRepository;
+        this.studyRepository = studyRepository;
+        this.singleNucleotidePolymorphismRepository = singleNucleotidePolymorphismRepository;
     }
 
     private Logger log = LoggerFactory.getLogger(getClass());

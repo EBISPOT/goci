@@ -102,6 +102,29 @@ public class AssociationOperationsService {
         return processAssociationValidationErrors(updatedError);
     }
 
+    public List<AssociationValidationView> checkSnpAssociationErrors(Association association,
+                                                                         String measurementType) {
+        Collection<ValidationError> errors = new ArrayList<>();
+        for(SingleNucleotidePolymorphism snp: association.getSnps()){
+            errors.add(errorCreationService.checkSnpValueIsPresent(snp.getRsId()));
+        }
+        association.getLoci().stream().forEach(locus -> locus.getStrongestRiskAlleles().stream().forEach(
+                allele-> {
+                    errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(allele.getRiskAlleleName()));
+                })
+        );
+
+        // Ensure user has entered required information on the form
+        if (measurementType.equals("or")) {
+            errors.add(errorCreationService.checkOrIsPresent(association.getOrPerCopyNum()));
+        }
+        if (measurementType.equals("beta")) {
+            errors.add(errorCreationService.checkBetaIsPresentAndIsNotNegative(association.getBetaNum()));
+        }
+
+        Collection<ValidationError> updatedError = ErrorProcessingService.checkForValidErrors(errors);
+        return processAssociationValidationErrors(updatedError);
+    }
     /**
      * Check a SNP association interaction form for errors, these are critical errors that would prevent creating an
      * association

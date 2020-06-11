@@ -1,8 +1,14 @@
 $(document).ready(function() {
-
+    //var message = baseURL /* injected from add_study.html */
     $('#pubmedSearchDatatable').DataTable({
         "columns": [
-            { "mData": "submissionID","sTitle": "Submission ID" },
+            { "mData": "submissionID","sTitle": "Submission ID",
+                "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                    if (sData != "") {
+                        $(nTd).html("<a href='" + baseURL + "/submission/" + sData + "'  target=\"_blank\">" + sData + "</a>");
+                    }
+                }
+            },
             { "mData": "pubMedID","sTitle": "Pubmed ID" },
             { "mData": "author", "sDefaultContent": "", "sTitle":"Author" },
             { "mData": "title", "sDefaultContent": "", "sTitle": "Title"   }, // <-- which values to use inside object
@@ -35,11 +41,20 @@ $(document).ready(function() {
             data: listPubmeds,
             success: function (data, textStatus, jqXHR) {
                 search = data.search;
-                $('#pubmedLabel').text(search.pubMedID)
-                $('#pubmedAuthor').text(search.author)
-                $('#pubmedTitle').text(search.title)
-                $('#doiLabel').text(search.doi)
-                console.log(data);
+                if(data.error) {
+                    $('#pubmedLabel').text('')
+                    $('#pubmedAuthor').text('')
+                    $('#pubmedTitle').text('')
+                    $('#doiLabel').text('')
+                    $('#error_text').html('')
+                    $("#main_error").show();
+                }else {
+                    $('#pubmedLabel').text(search.pubMedID)
+                    $('#pubmedAuthor').text(search.author)
+                    $('#pubmedTitle').text(search.title)
+                    $('#doiLabel').text(search.doi)
+                }
+                    console.log(data);
                 var table = $('#pubmedSearchDatatable').dataTable();
                 var oSettings = table.fnSettings();
                 table.fnClearTable(this);
@@ -61,7 +76,7 @@ $(document).ready(function() {
 
     $('#pubmedIdDatatable').DataTable({
         "columns": [
-            { "mData": "pubmedId","sTitle": "pubmed ID" },
+            { "mData": "pubmedId","sTitle": "Pubmed ID" },
             { "mData": "study_id", "sDefaultContent": "", "sTitle": "Study",
                 "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                     if (sData != "") {

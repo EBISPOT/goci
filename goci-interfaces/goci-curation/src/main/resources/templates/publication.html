@@ -74,14 +74,14 @@
                     <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
                         <div class="clearfix">
                             <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
-                                <span class="item-left-bold">PubMed ID</span>
+                                <span class="item-left-bold"><a th:if="${publication.activeSubmission}"
+                                                                th:href="@{/submissions/{submissionId}(submissionId=${publication.submissionId})}" title="Note: This Publication has an active submission">
+                <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
+            </a>
+                                    PubMed ID</span>
                             </div>
                             <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publication-pubmedid"
                                  th:text="${publication.pubmedId}">
-                                <a th:if="${publication.activeSubmission}"
-                                   th:href="@{/submissions/{submissionId}(submissionId=${publication.pubmedId})}" title="Note: This Publication has an active submission">
-                                    <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
-                                </a>
                             </div>
                         </div>
                         <div class="clearfix">
@@ -92,8 +92,24 @@
                                  th:text="${publication.firstAuthor.fullname}"></div>
 
                         </div>
-                    </div>
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span class="item-left-bold">Corresponding authors</span>
+                            </div>
+                            <span th:each="author: ${publication.correspondingAuthors}">
+                                    <span th:text="${author.fullname}"/>
+                            </span>
+                        </div>
+                        <div class="clearfix">
+                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
+                                <span class="item-left-bold">Corresponding author emails</span>
+                            </div>
+                            <span th:each="author: ${publication.correspondingAuthors}">
+                                    <span th:text="${author.correspondingAuthorEmail}"/>
+                            </span>
+                        </div>
 
+                    </div>
                     <!--  data -->
                     <div class="panel-body col-lg-5 col-md-4 col-sm-4 col-xs-4">
                         <div class="clearfix">
@@ -188,7 +204,7 @@
         </div>
         <div class="row">
             <div class="form-inline col-sm-6">
-                <label for="diseaseTrait" class="control-label col-sm-2">Disease Trait</label>
+                <label for="diseaseTrait" class="control-label col-sm-2">Reported trait</label>
 
                 <select name="diseaseTrait" id="diseaseTrait"
                         style="width: 300px"
@@ -204,7 +220,7 @@
                 </a>
             </div>
             <div class="form-inline col-sm-6">
-                <label for="EFOTrait" class="control-label col-sm-2">EFO Trait</label>
+                <label for="EFOTrait" class="control-label col-sm-2">Main EFO trait</label>
 
                 <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select col-sm-2"
                         style="width: 300px"
@@ -220,7 +236,7 @@
         </div>
         <div class="row">
             <div class="form-inline col-sm-6">
-                <label for="backgroundTrait" class="control-label col-sm-2">Background Trait</label>
+                <label for="backgroundTrait" class="control-label col-sm-2">Background trait (author submitted)</label>
 
                 <select name="backgroundTrait" id="backgroundTrait"
                         style="width: 300px"
@@ -236,7 +252,7 @@
                 </a>
             </div>
             <div class="form-inline col-sm-6">
-                <label for="mappedBackgroundTraits" class="control-label col-sm-2">Mapped Background Trait</label>
+                <label for="mappedBackgroundTraits" class="control-label col-sm-2">Background EFO Trait</label>
 
                 <select name="mappedBackgroundTraits"
                         class="form-control select2-select col-sm-2"

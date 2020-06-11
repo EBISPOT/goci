@@ -3,13 +3,14 @@ package uk.ac.ebi.spot.goci.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSampleDto;
 
 import javax.persistence.*;
+import java.io.IOException;
 
 @Data
 @AllArgsConstructor
@@ -34,6 +35,7 @@ public class UnpublishedAncestry {
     @JsonProperty("ancestry_category")
     private String ancestryCategory;
     private String ancestry;
+
     @JsonProperty("ancestry_description")
     private String ancestryDescription;
     @JsonProperty("country_recruitment")
@@ -41,20 +43,11 @@ public class UnpublishedAncestry {
 
     @OneToOne
     @JoinColumn(name = "study_id", unique = true)
+    @EqualsAndHashCode.Exclude
     private UnpublishedStudy study;
 
-    public static UnpublishedAncestry create(DepositionSampleDto sampleDto, UnpublishedStudy unpublishedStudy){
-        UnpublishedAncestry ancestry = new UnpublishedAncestry();
-        ancestry.setStudyTag(sampleDto.getStudyTag());
-        ancestry.setStage(sampleDto.getStage());
-        ancestry.setSampleSize(sampleDto.getSize());
-        ancestry.setCases(sampleDto.getCases());
-        ancestry.setControls(sampleDto.getControls());
-        ancestry.setSampleDescription(sampleDto.getSampleDescription());
-        ancestry.setAncestryCategory(sampleDto.getAncestryCategory());
-        ancestry.setAncestry(sampleDto.getAncestry());
-        ancestry.setAncestryDescription(sampleDto.getAncestryDescription());
-        ancestry.setCountryRecruitment(sampleDto.getCountryRecruitement());
+    public static UnpublishedAncestry create(DepositionSampleDto sampleDto, UnpublishedStudy unpublishedStudy) {
+        UnpublishedAncestry ancestry = BeanMapper.MAPPER.convert(sampleDto);
         ancestry.setStudy(unpublishedStudy);
         return ancestry;
     }

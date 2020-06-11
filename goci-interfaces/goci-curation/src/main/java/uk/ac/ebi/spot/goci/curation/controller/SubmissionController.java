@@ -139,6 +139,7 @@ public class SubmissionController {
     public String importSubmission(@PathVariable String submissionID, Model model, HttpServletRequest request,
                                    RedirectAttributes redirectAttributes) {
         List<String> statusMessages = new ArrayList<>();
+        List<String> errorMessages = new ArrayList<>();
         try {
             Map<String, Submission> submissionList = submissionService.getSubmissions();
             DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionID);
@@ -148,13 +149,14 @@ public class SubmissionController {
 
             submission.setStatus("IMPORTED");
             model.addAttribute("submissions", submissionList.values());
-            redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
         }catch(Exception e){
             e.printStackTrace();
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
-            statusMessages.add(stringWriter.getBuffer().toString());
+            errorMessages.add(stringWriter.getBuffer().toString());
         }
+        redirectAttributes.addFlashAttribute("errors", String.join("<br>", errorMessages));
+        redirectAttributes.addFlashAttribute("changesSaved", String.join("<br>", statusMessages));
         return "redirect:/submissions/" + submissionID;
     }
 
@@ -166,7 +168,8 @@ public class SubmissionController {
         StringWriter stringWriter = new StringWriter();
         new Throwable().printStackTrace(new PrintWriter(stringWriter));
         List<String> statusMessages = Arrays.asList(new String[]{"Error 1", "Error 2", stringWriter.getBuffer().toString()});
-        redirectAttributes.addFlashAttribute("changesSaved", statusMessages);
+        String status = String.join("<br>", statusMessages);
+        redirectAttributes.addFlashAttribute("changesSaved", status);
         return "redirect:/submissions/" + submissionID;
     }
 

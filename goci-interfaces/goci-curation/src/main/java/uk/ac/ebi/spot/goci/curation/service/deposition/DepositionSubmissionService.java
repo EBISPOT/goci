@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
@@ -90,18 +91,13 @@ public class DepositionSubmissionService {
     public Map<String, String> getSubmissionPubMedIds(){
         Map<String, String> pubmedMap = new HashMap<>();
         Map<String, Submission> submissionMap = getSubmissionsBasic();
-        for(Map.Entry<String, Submission> e: submissionMap.entrySet()){
-            Submission submission = e.getValue();
-            if(submission.getPubMedID() != null) {
-                pubmedMap.put(submission.getPubMedID(), e.getKey());
-            }
-        }
+        submissionMap.entrySet().stream().filter(e->e.getValue().getPubMedID() != null).forEach(e->pubmedMap.put(e.getValue().getPubMedID(), e.getKey()));
         return pubmedMap;
     }
 
     public Map<String, Submission> getSubmissionsBasic(){
-        //String url = "/submission-envelopes";
-        String url = "/submissions";
+        String url = "/submission-envelopes";
+        //String url = "/submissions";
         return getSubmissions(url);
 //        return new TreeMap<>();
     }
@@ -132,11 +128,10 @@ public class DepositionSubmissionService {
             //        }
             DepositionSubmission[] submissions =
                     template.getForObject(depositionIngestURL + url, DepositionSubmission[].class, params);
-            for (DepositionSubmission submission : submissions) {
-                Submission testSub = buildSubmission(submission);
+            Arrays.stream(submissions).forEach(s->{
+                Submission testSub = buildSubmission(s);
                 submissionList.put(testSub.getId(), testSub);
-                params.put("page", ++i);
-            }
+            });
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -146,8 +141,8 @@ public class DepositionSubmissionService {
     public DepositionSubmission getSubmission(String submissionID){
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
-        String response =
-                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", String.class, params);
+//        String response =
+//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", String.class, params);
         DepositionSubmission submission =
                 template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class,
                         params);
@@ -158,38 +153,37 @@ public class DepositionSubmissionService {
 
     public Submission buildSubmission(DepositionSubmission depositionSubmission){
         Submission testSub = new Submission();
+        testSub.setId(depositionSubmission.getSubmissionId());
+        testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
+        testSub.setStatus(depositionSubmission.getStatus());
+        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+        testSub.setSubmissionType(getSubmissionType(depositionSubmission));
         if(depositionSubmission.getBodyOfWork() != null){
-            testSub.setId(depositionSubmission.getSubmissionId());
-//            testSub.setPubMedID(depositionSubmission.getBodyOfWork().getPmids();
-            if(depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
-                if (depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
-                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
+            BodyOfWorkDto bodyOfWork = depositionSubmission.getBodyOfWork();
+            if(bodyOfWork.getPmids() != null && bodyOfWork.getPmids().size() != 0){
+                testSub.setPubMedID(String.join(",",bodyOfWork.getPmids()));
+            }
+            if(bodyOfWork.getFirstAuthor() != null) {
+                if (bodyOfWork.getFirstAuthor().getGroup() != null) {
+                    testSub.setAuthor(bodyOfWork.getFirstAuthor().getGroup());
                 } else {
-                    testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getFirstName() + ' ' +
-                            depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
+                    testSub.setAuthor(bodyOfWork.getFirstAuthor().getFirstName() + ' ' +
+                            bodyOfWork.getFirstAuthor().getLastName());
                 }
             }
-            testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
-            testSub.setStatus(depositionSubmission.getStatus());
-            testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
-            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
-            testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
-            testSub.setSubmissionType(getSubmissionType(depositionSubmission));
-            testSub.setDoi(depositionSubmission.getBodyOfWork().getDoi());
+            testSub.setTitle(bodyOfWork.getTitle());
+            testSub.setPublicationStatus(bodyOfWork.getStatus());
+            testSub.setDoi(bodyOfWork.getPreprintServerDOI());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
         }else if(depositionSubmission.getPublication() != null) {
-            testSub.setId(depositionSubmission.getSubmissionId());
-            testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
-            testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
-            testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
-            testSub.setStatus(depositionSubmission.getStatus());
-            testSub.setTitle(depositionSubmission.getPublication().getTitle());
-            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
-            testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
-            testSub.setSubmissionType(getSubmissionType(depositionSubmission));
-            testSub.setDoi(depositionSubmission.getPublication().getDoi());
+            DepositionPublication publication = depositionSubmission.getPublication();
+            testSub.setPubMedID(publication.getPmid());
+            testSub.setAuthor(publication.getFirstAuthor());
+            testSub.setTitle(publication.getTitle());
+            testSub.setPublicationStatus(publication.getStatus());
+            testSub.setDoi(publication.getDoi());
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
@@ -201,7 +195,6 @@ public class DepositionSubmissionService {
 
     public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
         List<String> statusMessages = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Submission.SubmissionType submissionType = getSubmissionType(depositionSubmission);
         Curator curator = curatorRepository.findByEmail(currentUser.getEmail());
         String submissionID = depositionSubmission.getSubmissionId();
@@ -224,10 +217,6 @@ public class DepositionSubmissionService {
                 publicationService.findStudiesByPubmedId(depositionSubmission.getPublication().getPmid());
 
         List<DepositionStudyDto> studies = depositionSubmission.getStudies();
-        List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
-        List<DepositionSampleDto> samples = depositionSubmission.getSamples();
-        //List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
-        List<DepositionNoteDto> notes = depositionSubmission.getNotes();
 
         //check submission status. if PUBLISHED, import summary stats, set state DONE
         //else import metadata, set state CURATOR_REVIEW
@@ -242,42 +231,10 @@ public class DepositionSubmissionService {
         } else {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
                 depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
+                publicationService.save(publication);
 
                 for (DepositionStudyDto studyDto : studies) {
-                    StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
-                    String studyTag = studyDto.getStudyTag();
-                    studyNote.append("created " + studyTag + "\n");
-                    Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
-                    Collection<Study> pubStudies = publication.getStudies();
-                    if(pubStudies == null){
-                        pubStudies = new ArrayList<>();
-                    }
-                    pubStudies.add(study);
-                    publication.setStudies(pubStudies);
-                    studyService.save(study);
-                    if (associations != null) {
-                        studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study,
-                                associations));
-                    }
-                    if (samples != null) {
-                        studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
-                    }
-
-                    eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study creation");
-                    depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION",
-                            curator,
-                            "Import study creation", currentUser);
-                    if (notes != null) {
-                        //find notes in study
-                        for (DepositionNoteDto noteDto : notes) {
-                            if (noteDto.getStudyTag().equals(studyTag)) {
-                                depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(),
-                                        noteDto.getStatus(), curator, noteDto.getNoteSubject(), currentUser);
-                            }
-                        }
-                    }
-                    studyService.save(study);
-                    statusMessages.add(studyNote.toString());
+                    statusMessages.add(processStudy(depositionSubmission, studyDto, currentUser, publication, curator));
                 }
                 cleanupPrePublishedStudies(studies);
             }
@@ -316,7 +273,7 @@ public class DepositionSubmissionService {
             boolean hasMetadata = false;
             boolean hasAssociations = false;
             for(DepositionStudyDto studyDto: submission.getStudies()){
-                if(studyDto.getSummaryStatisticsFile() != null){
+                if(studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")){
                     hasSumStats = true;
                 }
             }
@@ -336,49 +293,106 @@ public class DepositionSubmissionService {
     }
 
     public Submission.SubmissionType getSubmissionType(DepositionSubmission submission){
-        if(submission.getBodyOfWork() != null) {
+        if(submission.getBodyOfWork() != null && submission.getPublication() == null) {
             return Submission.SubmissionType.PRE_PUBLISHED;
         }
-        String publicationStatus = submission.getPublication().getStatus();
-        boolean hasSumStats = false;
-        boolean hasMetadata = false;
-        boolean hasAssociations = false;
-        if(publicationStatus.equals("UNDER_SUBMISSION")){
-            hasMetadata = true;
+        else if(submission.getBodyOfWork() == null && submission.getPublication() == null) {
+            return Submission.SubmissionType.UNKNOWN;
         }
-        else if(publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")){
-            hasSumStats = true;
-        }
-        if(submission.getStudies() != null) {
-            for (DepositionStudyDto studyDto : submission.getStudies()) {
-                if (studyDto.getSummaryStatisticsFile() != null) {
-                    hasSumStats = true;
+        else if(submission.getPublication() != null) {
+            String publicationStatus = submission.getPublication().getStatus();
+            boolean hasSumStats = false;
+            boolean hasMetadata = false;
+            boolean hasAssociations = false;
+            if (publicationStatus.equals("UNDER_SUBMISSION")) {
+                hasMetadata = true;
+            } else if (publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")) {
+                hasSumStats = true;
+            }
+            if (submission.getStudies() != null) {
+                for (DepositionStudyDto studyDto : submission.getStudies()) {
+                    if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") &&
+                            !studyDto.getSummaryStatisticsFile().equals("NR")) {
+                        hasSumStats = true;
+                    }
                 }
             }
-        }
-        if(submission.getAssociations() != null) {
-            for (DepositionAssociationDto associationDto : submission.getAssociations()) {
-                if (associationDto.getStudyTag() != null) {
-                    hasAssociations = true;
+            if (submission.getAssociations() != null) {
+                for (DepositionAssociationDto associationDto : submission.getAssociations()) {
+                    if (associationDto.getStudyTag() != null) {
+                        hasAssociations = true;
+                    }
                 }
             }
-        }
-        if(hasMetadata && hasSumStats && hasAssociations){
-            return Submission.SubmissionType.METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS;
-        }
-        if(hasMetadata && hasSumStats && !hasAssociations){
-            return Submission.SubmissionType.METADATA_AND_SUM_STATS;
-        }
-        if(hasMetadata && !hasSumStats && hasAssociations){
-            return Submission.SubmissionType.METADATA_AND_TOP_ASSOCIATIONS;
-        }
-        if(hasMetadata && !hasSumStats && !hasAssociations){
-            return Submission.SubmissionType.METADATA;
-        }
-        if(!hasMetadata && hasSumStats && !hasAssociations){
-            return Submission.SubmissionType.SUM_STATS;
+            if (hasMetadata && hasSumStats && hasAssociations) {
+                return Submission.SubmissionType.METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS;
+            }
+            if (hasMetadata && hasSumStats && !hasAssociations) {
+                return Submission.SubmissionType.METADATA_AND_SUM_STATS;
+            }
+            if (hasMetadata && !hasSumStats && hasAssociations) {
+                return Submission.SubmissionType.METADATA_AND_TOP_ASSOCIATIONS;
+            }
+            if (hasMetadata && !hasSumStats && !hasAssociations) {
+                return Submission.SubmissionType.METADATA;
+            }
+            if (!hasMetadata && hasSumStats && !hasAssociations) {
+                return Submission.SubmissionType.SUM_STATS;
+            }
         }
         return Submission.SubmissionType.UNKNOWN;
+    }
+
+    @Transactional
+    String processStudy(DepositionSubmission depositionSubmission, DepositionStudyDto studyDto, SecureUser currentUser,
+                      Publication publication, Curator curator){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
+        try {
+            List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
+            List<DepositionSampleDto> samples = depositionSubmission.getSamples();
+            //List<DepositionFileUploadDto> files = depositionSubmission.getFiles();
+            List<DepositionNoteDto> notes = depositionSubmission.getNotes();
+            String studyTag = studyDto.getStudyTag();
+            studyNote.append("created " + studyTag + "\n");
+            Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
+            Collection<Study> pubStudies = publication.getStudies();
+            if (pubStudies == null) {
+                pubStudies = new ArrayList<>();
+            }
+            pubStudies.add(study);
+            publication.setStudies(pubStudies);
+            studyService.save(study);
+            if (associations != null) {
+                studyNote.append(depositionAssociationService
+                        .saveAssociations(currentUser, studyTag, study, associations));
+            }
+            if (samples != null) {
+                studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
+            }
+
+            Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " + "creation");
+            List<Event> events = new ArrayList<>();
+            events.add(event);
+            study.setEvents(events);
+            depositionStudyService
+                    .addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION", curator,
+                            "Import study creation", currentUser);
+            if (notes != null) {
+                //find notes in study
+                for (DepositionNoteDto noteDto : notes) {
+                    if (noteDto.getStudyTag().equals(studyTag)) {
+                        depositionStudyService.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(),
+                                curator, noteDto.getNoteSubject(), currentUser);
+                    }
+                }
+            }
+            studyService.save(study);
+        }catch(Exception e){
+            studyNote.append("error creating study: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return studyNote.toString();
     }
 
     private void cleanupPrePublishedStudies(List<DepositionStudyDto> studyDtoList){
@@ -401,55 +415,4 @@ public class DepositionSubmissionService {
             }
         });
     }
-
-//    private DepositionStudyList getStudies(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        String response =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/studies", String.class,
-//                        params);
-//        DepositionStudyListWrapper studyList =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/studies",
-//                        DepositionStudyListWrapper.class, params);
-//        if (studyList.getStudies() == null) {
-//            studyList.setStudies(new DepositionStudyList());
-//        }
-//        return studyList.getStudies();
-//    }
-//
-//    private DepositionAssociationList getAssociations(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        String response =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/associations", String.class,
-//                        params);
-//        DepositionAssociationListWrapper associationListWrapper =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID" + "}/associations",
-//                        DepositionAssociationListWrapper.class, params);
-//        if (associationListWrapper.getAssociations() == null) {
-//            associationListWrapper.setAssociations(new DepositionAssociationList());
-//        }
-//        return associationListWrapper.getAssociations();
-//    }
-//
-//    private DepositionSampleList getSamples(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        String response =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID}/samples", String.class,
-//                        params);
-//        DepositionSampleListWrapper sampleListWrapper =
-//                template.getForObject(depositionIngestURL + "/submissions/{submissionID" + "}/samples",
-//                        DepositionSampleListWrapper.class, params);
-//        if (sampleListWrapper.getSamplesList() == null) {
-//            sampleListWrapper.setSamplesList(new DepositionSampleList());
-//        }
-//        return sampleListWrapper.getSamplesList();
-//    }
-//
-//    private DepositionNoteList getNotes(String submissionID) {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("submissionID", submissionID);
-//        return new DepositionNoteList();
-//    }
 }
