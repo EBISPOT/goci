@@ -60,7 +60,7 @@
               th:object="${submission}">
             <button id="importButton" type="submit" class="btn btn-sm col-sm-1"
                     th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-                    th:disabled="${submission.submissionType.toString().equals('CURATION_COMPLETE') || submission.submissionType.toString().equals('UNKNOWN') || submission.submissionType.toString().equals('PRE_PUBLISHED')}"
+                    th:disabled="${submission.status.equals('IMPORTED') || submission.status.equals('CURATION_COMPLETE') || submission.submissionType.toString().equals('UNKNOWN') || submission.submissionType.toString().equals('PRE_PUBLISHED')}"
                     th:text="${submission.submissionType.toString().equals('UNKNOWN')} ? Error : Import"></button>
         </form>
         <button class="btn btn-sm btn-primary col-sm-1" id="toggleSubmission">Show/Hide Submission</button>
