@@ -111,7 +111,8 @@ public class DepositionStudyService {
         if(genotypingTech != null) {
             String[] technologies = genotypingTech.split("\\||,");
             for (String technology : technologies) {
-                GenotypingTechnology gtt = genotypingTechnologyRepository.findByGenotypingTechnology(technology.trim());
+                GenotypingTechnology gtt = genotypingTechnologyRepository.findByGenotypingTechnology(
+                        DepositionTransform.transformGenotypingTechnology(technology.trim()));
                 gtList.add(gtt);
             }
         }
