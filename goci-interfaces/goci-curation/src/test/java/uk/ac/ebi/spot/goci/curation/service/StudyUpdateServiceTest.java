@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +11,8 @@ import uk.ac.ebi.spot.goci.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.model.DiseaseTrait;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.EventType;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.curation.builder.StudyExtensionBuilder;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.StudyExtensionRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
@@ -22,6 +20,7 @@ import uk.ac.ebi.spot.goci.service.StudyTrackingOperationServiceImpl;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -66,6 +65,13 @@ public class StudyUpdateServiceTest {
     private static final Study STU1 =
             new StudyBuilder().setId(802L).setEfoTraits(Collections.EMPTY_LIST).build();
 
+    private static final StudyExtension STU_EXTENSION =
+            new StudyExtensionBuilder().setCohort(RandomStringUtils.randomAlphabetic(10))
+                    .setSummaryStatisticsFile(RandomStringUtils.randomAlphabetic(10))
+                    .setStudyDescription(RandomStringUtils.randomAlphabetic(10))
+                    .setSummaryStatisticsAssembly(RandomStringUtils.randomAlphabetic(10))
+                    .build();
+
     private static final Study STU1_UPDATED =
             new StudyBuilder().setId(802L).setEfoTraits(Collections.EMPTY_LIST).build();
 
@@ -99,13 +105,14 @@ public class StudyUpdateServiceTest {
                                                      null)).thenReturn(null);
 
         // Test updating a study
-        studyUpdateService.updateStudy(STU1.getId(), STU1_UPDATED, SECURE_USER);
+        studyUpdateService.updateStudy(STU1.getId(), STU1_UPDATED, STU_EXTENSION, SECURE_USER);
 
         verify(trackingOperationService, times(1)).update(STU1_UPDATED,
                                                           SECURE_USER,
                                                           "STUDY_UPDATE",
                                                           null);
-        verify(studyRepository, times(1)).save(STU1_UPDATED);
+        verify(studyRepository, times(1)).save(any(Study.class));
+        verify(extensionRepository, times(1)).save(any(StudyExtension.class));
         verify(attributeUpdateService, times(2)).compareAttribute(Matchers.anyString(),
                                                                   Matchers.anyString(),
                                                                   Matchers.anyString());
@@ -125,13 +132,14 @@ public class StudyUpdateServiceTest {
                 "EFO Trait set to 'asthma'");
 
         // Test updating a study
-        studyUpdateService.updateStudy(STU2.getId(), STU2_UPDATED, SECURE_USER);
+        studyUpdateService.updateStudy(STU2.getId(), STU2_UPDATED, null, SECURE_USER);
 
         verify(trackingOperationService, times(1)).update(STU2_UPDATED,
                                                           SECURE_USER,
                                                           "STUDY_UPDATE",
                                                           "Disease Trait updated from 'Acne' to 'Asthma', EFO Trait set to 'asthma'");
         verify(studyRepository, times(1)).save(STU2_UPDATED);
+        verify(extensionRepository, times(0)).save(any(StudyExtension.class));
         verify(attributeUpdateService, times(2)).compareAttribute(Matchers.anyString(),
                                                                   Matchers.anyString(),
                                                                   Matchers.anyString());
