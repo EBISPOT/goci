@@ -117,12 +117,12 @@ public class DepositionSampleService {
             }
         } else {
             if (sampleDto.getCases() != null && sampleDto.getControls() != null && sampleDto.getCases() != 0 && sampleDto.getControls() != 0) {
-                ancestry = String.format("%,d", sampleDto.getCases()) + " " + ancestry + " ancestry cases, " +
-                        String.format("%,d", sampleDto.getControls()) + " " + ancestry + " ancestry controls";
+                ancestry = String.format("%,d", sampleDto.getCases()) + " " + ancestry + " cases, " +
+                        String.format("%,d", sampleDto.getControls()) + " " + ancestry + " controls";
             } else if (sampleDto.getSize() != -1) {
-                ancestry = String.format("%,d", sampleDto.getSize()) + " " + ancestry + " ancestry individuals";
+                ancestry = String.format("%,d", sampleDto.getSize()) + " " + ancestry + " individuals";
             } else {
-                ancestry += " ancestry individuals";
+                ancestry += " individuals";
             }
         }
         return ancestry;
