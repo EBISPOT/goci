@@ -70,9 +70,14 @@ public class StudyUpdateService {
         //study.getStudyExtension().setStudy(study);
         trackingOperationService.update(study, user, "STUDY_UPDATE", updateDescription);
         if (studyExtension != null) {
-            studyExtension.setStudy(study);
-            studyExtensionRepository.save(studyExtension);
-            study.setStudyExtension(studyExtension);
+            StudyExtension existing = studyExtensionRepository.findOne(studyExtension.getId());
+            existing.setStudyDescription(studyExtension.getStudyDescription());
+            existing.setCohort(studyExtension.getCohort());
+            existing.setCohortSpecificReference(studyExtension.getCohortSpecificReference());
+            existing.setStatisticalModel(studyExtension.getStatisticalModel());
+            existing.setSummaryStatisticsFile(studyExtension.getSummaryStatisticsFile());
+            existing.setSummaryStatisticsAssembly(studyExtension.getSummaryStatisticsAssembly());
+            studyExtensionRepository.save(existing);
         }
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
