@@ -65,13 +65,6 @@ public class StudyUpdateServiceTest {
     private static final Study STU1 =
             new StudyBuilder().setId(802L).setEfoTraits(Collections.EMPTY_LIST).build();
 
-    private static final StudyExtension STU_EXTENSION =
-            new StudyExtensionBuilder().setCohort(RandomStringUtils.randomAlphabetic(10))
-                    .setSummaryStatisticsFile(RandomStringUtils.randomAlphabetic(10))
-                    .setStudyDescription(RandomStringUtils.randomAlphabetic(10))
-                    .setSummaryStatisticsAssembly(RandomStringUtils.randomAlphabetic(10))
-                    .build();
-
     private static final Study STU1_UPDATED =
             new StudyBuilder().setId(802L).setEfoTraits(Collections.EMPTY_LIST).build();
 
@@ -105,7 +98,7 @@ public class StudyUpdateServiceTest {
                                                      null)).thenReturn(null);
 
         // Test updating a study
-        studyUpdateService.updateStudy(STU1.getId(), STU1_UPDATED, STU_EXTENSION, SECURE_USER);
+        studyUpdateService.updateStudy(STU1.getId(), STU1_UPDATED, null, SECURE_USER);
 
         verify(trackingOperationService, times(1)).update(STU1_UPDATED,
                                                           SECURE_USER,

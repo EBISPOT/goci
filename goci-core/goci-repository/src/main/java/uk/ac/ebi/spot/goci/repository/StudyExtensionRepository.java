@@ -5,4 +5,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import uk.ac.ebi.spot.goci.model.StudyExtension;
 
 @RepositoryRestResource(exported = false)
-public interface StudyExtensionRepository extends JpaRepository<StudyExtension, Long> {}
+public interface StudyExtensionRepository extends JpaRepository<StudyExtension, Long> {
+
+}

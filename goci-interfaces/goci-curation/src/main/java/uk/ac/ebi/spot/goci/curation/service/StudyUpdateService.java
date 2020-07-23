@@ -70,7 +70,7 @@ public class StudyUpdateService {
         //study.getStudyExtension().setStudy(study);
         trackingOperationService.update(study, user, "STUDY_UPDATE", updateDescription);
         if (studyExtension != null) {
-            StudyExtension existing = studyExtensionRepository.findOne(studyExtension.getId());
+            StudyExtension existing = studyExtensionRepository.findOne(study.getId());
             existing.setStudyDescription(studyExtension.getStudyDescription());
             existing.setCohort(studyExtension.getCohort());
             existing.setCohortSpecificReference(studyExtension.getCohortSpecificReference());
