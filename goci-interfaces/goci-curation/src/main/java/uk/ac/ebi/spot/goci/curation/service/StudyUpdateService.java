@@ -69,8 +69,13 @@ public class StudyUpdateService {
 
         //study.getStudyExtension().setStudy(study);
         trackingOperationService.update(study, user, "STUDY_UPDATE", updateDescription);
+
         if (studyExtension != null) {
-            StudyExtension existing = studyExtensionRepository.findOne(study.getId());
+            // Use Custom query "getStudyExtensionId" to get the ID of the StudyExtension since "studyExtension" passed
+            // by the study.html form returns "id" as the id of the Study object and not the StudyExtension
+            // and the default "find" query syntax then returns this study.id
+            StudyExtension existing = studyExtensionRepository.getStudyExtensionId(study.getId());
+
             existing.setStudyDescription(studyExtension.getStudyDescription());
             existing.setCohort(studyExtension.getCohort());
             existing.setCohortSpecificReference(studyExtension.getCohortSpecificReference());

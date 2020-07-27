@@ -91,24 +91,23 @@ public class StudyUpdateServiceTest {
         // Stubbing
         when(studyRepository.findOne(STU1.getId())).thenReturn(STU1);
         when(attributeUpdateService.compareAttribute("Disease Trait",
-                                                     null,
-                                                     null)).thenReturn(null);
+                null,
+                null)).thenReturn(null);
         when(attributeUpdateService.compareAttribute("EFO Trait",
-                                                     null,
-                                                     null)).thenReturn(null);
+                null,
+                null)).thenReturn(null);
 
         // Test updating a study
         studyUpdateService.updateStudy(STU1.getId(), STU1_UPDATED, null, SECURE_USER);
 
         verify(trackingOperationService, times(1)).update(STU1_UPDATED,
-                                                          SECURE_USER,
-                                                          "STUDY_UPDATE",
-                                                          null);
+                SECURE_USER,
+                "STUDY_UPDATE",
+                null);
         verify(studyRepository, times(1)).save(any(Study.class));
-        verify(extensionRepository, times(1)).save(any(StudyExtension.class));
         verify(attributeUpdateService, times(2)).compareAttribute(Matchers.anyString(),
-                                                                  Matchers.anyString(),
-                                                                  Matchers.anyString());
+                Matchers.anyString(),
+                Matchers.anyString());
     }
 
     @Test
