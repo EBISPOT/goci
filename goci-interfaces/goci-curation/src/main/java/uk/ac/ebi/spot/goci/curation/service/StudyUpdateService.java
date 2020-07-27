@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 public class StudyUpdateService {
 
-    private final StudyExtensionRepository studyExtensionRepository;
+    private StudyExtensionRepository studyExtensionRepository;
     private StudyRepository studyRepository;
     private AttributeUpdateService attributeUpdateService;
     private TrackingOperationService trackingOperationService;
@@ -54,7 +54,7 @@ public class StudyUpdateService {
      * @param study           Study to update
      * @param user            User performing request
      */
-    public void updateStudy(Long existingStudyId, Study study, SecureUser user) {
+    public void updateStudy(Long existingStudyId, Study study, StudyExtension studyExtension, SecureUser user) {
 
         // Use id in URL to get study and then its associated housekeeping
         Study existingStudy = studyRepository.findOne(existingStudyId);
@@ -69,9 +69,21 @@ public class StudyUpdateService {
 
         //study.getStudyExtension().setStudy(study);
         trackingOperationService.update(study, user, "STUDY_UPDATE", updateDescription);
-        //extension.setStudy(study);
-        //studyExtensionRepository.save(extension);
-        //study.setStudyExtension(extension);
+
+        if (studyExtension != null) {
+            // Use Custom query "getStudyExtensionId" to get the ID of the StudyExtension since "studyExtension" passed
+            // by the study.html form returns "id" as the id of the Study object and not the StudyExtension
+            // and the default "find" query syntax then returns this study.id
+            StudyExtension existing = studyExtensionRepository.getStudyExtensionId(study.getId());
+
+            existing.setStudyDescription(studyExtension.getStudyDescription());
+            existing.setCohort(studyExtension.getCohort());
+            existing.setCohortSpecificReference(studyExtension.getCohortSpecificReference());
+            existing.setStatisticalModel(studyExtension.getStatisticalModel());
+            existing.setSummaryStatisticsFile(studyExtension.getSummaryStatisticsFile());
+            existing.setSummaryStatisticsAssembly(studyExtension.getSummaryStatisticsAssembly());
+            studyExtensionRepository.save(existing);
+        }
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
     }

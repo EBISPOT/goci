@@ -440,6 +440,11 @@
                     </div>
                 </div>
 
+                <!-- Pass hidden form value so extension.study is not null when processing form values -->
+                <div class="form-group">
+                    <input id="study" type="hidden" th:field="${extension.study}"/>
+                </div>
+
                 <div class="form-group">
                     <label for="statisticalModel" class="control-label col-md-2">Statistical Model</label>
 

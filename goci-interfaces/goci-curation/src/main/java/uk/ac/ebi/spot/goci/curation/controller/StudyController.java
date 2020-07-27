@@ -660,16 +660,14 @@ public class StudyController {
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudy(@ModelAttribute Study study,
+                              @ModelAttribute StudyExtension extension,
                               @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 //        xintodo edit study
-        if(study.getStudyExtension() == null){
-            StudyExtension extension = new StudyExtension();
-            extension.setStudy(study);
-            study.setStudyExtension(extension);
+        if(extension == null){
+            extension = new StudyExtension();
         }
-        studyUpdateService.updateStudy(studyId, study,
-                currentUserDetailsService.getUserFromRequest(request));
+        studyUpdateService.updateStudy(studyId, study, extension, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";
