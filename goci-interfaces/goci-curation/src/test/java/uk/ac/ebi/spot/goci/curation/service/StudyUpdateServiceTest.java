@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +10,6 @@ import uk.ac.ebi.spot.goci.builder.DiseaseTraitBuilder;
 import uk.ac.ebi.spot.goci.builder.EfoTraitBuilder;
 import uk.ac.ebi.spot.goci.builder.SecureUserBuilder;
 import uk.ac.ebi.spot.goci.builder.StudyBuilder;
-import uk.ac.ebi.spot.goci.curation.builder.StudyExtensionBuilder;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.StudyExtensionRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
@@ -21,9 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by emma on 04/08/2016.
@@ -115,25 +111,25 @@ public class StudyUpdateServiceTest {
         // Stubbing
         when(studyRepository.findOne(STU2.getId())).thenReturn(STU2);
         when(attributeUpdateService.compareAttribute("Disease Trait",
-                                                     "Acne",
-                                                     STU2_UPDATED.getDiseaseTrait().getTrait())).thenReturn(
+                "Acne",
+                STU2_UPDATED.getDiseaseTrait().getTrait())).thenReturn(
                 "Disease Trait updated from 'Acne' to 'Asthma'");
         when(attributeUpdateService.compareAttribute("EFO Trait",
-                                                     null,
-                                                     "asthma")).thenReturn(
+                null,
+                "asthma")).thenReturn(
                 "EFO Trait set to 'asthma'");
 
         // Test updating a study
         studyUpdateService.updateStudy(STU2.getId(), STU2_UPDATED, null, SECURE_USER);
 
         verify(trackingOperationService, times(1)).update(STU2_UPDATED,
-                                                          SECURE_USER,
-                                                          "STUDY_UPDATE",
-                                                          "Disease Trait updated from 'Acne' to 'Asthma', EFO Trait set to 'asthma'");
+                SECURE_USER,
+                "STUDY_UPDATE",
+                "Disease Trait updated from 'Acne' to 'Asthma', EFO Trait set to 'asthma'");
         verify(studyRepository, times(1)).save(STU2_UPDATED);
         verify(extensionRepository, times(0)).save(any(StudyExtension.class));
         verify(attributeUpdateService, times(2)).compareAttribute(Matchers.anyString(),
-                                                                  Matchers.anyString(),
-                                                                  Matchers.anyString());
+                Matchers.anyString(),
+                Matchers.anyString());
     }
 }
