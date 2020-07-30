@@ -656,7 +656,6 @@ public class StudyController {
         model.addAttribute("extension", studyToView.getStudyExtension());
 
         DepositionProvenance depositionProvenance = submissionService.getProvenance(studyToView.getPublicationId().getPubmedId());
-        System.out.println("Returning user: " + depositionProvenance.getUser().getName() + " | " + depositionProvenance.getUser().getEmail());
         model.addAttribute("submitter", depositionProvenance.getUser());
 
         return "study";
