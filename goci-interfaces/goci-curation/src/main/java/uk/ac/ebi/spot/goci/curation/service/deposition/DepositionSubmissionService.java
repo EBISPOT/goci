@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,13 @@ import java.util.*;
 
 @Service
 public class DepositionSubmissionService {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     private final StudyService studyService;
     private final StudyOperationsService studyOperationsService;
     private final PublicationService publicationService;
@@ -195,11 +204,20 @@ public class DepositionSubmissionService {
 
     public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
         List<String> statusMessages = new ArrayList<>();
+
+        getLog().info("[IMPORT] Evaluating submission type for: {}", depositionSubmission.getSubmissionId());
         Submission.SubmissionType submissionType = getSubmissionType(depositionSubmission);
+        getLog().info("[IMPORT] Found submission type for: {}", submissionType.name());
+
         Curator curator = curatorRepository.findByEmail(currentUser.getEmail());
         String submissionID = depositionSubmission.getSubmissionId();
+
+        getLog().info("[IMPORT] Retrieving publication: {}", depositionSubmission.getPublication().getPmid());
         Publication publication = publicationService.findByPumedId(depositionSubmission.getPublication().getPmid());
+        getLog().info("[IMPORT] Found publication: {}", publication.getPubmedId());
+
         if(depositionSubmission.getPublication().getCorrespondingAuthor() != null){
+            getLog().info("[IMPORT] Creating Publication extensions for corresponding authors ...");
             PublicationExtension author = new PublicationExtension();
             author.setCorrespondingAuthorEmail(depositionSubmission.getPublication().getCorrespondingAuthor().getEmail());
             if(depositionSubmission.getPublication().getCorrespondingAuthor().getGroup() != null) {
@@ -208,26 +226,40 @@ public class DepositionSubmissionService {
                 author.setCorrespondingAuthorName(depositionSubmission.getPublication().getCorrespondingAuthor().getFirstName() + ' ' + depositionSubmission.getPublication().getCorrespondingAuthor().getLastName());
             }
             authorRepository.save(author);
+            getLog().info("[IMPORT] Publication extension created: {}", author.getId());
             List<PublicationExtension> authorList = new ArrayList<>();
             authorList.add(author);
             publication.setCorrespondingAuthors(authorList);
             publicationService.save(publication);
+            getLog().info("[IMPORT] Publication [{}] saved.", publication.getPubmedId());
         }
+
+        getLog().info("[IMPORT] Looking for studies in the local DB ...");
         Collection<Study> dbStudies =
                 publicationService.findStudiesByPubmedId(depositionSubmission.getPublication().getPmid());
+        getLog().info("[IMPORT] Found {} studies.", dbStudies.size());
 
         List<DepositionStudyDto> studies = depositionSubmission.getStudies();
+        getLog().info("[IMPORT] Found {} studies in the submission retrieved from the Deposition App.", studies.size());
 
         //check submission status. if PUBLISHED, import summary stats, set state DONE
         //else import metadata, set state CURATOR_REVIEW
         if (submissionType == Submission.SubmissionType.SUM_STATS) { //if submission type is SUM_STATS only
+            getLog().info("[IMPORT] Found SUM_STATS submission.", studies.size());
+
+            getLog().info("[IMPORT] Moving summary stats from unpublished to published.");
             depositionStudyService.publishSummaryStats(studies, dbStudies, currentUser);
+            getLog().info("[IMPORT] Moving summary stats done.");
+
             depositionSubmission.setStatus("CURATION_COMPLETE");
             depositionSubmission.getPublication().setStatus("PUBLISHED_WITH_SS");
             Map<String, String> params = new HashMap<>();
             params.put("submissionID", submissionID);
+
+            getLog().info("[IMPORT] Sending request to update submission in the Deposition App.");
             template.put(depositionIngestURL + "/submissions/{submissionID}", depositionSubmission, params);
             statusMessages.add("imported summary stats");
+            getLog().info("[IMPORT] Summary stats imported. Process finalized.");
         } else {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
                 depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
