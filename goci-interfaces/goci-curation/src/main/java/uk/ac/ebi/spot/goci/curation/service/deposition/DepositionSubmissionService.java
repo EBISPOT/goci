@@ -150,10 +150,15 @@ public class DepositionSubmissionService {
     }
 
     public DepositionProvenance getProvenance(String pmid) {
-        Map<String, String> params = new HashMap<>();
-        params.put("pmid", pmid);
-        DepositionProvenance provenance = template.getForObject(depositionIngestURL + "/provenance?pmid={pmid}", DepositionProvenance.class, params);
-        return provenance;
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("pmid", pmid);
+            DepositionProvenance provenance = template.getForObject(depositionIngestURL + "/provenance?pmid={pmid}", DepositionProvenance.class, params);
+            return provenance;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Submission buildSubmission(DepositionSubmission depositionSubmission) {
