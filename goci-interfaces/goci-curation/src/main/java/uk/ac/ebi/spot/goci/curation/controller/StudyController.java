@@ -35,6 +35,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionProvenance;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
@@ -59,6 +60,7 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/studies")
 public class StudyController {
+
     @Value("${deposition.ui.uri}")
     private String depositionUiURL;
 
@@ -652,6 +654,10 @@ public class StudyController {
             studyToView.setStudyExtension(extension);
         }
         model.addAttribute("extension", studyToView.getStudyExtension());
+
+        DepositionProvenance depositionProvenance = submissionService.getProvenance(studyToView.getPublicationId().getPubmedId());
+        System.out.println("Returning user: " + depositionProvenance.getUser().getName() + " | " + depositionProvenance.getUser().getEmail());
+        model.addAttribute("submitter", depositionProvenance.getUser());
 
         return "study";
     }
