@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DepositionSubmissionService {
@@ -237,10 +238,12 @@ public class DepositionSubmissionService {
         getLog().info("[IMPORT] Looking for studies in the local DB ...");
         Collection<Study> dbStudies =
                 publicationService.findStudiesByPubmedId(depositionSubmission.getPublication().getPmid());
-        getLog().info("[IMPORT] Found {} studies.", dbStudies.size());
+        List<Long> dbStudyIds = dbStudies.stream().map(Study::getId).collect(Collectors.toList());
+        getLog().info("[IMPORT] Found {} studies: {}", dbStudies.size(), dbStudyIds);
 
         List<DepositionStudyDto> studies = depositionSubmission.getStudies();
-        getLog().info("[IMPORT] Found {} studies in the submission retrieved from the Deposition App.", studies.size());
+        List<String> gcsts = studies.stream().map(DepositionStudyDto::getAccession).collect(Collectors.toList());
+        getLog().info("[IMPORT] Found {} studies in the submission retrieved from the Deposition App: {}", studies.size(), gcsts);
 
         //check submission status. if PUBLISHED, import summary stats, set state DONE
         //else import metadata, set state CURATOR_REVIEW
@@ -262,15 +265,19 @@ public class DepositionSubmissionService {
             getLog().info("[IMPORT] Summary stats imported. Process finalized.");
         } else {
             if (studies != null){// && dbStudies.size() == 1) { //only do this for un-curated publications
+                getLog().info("[IMPORT] Deleting proxy studies created when the publication was initially imported.");
                 depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
                 publicationService.save(publication);
 
                 for (DepositionStudyDto studyDto : studies) {
+                    getLog().info("[IMPORT] Processing study: {} | {}.", studyDto.getStudyTag(), studyDto.getAccession());
                     statusMessages.add(processStudy(depositionSubmission, studyDto, currentUser, publication, curator));
                 }
+                getLog().info("[IMPORT] Deleting unpublished studies and body of works.");
                 cleanupPrePublishedStudies(studies);
             }
             publicationService.save(publication);
+            getLog().info("[IMPORT] Setting new submission statuses.");
             depositionSubmission.setDateSubmitted(new LocalDate());
             depositionSubmission.setStatus("CURATION_COMPLETE");
             depositionSubmission.getPublication().setStatus("CURATION_STARTED");
@@ -387,6 +394,7 @@ public class DepositionSubmissionService {
             List<DepositionNoteDto> notes = depositionSubmission.getNotes();
             String studyTag = studyDto.getStudyTag();
             studyNote.append("created " + studyTag + "\n");
+
             Study study = depositionStudyService.initStudy(studyDto, publication, currentUser);
             Collection<Study> pubStudies = publication.getStudies();
             if (pubStudies == null) {
@@ -396,17 +404,21 @@ public class DepositionSubmissionService {
             publication.setStudies(pubStudies);
             studyService.save(study);
             if (associations != null) {
+                getLog().info("[IMPORT] Found {} associations in the submission retrieved from the Deposition App.", associations.size());
                 studyNote.append(depositionAssociationService
                         .saveAssociations(currentUser, studyTag, study, associations));
             }
             if (samples != null) {
+                getLog().info("[IMPORT] Found {} samples in the submission retrieved from the Deposition App.", samples.size());
                 studyNote.append(depositionSampleService.saveSamples(currentUser, studyTag, study, samples));
             }
 
+            getLog().info("[IMPORT] Creating events ...");
             Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " + "creation");
             List<Event> events = new ArrayList<>();
             events.add(event);
             study.setEvents(events);
+            getLog().info("[IMPORT] Adding notes ...");
             depositionStudyService
                     .addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION", curator,
                             "Import study creation", currentUser);
@@ -419,10 +431,12 @@ public class DepositionSubmissionService {
                     }
                 }
             }
+            getLog().info("[IMPORT] Final save ...");
             studyService.save(study);
+            getLog().info("[IMPORT] All done ...");
         }catch(Exception e){
             studyNote.append("error creating study: " + e.getMessage());
-            e.printStackTrace();
+            getLog().error("Unable to process study [{}]: {}", studyDto.getAccession(), e.getMessage(), e);
         }
         return studyNote.toString();
     }

@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service.deposition;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.model.*;
@@ -14,6 +16,13 @@ import java.util.List;
 
 @Component
 public class DepositionSampleService {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     @Autowired
     CountryRepository countryRepository;
     @Autowired
@@ -64,14 +73,20 @@ public class DepositionSampleService {
                 List<AncestralGroup> ancestryGroups = new ArrayList<>();
                 if (ancestryCat != null) {
                     String[] groups = ancestryCat.split("\\||,");
+                    getLog().info("[IMPORT] Ancestry groups provided: {}", groups.length);
                     for (String group : groups) {
                         AncestralGroup ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
                         ancestryGroups.add(ancestryGroup);
                     }
                 }
+                getLog().info("[IMPORT] Ancestry groups mapped: {}", ancestryGroups.size());
                 ancestry.setAncestralGroups(ancestryGroups);
                 ancestry.setStudy(study);
-                ancestryRepository.save(ancestry);
+                try {
+                    ancestryRepository.save(ancestry);
+                } catch (Exception e) {
+                    getLog().info("[IMPORT] Unable to save ancestry: {}", e.getMessage(), e);
+                }
                 AncestryExtension ancestryExtension = new AncestryExtension();
                 ancestryExtension.setAncestry(ancestry);
                 if (sampleDto.getAncestry() != null) {
@@ -81,9 +96,13 @@ public class DepositionSampleService {
                 ancestryExtension.setNumberCases(sampleDto.getCases());
                 ancestryExtension.setNumberControls(sampleDto.getControls());
                 ancestryExtension.setSampleDescription(sampleDto.getSampleDescription());
-                extensionRepository.save(ancestryExtension);
-                ancestry.setAncestryExtension(ancestryExtension);
-                ancestryRepository.save(ancestry);
+                try {
+                    extensionRepository.save(ancestryExtension);
+                    ancestry.setAncestryExtension(ancestryExtension);
+                    ancestryRepository.save(ancestry);
+                } catch (Exception e) {
+                    getLog().info("[IMPORT] Unable to save ancestry extension: {}", e.getMessage(), e);
+                }
             }
         }
         if (initialSampleSize.endsWith(", ")) {
