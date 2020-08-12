@@ -3,15 +3,10 @@ package uk.ac.ebi.spot.goci.curation.service.deposition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
+import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
-import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
-import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
-import uk.ac.ebi.spot.goci.repository.AssociationExtensionRepository;
-import uk.ac.ebi.spot.goci.repository.AssociationRepository;
 import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 import uk.ac.ebi.spot.goci.service.LociAttributesService;
 import uk.ac.ebi.spot.goci.service.MapCatalogService;
@@ -20,11 +15,10 @@ import uk.ac.ebi.spot.goci.utils.AssociationCalculationService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-@Component
-public class DepositionAssociationService {
+@Service
+public class AssociationValidationService {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -33,36 +27,30 @@ public class DepositionAssociationService {
     }
 
     @Autowired
-    SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
-    @Autowired
-    AssociationOperationsService associationOperationsService;
-    @Autowired
-    AssociationRepository associationRepository;
-    @Autowired
-    LociAttributesService lociService;
-    @Autowired
-    MapCatalogService mapCatalogService;
-    @Autowired
-    AssociationExtensionRepository extensionRepository;
-    @Autowired
-    AssociationCalculationService calculationService;
-    @Autowired
-    EnsemblRestTemplateService ensemblRestTemplateService;
-    @Autowired
-    ValidationService validationService;
+    private AssociationOperationsService associationOperationsService;
 
+    @Autowired
+    private LociAttributesService lociService;
 
-    public DepositionAssociationService() {
-    }
+    @Autowired
+    private MapCatalogService mapCatalogService;
 
-    public String saveAssociations(SecureUser currentUser, String studyTag, Study study, List<DepositionAssociationDto> associations, ImportLog importLog) {
+    @Autowired
+    private AssociationCalculationService calculationService;
+
+    @Autowired
+    private EnsemblRestTemplateService ensemblRestTemplateService;
+
+    @Autowired
+    private ValidationService validationService;
+
+    public List<String> validateAssociations(String studyTag, String accessionId, List<DepositionAssociationDto> associations) {
+        List<String> errorList = new ArrayList<>();
+
         //find associations in study
         String eRelease = ensemblRestTemplateService.getRelease();
-        StringBuffer studyNote = new StringBuffer();
         for (DepositionAssociationDto associationDto : associations) {
             if (associationDto.getStudyTag().equals(studyTag)) {
-                getLog().info("Creating association: {} | {}", study.getStudyTag(), study.getAccessionId());
-                ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating association", study.getAccessionId()));
                 Association association = new Association();
                 association.setSnpInteraction(false);
                 Collection<Locus> loci = new ArrayList<>();
@@ -84,12 +72,12 @@ public class DepositionAssociationService {
                 }
                 association.setPvalueDescription(associationDto.getPValueText());
                 String rsID = associationDto.getVariantID();
-                getLog().info("Processing rdID: {}", rsID);
+                getLog().info("Processing rdID: {}", studyTag, accessionId, rsID);
                 if (rsID != null) {
                     SingleNucleotidePolymorphism snp = lociService.createSnp(rsID);
-                    studyNote.append("added SNP " + rsID + "\n");//does this fail
                     RiskAllele riskAllele =
                             lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
+
                     if (associationDto.getProxyVariant() != null) {
                         List<SingleNucleotidePolymorphism> proxySnps = new ArrayList<>();
                         proxySnps.add(lociService.createSnp(associationDto.getProxyVariant()));
@@ -101,8 +89,7 @@ public class DepositionAssociationService {
                     loci.add(locus);
                     association.setLoci(loci);
                 } else {
-                    importLog.addError("No rsId provided.", "Creating association");
-                    importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+                    errorList.add("No rsId found for association related to: " + associationDto.getStudyTag() + " | " + accessionId);
                     continue;
                 }
                 if (associationDto.getEffectAlleleFrequency() != null && associationDto.getEffectAlleleFrequency().intValue() != -1) {
@@ -113,8 +100,10 @@ public class DepositionAssociationService {
                 if (associationDto.getStandardError() != null) {
                     association.setStandardError(associationDto.getStandardError().floatValue());
                 }
+                String measurementType = "";
                 if (associationDto.getOddsRatio() != null) {
                     association.setOrPerCopyNum(associationDto.getOddsRatio().floatValue());
+                    measurementType = "or";
                 }
                 if (associationDto.getBeta() != null) {
                     Double betaValue = associationDto.getBeta();
@@ -124,6 +113,7 @@ public class DepositionAssociationService {
                         association.setBetaDirection("increase");
                     }
                     association.setBetaNum(Math.abs(betaValue.floatValue()));
+                    measurementType = "beta";
                     association.setBetaUnit(associationDto.getBetaUnit());
                 }
                 if (associationDto.getCiLower() != null && associationDto.getCiUpper() != null) {
@@ -132,9 +122,11 @@ public class DepositionAssociationService {
                     if (associationDto.getOddsRatio() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getOddsRatio())));
+                        measurementType = "or";
                     } else if (associationDto.getBeta() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getBeta())));
+                        measurementType = "beta";
                     }
                 }
                 AssociationExtension associationExtension = new AssociationExtension();
@@ -142,38 +134,39 @@ public class DepositionAssociationService {
                 associationExtension.setEffectAllele(associationDto.getEffectAllele());
                 associationExtension.setOtherAllele(associationDto.getOtherAllele());
 
-                associationOperationsService.saveAssociation(association, study, new ArrayList<>());
-                extensionRepository.save(associationExtension);
-                association.setAssociationExtension(associationExtension);
-                associationRepository.save(association);
-
-                Collection<AssociationValidationView> errors = associationOperationsService.saveAssociationCreatedFromForm(study,
-                        association, currentUser, eRelease);
-                getLog().info("Found {} errors on save.", errors.size());
-                StringBuffer errorBuffer = new StringBuffer();
-                for (AssociationValidationView associationValidationView : errors) {
-                    getLog().error("Save error: {} | {} | {}", associationValidationView.getWarning(), associationValidationView.getErrorMessage(), associationValidationView.getField());
-                    errorBuffer.append("Save error: " + associationValidationView.getWarning() + " | " +
-                            associationValidationView.getErrorMessage() + " | " + associationValidationView.getField()).append("\n");
+                getLog().info("[{} | {}] Checking for SNP validation errors ...", studyTag, accessionId);
+                Collection<ValidationError> rowErrors =
+                        associationOperationsService.checkSnpAssociationErrors(association,
+                                measurementType);
+                getLog().info("[{} | {}] Found {} SNP validation errors.", studyTag, accessionId, rowErrors.size());
+                for (ValidationError validationError : rowErrors) {
+                    getLog().error("SNP validation error: {} | {} | {} | {}", validationError.getField(), validationError.getTypeError(), validationError.getError(), validationError.getWarning());
+                    errorList.add("[" + accessionId + " | " + associationDto.getStudyTag() + "] SNP validation error: " + validationError.getField() + " [" + validationError.getTypeError() + "]: " + validationError.getError() + " | " + validationError.getWarning());
                 }
-                if (errors.isEmpty()) {
-                    try {
-                        mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(),
-                                Collections.singleton(association));
-                        studyNote.append("mapped associations" + "\n");
-                    } catch (EnsemblMappingException e) {
-                        getLog().error("Ensembl mapping failure: {}", e.getMessage(), e);
-                        importLog.addError("Ensembl mapping failure: " + e.getMessage(), "Creating association");
-                        importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+
+                if (rowErrors.isEmpty()) {
+                    // Save and validate form
+                    // Validate association
+                    getLog().info("[{} | {}] Performing full validation ...", studyTag, accessionId);
+                    Collection<ValidationError> associationValidationErrors = validationService.runAssociationValidation(association, "full", eRelease);
+                    getLog().info("[{} | {}] Found {} full validation errors.", studyTag, accessionId, associationValidationErrors.size());
+                    for (ValidationError validationError : associationValidationErrors) {
+                        getLog().error("Full validation error: {} | {} | {} | {}", validationError.getField(), validationError.getTypeError(), validationError.getError(), validationError.getWarning());
+                        errorList.add("[" + accessionId + " | " + associationDto.getStudyTag() + "] Full validation error: " + validationError.getField() + " [" + validationError.getTypeError() + "]: " + validationError.getError() + " | " + validationError.getWarning());
+                    }
+                    if (!associationValidationErrors.isEmpty()) {
                         continue;
                     }
-                    importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
-                } else {
-                    importLog.addError(errorBuffer.toString().trim(), "Creating association");
-                    importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+
+                    List<String> list = mapCatalogService.validateMappingForAssociation(association, rsID);
+                    for (String error : list) {
+                        errorList.add("[" + accessionId + " | " + associationDto.getStudyTag() + "] :: " + error);
+                    }
                 }
             }
         }
-        return studyNote.toString();
+
+        return errorList;
     }
+
 }

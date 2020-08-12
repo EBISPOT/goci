@@ -30,7 +30,7 @@ public class AncestralGroup {
     }
 
     public AncestralGroup(String ancestralGroup,
-                    Collection<Ancestry> ancestries) {
+                          Collection<Ancestry> ancestries) {
         this.ancestralGroup = ancestralGroup;
         this.ancestries = ancestries;
     }
@@ -58,5 +58,10 @@ public class AncestralGroup {
 
     public void setAncestries(Collection<Ancestry> ancestries) {
         this.ancestries = ancestries;
+    }
+
+    @Override
+    public String toString() {
+        return ancestralGroup;
     }
 }

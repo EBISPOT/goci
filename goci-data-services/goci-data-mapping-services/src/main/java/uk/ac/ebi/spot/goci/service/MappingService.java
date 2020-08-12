@@ -9,15 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.component.EnsemblMappingPipeline;
 import uk.ac.ebi.spot.goci.component.EnsemblRelease;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
-import uk.ac.ebi.spot.goci.model.Association;
-import uk.ac.ebi.spot.goci.model.EnsemblMappingResult;
-import uk.ac.ebi.spot.goci.model.EventType;
-import uk.ac.ebi.spot.goci.model.Gene;
-import uk.ac.ebi.spot.goci.model.GenomicContext;
-import uk.ac.ebi.spot.goci.model.Location;
-import uk.ac.ebi.spot.goci.model.Locus;
-import uk.ac.ebi.spot.goci.model.SecureUser;
-import uk.ac.ebi.spot.goci.model.SingleNucleotidePolymorphism;
+import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.repository.SecureUserRepository;
 import uk.ac.ebi.spot.goci.repository.SingleNucleotidePolymorphismRepository;
 
@@ -27,8 +19,8 @@ import java.util.*;
  * Created by emma on 13/08/2015.
  *
  * @author emma
- *         <p>
- *         Service that runs mapping pipeline over all or a selection of associations.
+ * <p>
+ * Service that runs mapping pipeline over all or a selection of associations.
  */
 @Service
 public class MappingService {
@@ -82,7 +74,7 @@ public class MappingService {
 
         try {
             eRelease = String.valueOf(ensemblRelease.getReleaseVersion());
-        }catch (Exception exception) {
+        } catch (Exception exception) {
             //getReleaseVersion can throw EnsemblRestIOException, but any exceptions should not block the mapping.
             eRelease = null;
         }
@@ -111,8 +103,7 @@ public class MappingService {
             getLog().debug("Update mapping record");
             mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
 
-        }
-        catch (EnsemblMappingException e) {
+        } catch (EnsemblMappingException e) {
             throw new EnsemblMappingException("Attempt to map supplied association failed", e);
         }
     }
@@ -129,34 +120,70 @@ public class MappingService {
         // Default mapping user
         SecureUser user = secureUserRepository.findByEmail("automatic_mapping_process");
         String eRelease = this.getEnsemblRelease();
-        int totalAssociationDone=1;
+        int totalAssociationDone = 1;
         List<Long> associationsFailed = new ArrayList<Long>();
-            for (Association association : associations) {
-                try {
-                    getLog().debug("Start doMapping Association nr:" + String.valueOf(totalAssociationDone));
-                    doMapping(association, eRelease);
+        for (Association association : associations) {
+            try {
+                getLog().debug("Start doMapping Association nr:" + String.valueOf(totalAssociationDone));
+                doMapping(association, eRelease);
 
-                    // Update mapping event
-                    trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
+                // Update mapping event
+                trackingOperationService.update(association, user, "ASSOCIATION_MAPPING");
 
-                    // Once mapping is complete, update mapping record
-                    getLog().debug("Update mapping record");
-                    mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
-                    totalAssociationDone = totalAssociationDone + 1;
-                } catch (EnsemblMappingException e) {
-                    //throw new EnsemblMappingException("Attempt to map all associations failed", e);
-                    associationsFailed.add(association.getId());
-                }catch (Throwable t){
-                    getLog().error(association.getId() + ": " + t.getMessage());
-                }
+                // Once mapping is complete, update mapping record
+                getLog().debug("Update mapping record");
+                mappingRecordService.updateAssociationMappingRecord(association, new Date(), performer);
+                totalAssociationDone = totalAssociationDone + 1;
+            } catch (EnsemblMappingException e) {
+                //throw new EnsemblMappingException("Attempt to map all associations failed", e);
+                associationsFailed.add(association.getId());
+            } catch (Throwable t) {
+                getLog().error(association.getId() + ": " + t.getMessage());
             }
+        }
         getLog().debug("Number of associations FAILED");
         getLog().debug(String.valueOf(associationsFailed.size()));
         getLog().debug(Arrays.toString(associationsFailed.toArray(new Long[0])));
     }
 
-    private void doMapping(Association association, String eRelease) throws EnsemblMappingException {
+    public List<String> validateSingleAssociation(Association association, String rsId) {
+        String eRelease = this.getEnsemblRelease();
+        List<String> errorList = new ArrayList<>();
 
+        getLog().info("Mapping association: {}", rsId);
+        try {
+            getLog().debug("Running mapping....");
+            EnsemblMappingResult ensemblMappingResult = ensemblMappingPipeline.run_pipeline(rsId, new ArrayList<>(), eRelease);
+
+            Collection<Location> locations = ensemblMappingResult.getLocations();
+            Collection<GenomicContext> snpGenomicContexts = ensemblMappingResult.getGenomicContexts();
+            List<String> pipelineErrors = ensemblMappingResult.getPipelineErrors();
+            if (!pipelineErrors.isEmpty()) {
+                errorList.addAll(pipelineErrors);
+            }
+
+            // Store location information for SNP
+            if (locations.isEmpty()) {
+                getLog().warn("Attempt to map SNP: " + rsId + " returned no location details");
+                errorList.add("Attempt to map SNP: " + rsId + " returned no location details");
+            }
+
+            // Store genomic context data for snp
+            if (snpGenomicContexts.isEmpty()) {
+                getLog().warn("Attempt to map SNP: " + rsId + " returned no mapped genes");
+                errorList.add("Attempt to map SNP: " + rsId + " returned no mapped genes");
+            }
+        } catch (Exception e) {
+            getLog().error("Encountered a " + e.getClass().getSimpleName() +
+                    " whilst trying to run mapping of SNP " + rsId +
+                    ", found in association: " + association.getId(), e);
+            errorList.add("Encountered a " + e.getClass().getSimpleName() +
+                    " whilst trying to run mapping of SNP " + rsId);
+        }
+        return errorList;
+    }
+
+    private void doMapping(Association association, String eRelease) throws EnsemblMappingException {
         getLog().info("Mapping association: " + association.getId());
 
         // Map to store returned location data, this is used in
@@ -199,11 +226,10 @@ public class MappingService {
                     getLog().debug("Running mapping....");
                     ensemblMappingResult =
                             ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp, eRelease);
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     getLog().error("Encountered a " + e.getClass().getSimpleName() +
-                                           " whilst trying to run mapping of SNP " + snpRsId +
-                                           ", found in association: " + association.getId(), e);
+                            " whilst trying to run mapping of SNP " + snpRsId +
+                            ", found in association: " + association.getId(), e);
                     throw new EnsemblMappingException();
                 }
 
@@ -257,8 +283,7 @@ public class MappingService {
                             snpToLocationsMap.put(snpRsId, snpLocation);
                         }
                     }
-                }
-                else {
+                } else {
                     getLog().warn("Attempt to map SNP: " + snpRsId + " returned no location details");
                     pipelineErrors.add("Attempt to map SNP: " + snpRsId + " returned no location details");
                 }
@@ -266,8 +291,7 @@ public class MappingService {
                 // Store genomic context data for snp
                 if (!snpGenomicContexts.isEmpty()) {
                     allGenomicContexts.addAll(snpGenomicContexts);
-                }
-                else {
+                } else {
                     getLog().warn("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
                     pipelineErrors.add("Attempt to map SNP: " + snpRsId + " returned no mapped genes");
                 }
@@ -281,8 +305,7 @@ public class MappingService {
         // Create association report based on whether there is errors or not
         if (!associationPipelineErrors.isEmpty()) {
             associationReportService.processAssociationErrors(association, associationPipelineErrors);
-        }
-        else {
+        } else {
             associationReportService.updateAssociationReportDetails(association);
         }
 
