@@ -30,7 +30,7 @@ public class GenotypingTechnology {
     }
 
     public GenotypingTechnology(String genotypingTechnology,
-                          Collection<Study> studies) {
+                                Collection<Study> studies) {
         this.genotypingTechnology = genotypingTechnology;
         this.studies = studies;
     }
@@ -58,5 +58,10 @@ public class GenotypingTechnology {
 
     public void setStudies(Collection<Study> studies) {
         this.studies = studies;
+    }
+
+    @Override
+    public String toString() {
+        return genotypingTechnology;
     }
 }

@@ -29,8 +29,8 @@ import java.util.*;
  * Created by emma on 03/03/2016.
  *
  * @author emma
- *         <p>
- *         Service class that handles common operations performed on associations
+ * <p>
+ * Service class that handles common operations performed on associations
  */
 @Service
 public class AssociationOperationsService {
@@ -102,14 +102,14 @@ public class AssociationOperationsService {
         return processAssociationValidationErrors(updatedError);
     }
 
-    public List<AssociationValidationView> checkSnpAssociationErrors(Association association,
-                                                                         String measurementType) {
+    public Collection<ValidationError> checkSnpAssociationErrors(Association association,
+                                                                 String measurementType) {
         Collection<ValidationError> errors = new ArrayList<>();
-        for(SingleNucleotidePolymorphism snp: association.getSnps()){
+        for (SingleNucleotidePolymorphism snp : association.getSnps()) {
             errors.add(errorCreationService.checkSnpValueIsPresent(snp.getRsId()));
         }
         association.getLoci().stream().forEach(locus -> locus.getStrongestRiskAlleles().stream().forEach(
-                allele-> {
+                allele -> {
                     errors.add(errorCreationService.checkStrongestAlleleValueIsPresent(allele.getRiskAlleleName()));
                 })
         );
@@ -123,8 +123,10 @@ public class AssociationOperationsService {
         }
 
         Collection<ValidationError> updatedError = ErrorProcessingService.checkForValidErrors(errors);
-        return processAssociationValidationErrors(updatedError);
+        return updatedError;
+//        return processAssociationValidationErrors(updatedError);
     }
+
     /**
      * Check a SNP association interaction form for errors, these are critical errors that would prevent creating an
      * association
@@ -132,8 +134,8 @@ public class AssociationOperationsService {
      * @param form            The form to validate
      * @param measurementType Determine if user has selected and populated essential value on the form
      */
-    public List<AssociationValidationView> checkSnpAssociationInteractionFormErrors(SnpAssociationInteractionForm form,
-                                                                                    String measurementType) {
+    public Collection<ValidationError> checkSnpAssociationInteractionFormErrors(SnpAssociationInteractionForm form,
+                                                                                String measurementType) {
         Collection<ValidationError> errors = new ArrayList<>();
         for (SnpFormColumn column : form.getSnpFormColumns()) {
             errors.add(errorCreationService.checkSnpValueIsPresent(column.getSnp()));
@@ -149,7 +151,12 @@ public class AssociationOperationsService {
         }
 
         Collection<ValidationError> updatedError = ErrorProcessingService.checkForValidErrors(errors);
-        return processAssociationValidationErrors(updatedError);
+        return updatedError;
+    }
+
+    public List<AssociationValidationView> checkSnpAssociationInteractionFormErrorsForView(SnpAssociationInteractionForm form,
+                                                                                                 String measurementType) {
+        return processAssociationValidationErrors(checkSnpAssociationInteractionFormErrors(form, measurementType));
     }
 
     /**
@@ -162,8 +169,7 @@ public class AssociationOperationsService {
     public Collection<AssociationValidationView> saveAssociationCreatedFromForm(Study study,
                                                                                 Association association,
                                                                                 SecureUser user,
-                                                                                String eRelease)
-            throws EnsemblMappingException {
+                                                                                String eRelease) {
 
         // Validate association
         Collection<ValidationError> associationValidationErrors =
@@ -244,14 +250,14 @@ public class AssociationOperationsService {
     /**
      * Validate & save association
      *
-     * @param study         Study to assign association to
-     * @param association   Association to validate and save
+     * @param study       Study to assign association to
+     * @param association Association to validate and save
      * @param user
      */
     public Collection<AssociationValidationView> validateAndSaveAssociation(Study study,
-                                                                               Association association,
-                                                                               SecureUser user,
-                                                                               String eRelease)
+                                                                            Association association,
+                                                                            SecureUser user,
+                                                                            String eRelease)
             throws EnsemblMappingException {
 
         // Validate association
@@ -332,8 +338,7 @@ public class AssociationOperationsService {
         String measurementType = "none";
         if (association.getBetaNum() != null) {
             measurementType = "beta";
-        }
-        else {
+        } else {
             if (association.getOrPerCopyNum() != null) {
                 measurementType = "or";
             }
@@ -350,9 +355,7 @@ public class AssociationOperationsService {
 
         if (association.getSnpInteraction() != null && association.getSnpInteraction()) {
             return createForm(association, snpInteractionAssociationService);
-        }
-
-        else {
+        } else {
             return createForm(association, singleSnpMultiSnpAssociationService);
         }
     }
@@ -533,8 +536,8 @@ public class AssociationOperationsService {
         List<AssociationValidationView> associationValidationViews = new ArrayList<>();
         errors.forEach(validationError -> {
             associationValidationViews.add(new AssociationValidationView(validationError.getField(),
-                                                                         validationError.getError(),
-                                                                         validationError.getWarning()));
+                    validationError.getError(),
+                    validationError.getWarning()));
         });
         return associationValidationViews;
     }

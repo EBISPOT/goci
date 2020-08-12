@@ -509,16 +509,10 @@ public class AssociationController {
 
             // Save and validate form
             String eRelease = ensemblRestTemplateService.getRelease();
-            Collection<AssociationValidationView> errors = null;
-            try {
-                errors = associationOperationsService.saveAssociationCreatedFromForm(study,
+            Collection<AssociationValidationView> errors = associationOperationsService.saveAssociationCreatedFromForm(study,
                         newAssociation,
                         currentUserDetailsService.getUserFromRequest(
                                 request), eRelease);
-            }
-            catch (EnsemblMappingException e) {
-                return "ensembl_mapping_failure";
-            }
 
             // Determine if we have any errors rather than warnings
             long errorCount = errors.stream()
@@ -578,15 +572,9 @@ public class AssociationController {
 
             // Save and validate form
             String eRelease = ensemblRestTemplateService.getRelease();
-            Collection<AssociationValidationView> errors = null;
-            try {
-                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
+            Collection<AssociationValidationView> errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
                         currentUserDetailsService.getUserFromRequest(
                                 request), eRelease);
-            }
-            catch (EnsemblMappingException e) {
-                return "ensembl_mapping_failure";
-            }
 
             // Determine if we have any errors rather than warnings
             long errorCount = errors.stream()
@@ -628,7 +616,7 @@ public class AssociationController {
 
         // Check for errors in form that would prevent saving an association
         List<AssociationValidationView> colErrors =
-                associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm,
+                associationOperationsService.checkSnpAssociationInteractionFormErrorsForView(snpAssociationInteractionForm,
                         measurementType);
 
         if (!colErrors.isEmpty()) {
@@ -643,16 +631,10 @@ public class AssociationController {
                     snpInteractionAssociationService.createAssociation(snpAssociationInteractionForm);
 
             // Save and validate form
-            Collection<AssociationValidationView> errors = null;
             String eRelease = ensemblRestTemplateService.getRelease();
-            try {
-                errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
+            Collection<AssociationValidationView> errors = associationOperationsService.saveAssociationCreatedFromForm(study, newAssociation,
                         currentUserDetailsService.getUserFromRequest(
                                 request), eRelease);
-            }
-            catch (EnsemblMappingException e) {
-                return "ensembl_mapping_failure";
-            }
 
             // Determine if we have any errors rather than warnings
             long errorCount = errors.stream()
@@ -758,7 +740,7 @@ public class AssociationController {
         List<AssociationValidationView> criticalErrors = new ArrayList<>();
         if (associationType.equalsIgnoreCase("interaction")) {
             criticalErrors =
-                    associationOperationsService.checkSnpAssociationInteractionFormErrors(snpAssociationInteractionForm,
+                    associationOperationsService.checkSnpAssociationInteractionFormErrorsForView(snpAssociationInteractionForm,
                             measurementType);
         }
         else {
@@ -1472,7 +1454,7 @@ public class AssociationController {
                         List<AssociationValidationView> criticalErrors = new ArrayList<>();
                         if (associationToValidate.getSnpInteraction()) {
                             criticalErrors =
-                                    associationOperationsService.checkSnpAssociationInteractionFormErrors((SnpAssociationInteractionForm) associationOperationsService
+                                    associationOperationsService.checkSnpAssociationInteractionFormErrorsForView((SnpAssociationInteractionForm) associationOperationsService
                                                                                                                   .generateForm(associationToValidate),
                                                                                                           measurementType);
                         }

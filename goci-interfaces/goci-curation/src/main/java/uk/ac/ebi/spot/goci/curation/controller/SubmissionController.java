@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
+import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionImportService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
+import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionUtil;
 import uk.ac.ebi.spot.goci.model.Publication;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
@@ -35,6 +37,7 @@ public class SubmissionController {
 
     private final DepositionSubmissionService submissionService;
     private final CurrentUserDetailsService currentUserDetailsService;
+    private final DepositionSubmissionImportService depositionSubmissionImportService;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -51,9 +54,11 @@ public class SubmissionController {
     private String depositionIngestURL;
 
     public SubmissionController(@Autowired DepositionSubmissionService submissionService,
-                                @Autowired CurrentUserDetailsService currentUserDetailsService) {
+                                @Autowired CurrentUserDetailsService currentUserDetailsService,
+                                @Autowired DepositionSubmissionImportService depositionSubmissionImportService) {
         this.submissionService = submissionService;
         this.currentUserDetailsService = currentUserDetailsService;
+        this.depositionSubmissionImportService = depositionSubmissionImportService;
     }
 
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -91,7 +96,7 @@ public class SubmissionController {
             testSub.setJournal(depositionSubmission.getPublication().getJournal());
             testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
             testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
-            testSub.setSubmissionType(submissionService.getSubmissionType(depositionSubmission));
+            testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
             testSub.setPublicationDate(depositionSubmission.getPublication().getPublicationDate());
             if(depositionSubmission.getPublication().getCorrespondingAuthor() != null) {
                 DepositionAuthor author = depositionSubmission.getPublication().getCorrespondingAuthor();
@@ -126,7 +131,7 @@ public class SubmissionController {
             testSub.setJournal(depositionSubmission.getBodyOfWork().getJournal());
             testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
             testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
-            testSub.setSubmissionType(submissionService.getSubmissionType(depositionSubmission));
+            testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
@@ -145,7 +150,7 @@ public class SubmissionController {
             DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionID);
             Submission submission = submissionList.get(submissionID);
             SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
-            statusMessages = submissionService.importSubmission(depositionSubmission, currentUser);
+            statusMessages = depositionSubmissionImportService.importSubmission(depositionSubmission, currentUser);
 
             submission.setStatus("IMPORTED");
             model.addAttribute("submissions", submissionList.values());

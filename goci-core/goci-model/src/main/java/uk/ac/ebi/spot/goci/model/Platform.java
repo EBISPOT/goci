@@ -10,8 +10,8 @@ import javax.persistence.ManyToMany;
 import java.util.Collection;
 
 /**
-* Created by dwelter on 08/03/16.
-*/
+ * Created by dwelter on 08/03/16.
+ */
 @Entity
 public class Platform {
 
@@ -60,4 +60,8 @@ public class Platform {
         this.studies = studies;
     }
 
+    @Override
+    public String toString() {
+        return manufacturer;
+    }
 }

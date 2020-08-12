@@ -571,7 +571,7 @@ public class AssociationControllerTest {
 
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
-        when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
+        when(associationOperationsService.checkSnpAssociationInteractionFormErrorsForView(Matchers.any(
                 SnpAssociationInteractionForm.class), Matchers.anyString()))
                 .thenReturn(errors);
 
@@ -795,7 +795,7 @@ public class AssociationControllerTest {
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
         when(associationRepository.findOne(Matchers.anyLong())).thenReturn(ASSOCIATION);
-        when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
+        when(associationOperationsService.checkSnpAssociationInteractionFormErrorsForView(Matchers.any(
                 SnpAssociationInteractionForm.class), Matchers.anyString())).thenReturn(errors);
         when(associationOperationsService.determineIfAssociationIsOrType(Matchers.any(Association.class))).thenReturn(
                 "or");
