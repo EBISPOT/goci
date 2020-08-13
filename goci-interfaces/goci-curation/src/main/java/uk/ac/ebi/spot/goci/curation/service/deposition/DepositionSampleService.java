@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSampleDto;
 import uk.ac.ebi.spot.goci.repository.AncestralGroupRepository;
@@ -37,6 +38,7 @@ public class DepositionSampleService {
     public DepositionSampleService() {
     }
 
+    @Transactional
     public String saveSamples(String studyTag, Study study, List<DepositionSampleDto> samples, ImportLog importLog) {
         //find samples in study
         StringBuffer studyNote = new StringBuffer();

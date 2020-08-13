@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
@@ -55,6 +56,7 @@ public class DepositionAssociationService {
     public DepositionAssociationService() {
     }
 
+    @Transactional
     public String saveAssociations(SecureUser currentUser, String studyTag, Study study, List<DepositionAssociationDto> associations, ImportLog importLog) {
         //find associations in study
         String eRelease = ensemblRestTemplateService.getRelease();

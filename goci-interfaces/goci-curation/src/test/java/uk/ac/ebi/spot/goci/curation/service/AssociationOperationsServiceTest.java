@@ -253,7 +253,7 @@ public class AssociationOperationsServiceTest {
         when(errorCreationService.checkStrongestAlleleValueIsPresent(Matchers.anyString())).thenReturn(RISK_ALLELE_ERROR);
         when(errorCreationService.checkOrIsPresent(Matchers.anyFloat())).thenReturn(OR_ERROR);
 
-        assertThat(associationOperationsService.checkSnpAssociationInteractionFormErrors(
+        assertThat(associationOperationsService.checkSnpAssociationInteractionFormErrorsForView(
                 SNP_ASSOCIATION_INTERACTION_FORM_WITH_ERRORS,
                 "or")).isInstanceOf(List.class)
                 .hasOnlyElementsOfType(
