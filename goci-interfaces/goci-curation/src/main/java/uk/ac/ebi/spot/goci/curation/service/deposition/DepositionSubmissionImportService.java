@@ -88,11 +88,11 @@ public class DepositionSubmissionImportService {
                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                 importLog.addErrors(result.getRight(), "Publishing summary stats");
 
-                importStep = importLog.addStep(new ImportLogStep("Updating submission status", submissionID));
+                importStep = importLog.addStep(new ImportLogStep("Updating submission status: CURATION_COMPLETE", submissionID));
                 String stepOutcome = ingestService.updateSubmissionStatus(depositionSubmission, "CURATION_COMPLETE", "PUBLISHED_WITH_SS");
                 if (stepOutcome != null) {
                     importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
-                    importLog.addError(stepOutcome, "Updating submission status");
+                    importLog.addError(stepOutcome, "Updating submission status: CURATION_COMPLETE");
                     outcome = false;
                 } else {
                     importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
@@ -106,7 +106,6 @@ public class DepositionSubmissionImportService {
             /**
              * TODO: Send notification
              */
-            getLog().info("[{}] Summary stats imported. Process finalized. Outcome: {}", submissionID, importLog.pretty());
         } else {
             ImportLogStep studiesStep = importLog.addStep(new ImportLogStep("Verifying studies", submissionID));
             if (studies != null) {// && dbStudies.size() == 1) { //only do this for un-curated publications
@@ -151,10 +150,10 @@ public class DepositionSubmissionImportService {
                                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                             }
 
-                            importStep = importLog.addStep(new ImportLogStep("Updating submission status", submissionID));
+                            importStep = importLog.addStep(new ImportLogStep("Updating submission status: CURATION_COMPLETE", submissionID));
                             result = ingestService.updateSubmissionStatus(depositionSubmission, "CURATION_COMPLETE", "CURATION_STARTED");
                             if (result != null) {
-                                importLog.addError(result, "Updating submission status");
+                                importLog.addError(result, "Updating submission status: CURATION_COMPLETE");
                                 importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
                                 outcome = false;
                             } else {
@@ -167,13 +166,11 @@ public class DepositionSubmissionImportService {
                 importLog.updateStatus(studiesStep.getId(), ImportLog.FAIL);
                 importLog.addError("Submission [" + submissionID + "] has no studies", "\"Verifying studies\"");
                 outcome = false;
-
             }
 
             /**
              * TODO: Send notification
              */
-            getLog().info(importLog.pretty());
         }
 
         if (outcome) {
@@ -194,8 +191,19 @@ public class DepositionSubmissionImportService {
                 publicationService.save(publication);
                 getLog().info("Publication [{}] saved.", publication.getPubmedId());
             }
+        } else {
+            ImportLogStep importStep = importLog.addStep(new ImportLogStep("Updating submission status: IMPORT_FAILED", submissionID));
+            String stepOutcome = ingestService.updateSubmissionStatus(depositionSubmission, "IMPORT_FAILED", "");
+            if (stepOutcome != null) {
+                importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+                importLog.addError(stepOutcome, "Updating submission status: IMPORT_FAILED");
+            } else {
+                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+            }
         }
 
+        getLog().info("Import process finalized: {}", depositionSubmission.getSubmissionId());
+        getLog().info(importLog.pretty());
         return Arrays.asList(new String[]{importLog.pretty()});
     }
 
