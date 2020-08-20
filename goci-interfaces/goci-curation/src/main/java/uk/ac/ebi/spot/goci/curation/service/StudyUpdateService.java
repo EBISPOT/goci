@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.Housekeeping;
+import uk.ac.ebi.spot.goci.model.SecureUser;
+import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.StudyExtension;
 import uk.ac.ebi.spot.goci.repository.StudyExtensionRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
@@ -19,8 +22,8 @@ import java.util.stream.Collectors;
  * Created by emma on 03/08/2016.
  *
  * @author emma
- *         <p>
- *         Service to update a study object
+ * <p>
+ * Service to update a study object
  */
 @Service
 public class StudyUpdateService {
@@ -76,13 +79,17 @@ public class StudyUpdateService {
             // and the default "find" query syntax then returns this study.id
             StudyExtension existing = studyExtensionRepository.getStudyExtensionId(study.getId());
 
-            existing.setStudyDescription(studyExtension.getStudyDescription());
-            existing.setCohort(studyExtension.getCohort());
-            existing.setCohortSpecificReference(studyExtension.getCohortSpecificReference());
-            existing.setStatisticalModel(studyExtension.getStatisticalModel());
-            existing.setSummaryStatisticsFile(studyExtension.getSummaryStatisticsFile());
-            existing.setSummaryStatisticsAssembly(studyExtension.getSummaryStatisticsAssembly());
-            studyExtensionRepository.save(existing);
+            if (existing != null) {
+                existing.setStudyDescription(studyExtension.getStudyDescription());
+                existing.setCohort(studyExtension.getCohort());
+                existing.setCohortSpecificReference(studyExtension.getCohortSpecificReference());
+                existing.setStatisticalModel(studyExtension.getStatisticalModel());
+                existing.setSummaryStatisticsFile(studyExtension.getSummaryStatisticsFile());
+                existing.setSummaryStatisticsAssembly(studyExtension.getSummaryStatisticsAssembly());
+                studyExtensionRepository.save(existing);
+            } else {
+                studyExtensionRepository.save(studyExtension);
+            }
         }
         studyRepository.save(study);
         getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
@@ -155,8 +162,8 @@ public class StudyUpdateService {
 
     private String checkForDiseaseTraitUpdate(String existingDiseaseTraitName, String updatedDiseaseTraitName) {
         return attributeUpdateService.compareAttribute("Disease Trait",
-                                                       existingDiseaseTraitName,
-                                                       updatedDiseaseTraitName);
+                existingDiseaseTraitName,
+                updatedDiseaseTraitName);
     }
 
     private String checkForEfoTraitUpdate(List<String> existingStudyEfoTraits, List<String> updatedStudyEfoTraits) {
@@ -182,7 +189,7 @@ public class StudyUpdateService {
         }
 
         return attributeUpdateService.compareAttribute("EFO Trait",
-                                                       existingStudyEfoTraitsAsString,
-                                                       updatedStudyEfoTraitsAsString);
+                existingStudyEfoTraitsAsString,
+                updatedStudyEfoTraitsAsString);
     }
 }
