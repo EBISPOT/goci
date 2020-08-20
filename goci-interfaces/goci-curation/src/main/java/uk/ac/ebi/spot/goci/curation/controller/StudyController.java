@@ -35,6 +35,8 @@ import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionProvenance;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionUser;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.exception.PubmedLookupException;
@@ -59,6 +61,7 @@ import java.util.concurrent.Callable;
 @Controller
 @RequestMapping("/studies")
 public class StudyController {
+
     @Value("${deposition.ui.uri}")
     private String depositionUiURL;
 
@@ -653,6 +656,10 @@ public class StudyController {
         }
         model.addAttribute("extension", studyToView.getStudyExtension());
 
+        DepositionProvenance depositionProvenance = submissionService.getProvenance(studyToView.getPublicationId().getPubmedId());
+        DepositionUser depositionUser = depositionProvenance == null ? new DepositionUser("N/A", "N/A") : depositionProvenance.getUser();
+        model.addAttribute("submitter", depositionUser);
+
         return "study";
     }
 
@@ -660,16 +667,14 @@ public class StudyController {
     // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String updateStudy(@ModelAttribute Study study,
+                              @ModelAttribute StudyExtension extension,
                               @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
 //        xintodo edit study
-        if(study.getStudyExtension() == null){
-            StudyExtension extension = new StudyExtension();
-            extension.setStudy(study);
-            study.setStudyExtension(extension);
+        if(extension == null){
+            extension = new StudyExtension();
         }
-        studyUpdateService.updateStudy(studyId, study,
-                currentUserDetailsService.getUserFromRequest(request));
+        studyUpdateService.updateStudy(studyId, study, extension, currentUserDetailsService.getUserFromRequest(request));
 
         // Add save message
         String message = "Changes saved successfully";

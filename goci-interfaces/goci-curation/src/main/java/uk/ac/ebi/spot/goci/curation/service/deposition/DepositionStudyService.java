@@ -1,5 +1,7 @@
 package uk.ac.ebi.spot.goci.curation.service.deposition;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.ac.ebi.spot.goci.curation.service.HousekeepingOperationsService;
@@ -18,6 +20,13 @@ import java.util.List;
 
 @Component
 public class DepositionStudyService {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     @Autowired
     DiseaseTraitRepository diseaseTraitRepository;
     @Autowired
@@ -92,6 +101,7 @@ public class DepositionStudyService {
         Curator levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         CurationStatus levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
 
+        getLog().info("[IMPORT] Initializing study: {} | {}", publication.getPubmedId(), studyDto.getAccession());
         Study study = studyDto.buildStudy();
         DiseaseTrait diseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait());
         study.setDiseaseTrait(diseaseTrait);
@@ -100,30 +110,38 @@ public class DepositionStudyService {
         if (manufacturerString != null) {
             List<Platform> platformList = new ArrayList<>();
             String[] manufacturers = manufacturerString.split("\\||,");
+            getLog().info("[IMPORT] Manufacturers provided: {}", manufacturers.length);
             for (String manufacturer : manufacturers) {
                 Platform platform = platformRepository.findByManufacturer(manufacturer.trim());
                 platformList.add(platform);
             }
+            getLog().info("[IMPORT] Manufacturers mapped: {}", platformList.size());
             study.setPlatforms(platformList);
         }
         List<GenotypingTechnology> gtList = new ArrayList<>();
         String genotypingTech = studyDto.getGenotypingTechnology();
         if(genotypingTech != null) {
             String[] technologies = genotypingTech.split("\\||,");
+            getLog().info("[IMPORT] Genotyping technology provided: {}", technologies.length);
             for (String technology : technologies) {
-                GenotypingTechnology gtt = genotypingTechnologyRepository.findByGenotypingTechnology(technology.trim());
+                GenotypingTechnology gtt = genotypingTechnologyRepository.findByGenotypingTechnology(
+                        DepositionTransform.transformGenotypingTechnology(technology.trim()));
                 gtList.add(gtt);
             }
         }
+        getLog().info("[IMPORT] Genotyping technology mapped: {}", gtList.size());
         study.setGenotypingTechnologies(gtList);
 
         study.setPublicationId(publication);
+        getLog().info("[IMPORT] Creating house keeping ...");
         Housekeeping housekeeping = housekeepingRepository.createHousekeeping();
+        getLog().info("[IMPORT] House keeping created: {}", housekeeping.getId());
         study.setHousekeeping(housekeeping);
         housekeeping.setCurator(levelTwoCurator);
         housekeeping.setCurationStatus(levelOneCurationComplete);
         if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")) {
             study.setFullPvalueSet(true);
+            getLog().info("[IMPORT] Full p-value set to TRUE.");
         }
         Integer variantCount = studyDto.getVariantCount();
         if(variantCount != -1) {
@@ -133,21 +151,25 @@ public class DepositionStudyService {
         String efoTrait = studyDto.getEfoTrait();
         if(efoTrait != null){
             String[] efoTraits = efoTrait.split("\\||,");
+            getLog().info("[IMPORT] EFO traits provided: {}", efoTraits.length);
             for(String trait: efoTraits){
                 EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait.trim());
                 efoTraitList.add(dbTrait);
             }
         }
         List<EfoTrait> mappedTraitList = new ArrayList<>();
+        getLog().info("[IMPORT] EFO traits mapped: {}", efoTraitList.size());
         study.setEfoTraits(efoTraitList);
         String mappedBackgroundTrait = studyDto.getBackgroundEfoTrait();
         if(mappedBackgroundTrait != null) {
             String[] efoTraits = mappedBackgroundTrait.split("\\||,");
+            getLog().info("[IMPORT] Background EFO traits provided: {}", efoTraits.length);
             for (String trait : efoTraits) {
                 EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait);
                 mappedTraitList.add(dbTrait);
             }
         }
+        getLog().info("[IMPORT] Background EFO traits mapped: {}", mappedTraitList.size());
         study.setMappedBackgroundTraits(mappedTraitList);
         DiseaseTrait backgroundTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait());
         study.setBackgroundTrait(backgroundTrait);
@@ -156,7 +178,13 @@ public class DepositionStudyService {
             study.setFullPvalueSet(true);
         }
         study.setStudyDesignComment(studyDto.getArrayInformation());
-        studyService.save(study);
+        getLog().info("[IMPORT] Saving study ...");
+        try {
+            studyService.save(study);
+            getLog().info("[IMPORT] Study saved: {}", study.getId());
+        } catch (Exception e) {
+            getLog().error("[IMPORT] Could not save study: {}", e.getMessage(), e);
+        }
         StudyExtension studyExtension = new StudyExtension();
         studyExtension.setStudyDescription(studyDto.getStudyDescription());
         studyExtension.setCohort(studyDto.getCohort());
@@ -165,9 +193,15 @@ public class DepositionStudyService {
         studyExtension.setSummaryStatisticsFile(studyDto.getSummaryStatisticsFile());
         studyExtension.setSummaryStatisticsAssembly(studyDto.getSummaryStatisticsAssembly());
         studyExtension.setStudy(study);
-        studyExtensionRepository.save(studyExtension);
-        study.setStudyExtension(studyExtension);
-        studyService.save(study);
+        getLog().info("[IMPORT] Saving study extension...");
+        try {
+            studyExtensionRepository.save(studyExtension);
+            getLog().info("[IMPORT] Study extension saved: {}", studyExtension.getId());
+            study.setStudyExtension(studyExtension);
+            studyService.save(study);
+        } catch (Exception e) {
+            getLog().error("[IMPORT] Could not save study extension: {}", e.getMessage(), e);
+        }
         return study;
     }
 

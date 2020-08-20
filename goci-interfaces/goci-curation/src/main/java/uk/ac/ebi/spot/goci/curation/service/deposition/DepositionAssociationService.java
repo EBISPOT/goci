@@ -1,12 +1,10 @@
 package uk.ac.ebi.spot.goci.curation.service.deposition;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.model.AssociationValidationView;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationForm;
-import uk.ac.ebi.spot.goci.curation.model.SnpAssociationStandardMultiForm;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.SingleSnpMultiSnpAssociationService;
 import uk.ac.ebi.spot.goci.exception.EnsemblMappingException;
@@ -20,7 +18,6 @@ import uk.ac.ebi.spot.goci.service.MapCatalogService;
 import uk.ac.ebi.spot.goci.service.ValidationService;
 import uk.ac.ebi.spot.goci.utils.AssociationCalculationService;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,6 +25,12 @@ import java.util.List;
 
 @Component
 public class DepositionAssociationService {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
 
     @Autowired
     SingleSnpMultiSnpAssociationService singleSnpMultiSnpAssociationService;
@@ -49,11 +52,11 @@ public class DepositionAssociationService {
     ValidationService validationService;
 
 
-
-    public DepositionAssociationService() {}
+    public DepositionAssociationService() {
+    }
 
     public String saveAssociations(SecureUser currentUser, String studyTag, Study study,
-                                 List<DepositionAssociationDto> associations) throws EnsemblMappingException {
+                                   List<DepositionAssociationDto> associations) throws EnsemblMappingException {
         //find associations in study
         String eRelease = ensemblRestTemplateService.getRelease();
         StringBuffer studyNote = new StringBuffer();
@@ -80,58 +83,62 @@ public class DepositionAssociationService {
                 }
                 association.setPvalueDescription(associationDto.getPValueText());
                 String rsID = associationDto.getVariantID();
-                if(rsID != null) {
+                getLog().info("[IMPORT] Processing rdID: {}", rsID);
+                if (rsID != null) {
                     SingleNucleotidePolymorphism snp = lociService.createSnp(rsID);
+                    getLog().info("[IMPORT] SNP created: {}", snp.getId());
 
                     studyNote.append("added SNP " + rsID + "\n");//does this fail
                     RiskAllele riskAllele =
                             lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
+                    getLog().info("[IMPORT] Risk allele created: {}", riskAllele.getId());
+
                     if (associationDto.getProxyVariant() != null) {
                         List<SingleNucleotidePolymorphism> proxySnps = new ArrayList<>();
                         proxySnps.add(lociService.createSnp(associationDto.getProxyVariant()));
                         riskAllele.setProxySnps(proxySnps);
+                        getLog().info("[IMPORT] Created {} proxy SNPs: {}", proxySnps.size());
                     }
                     List<RiskAllele> alleleList = new ArrayList<>();
                     alleleList.add(riskAllele);
                     locus.setStrongestRiskAlleles(alleleList);
                     loci.add(locus);
                     association.setLoci(loci);
-                }else{
+                } else {
                     throw new IllegalArgumentException("error, no rs_id found for " + associationDto.getStudyTag());
                 }
-                if(associationDto.getEffectAlleleFrequency() != null && associationDto.getEffectAlleleFrequency().intValue() != -1) {
+                if (associationDto.getEffectAlleleFrequency() != null && associationDto.getEffectAlleleFrequency().intValue() != -1) {
                     association.setRiskFrequency(associationDto.getEffectAlleleFrequency().toString());
-                }
-                else{
+                } else {
                     association.setRiskFrequency("NR");
                 }
-                if(associationDto.getStandardError() != null) {
+                if (associationDto.getStandardError() != null) {
                     association.setStandardError(associationDto.getStandardError().floatValue());
                 }
                 String measurementType = "";
-                if(associationDto.getOddsRatio() != null) {
+                if (associationDto.getOddsRatio() != null) {
                     association.setOrPerCopyNum(associationDto.getOddsRatio().floatValue());
                     measurementType = "or";
                 }
-                if(associationDto.getBeta() != null) {
+                if (associationDto.getBeta() != null) {
                     Double betaValue = associationDto.getBeta();
-                    if(betaValue < 0){
+                    if (betaValue < 0) {
                         association.setBetaDirection("decrease");
-                    }else{
+                    } else {
                         association.setBetaDirection("increase");
                     }
                     association.setBetaNum(Math.abs(betaValue.floatValue()));
                     measurementType = "beta";
                     association.setBetaUnit(associationDto.getBetaUnit());
                 }
-                if(associationDto.getCiLower() != null && associationDto.getCiUpper() != null) {
+                if (associationDto.getCiLower() != null && associationDto.getCiUpper() != null) {
                     association.setRange("[" + associationDto.getCiLower() + "-" + associationDto.getCiUpper() + "]");
-                }else{
-                    if(associationDto.getOddsRatio() != null && associationDto.getStandardError() != null) {
+                } else {
+                    if (associationDto.getOddsRatio() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getOddsRatio())));
                         measurementType = "or";
-                    }else if(associationDto.getBeta() != null && associationDto.getStandardError() != null) {
+                    } else if (associationDto.getBeta() != null && associationDto.getStandardError() != null) {
                         association.setRange(calculationService
                                 .setRange(associationDto.getStandardError(), Math.abs(associationDto.getBeta())));
                         measurementType = "beta";
@@ -142,15 +149,26 @@ public class DepositionAssociationService {
                 associationExtension.setEffectAllele(associationDto.getEffectAllele());
                 associationExtension.setOtherAllele(associationDto.getOtherAllele());
 
+                getLog().info("[IMPORT] Checking for association errors ...");
                 List<AssociationValidationView> rowErrors =
                         associationOperationsService.checkSnpAssociationErrors(association,
                                 measurementType);
+                getLog().info("[IMPORT] Found {} association errors.", rowErrors.size());
+                for (AssociationValidationView associationValidationView : rowErrors) {
+                    getLog().error("[IMPORT] Assoc error: {} | {} | {}", associationValidationView.getWarning(), associationValidationView.getErrorMessage(), associationValidationView.getField());
+                }
 
                 if (rowErrors.isEmpty()) {
                     // Save and validate form
                     // Validate association
+                    getLog().info("[IMPORT] Validating association ...");
                     Collection<ValidationError> associationValidationErrors =
                             validationService.runAssociationValidation(association, "full", eRelease);
+                    getLog().info("[IMPORT] Found {} validation errors.", associationValidationErrors.size());
+                    for (ValidationError validationError : associationValidationErrors) {
+                        getLog().error("[IMPORT] Validation error: {} | {} | {}", validationError.getWarning(), validationError.getError(), validationError.getField());
+                    }
+
                     associationOperationsService.saveAssociation(association, study, associationValidationErrors);
                     extensionRepository.save(associationExtension);
                     association.setAssociationExtension(associationExtension);
@@ -158,17 +176,23 @@ public class DepositionAssociationService {
 
                     Collection<AssociationValidationView> errors = null;
                     try {
+                        getLog().info("[IMPORT] Saving association ...");
                         errors = associationOperationsService.saveAssociationCreatedFromForm(study,
                                 association, currentUser, eRelease);
+                        getLog().info("[IMPORT] Found {} errors on save.", errors.size());
+                        for (AssociationValidationView associationValidationView : errors) {
+                            getLog().error("[IMPORT] Save error: {} | {} | {}", associationValidationView.getWarning(), associationValidationView.getErrorMessage(), associationValidationView.getField());
+                        }
+
                         mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(),
                                 Collections.singleton(association));
                         studyNote.append("mapped associations" + "\n");
-                    }
-                    catch (EnsemblMappingException e) {
+                    } catch (EnsemblMappingException e) {
+                        getLog().error("[IMPORT] Ensembl mapping failure: {}", e.getMessage(), e);
                         return "ensembl_mapping_failure";
                     }
-                }else{
-                    rowErrors.forEach(s->studyNote.append(s.getErrorMessage()));
+                } else {
+                    rowErrors.forEach(s -> studyNote.append(s.getErrorMessage()));
                 }
             }
         }
