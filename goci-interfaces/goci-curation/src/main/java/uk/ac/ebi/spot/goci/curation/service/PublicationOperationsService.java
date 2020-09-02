@@ -144,6 +144,7 @@ public class PublicationOperationsService {
 
     // Import the a list of pubmedid
     public ArrayList<HashMap<String,String>> importNewPublications(String pubmedIdList, SecureUser currentUser) {
+        getLog().info("Importing publications: {}", pubmedIdList);
         ArrayList<HashMap<String,String>> listPublications = new ArrayList<>();
 
         String regex = "[0-9, /,]+";
@@ -151,6 +152,7 @@ public class PublicationOperationsService {
         String pubmedIdListTrim = pubmedIdList.trim();
 
         if (!pubmedIdListTrim.matches(regex)) {
+            getLog().error("Error found when parsing publication list: Pubmed list must be number follow by comma");
             HashMap<String, String> error = new HashMap<String, String>();
             error.put("pubmedId", "general");
             error.put("error", "Pubmed List must be number follow by comma");
@@ -164,7 +166,8 @@ public class PublicationOperationsService {
             HashMap<String, String> pubmedResult = new HashMap<String, String>();
             pubmedId = pubmedId.trim();
             if (pubmedId == "") {
-                pubmedResult.put("pubmedId", "Empty");
+                getLog().error("Error found when processing pubmed entry: Found empty Pubmed ID");
+                pubmedResult.put("pubmedId", "general");
                 pubmedResult.put("error", "Empty pubmed id - The pubmedId is mandatory");
                 listPublications.add(pubmedResult);
             }
@@ -172,8 +175,8 @@ public class PublicationOperationsService {
             // Check if there is an existing study with the same pubmed id
             Collection<Study> existingStudies = publicationService.findStudiesByPubmedId(pubmedId);
             if (existingStudies != null) {
-                pubmedResult.put("pubmedId", pubmedId);
-                pubmedResult.put("error", "This pubmed already exists.");
+                pubmedResult.put("pubmedId", "general");
+                pubmedResult.put("error", "Pubmed " + pubmedId + " already exists.");
                 listPublications.add(pubmedResult);
             } else {
                 //Study importedStudy = defaultPubMedSearchService.findPublicationSummary(pubmedId);
@@ -196,18 +199,18 @@ public class PublicationOperationsService {
                     studyFileService.createStudyDir(savedStudy.getId());
                 } catch (NoStudyDirectoryException e) {
                     getLog().error("No study directory exception");
-                    pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("error", "No study directory exception");
+                    pubmedResult.put("pubmedId", "general");
+                    pubmedResult.put("error", "No study directory exception for pubmed: " + pubmedId);
                     listPublications.add(pubmedResult);
                 } catch (PubmedLookupException ple) {
-                    getLog().error("Something went wrong quering EuropePMC.");
-                    pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("error", ple.getMessage());
+                    getLog().error("Encountered Pubmed lookup exception: {}", ple.getMessage(), ple);
+                    pubmedResult.put("pubmedId", "general");
+                    pubmedResult.put("error", "Pubmed " + pubmedId + " lookup exception: " + ple.getMessage());
                     listPublications.add(pubmedResult);
                 } catch (Exception e) {
-                    getLog().error("Something went wrong. Please, contact the helpdesk.");
-                    pubmedResult.put("pubmedId", pubmedId);
-                    pubmedResult.put("error", "Something went wrong. Please, contact the helpdesk.");
+                    getLog().error("Encountered error: {}", e.getMessage(), e);
+                    pubmedResult.put("pubmedId", "general");
+                    pubmedResult.put("error", "Pubmed " + pubmedId + " encountered error: " + e.getMessage());
                     listPublications.add(pubmedResult);
                 }
 

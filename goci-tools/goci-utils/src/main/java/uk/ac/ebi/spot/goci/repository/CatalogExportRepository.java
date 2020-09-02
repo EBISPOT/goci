@@ -196,7 +196,8 @@ public class CatalogExportRepository {
                     }
                 }
             }
-            long id = generateUniqueID(identifiers);
+//            long id = generateUniqueID(identifiers);
+            long id = System.nanoTime();
 
             if (bindings.contains(CatalogHeaderBinding.UNIQUE_KEY)) {
                 rowMap.put(CatalogHeaderBinding.UNIQUE_KEY, Long.toString(id));
