@@ -91,9 +91,8 @@ public class DepositionSubmissionImportService {
                 importStep = importLog.addStep(new ImportLogStep("Updating submission status: CURATION_COMPLETE", submissionID));
                 String stepOutcome = ingestService.updateSubmissionStatus(depositionSubmission, "CURATION_COMPLETE", "PUBLISHED_WITH_SS");
                 if (stepOutcome != null) {
-                    importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
-                    importLog.addError(stepOutcome, "Updating submission status: CURATION_COMPLETE");
-                    outcome = false;
+                    importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS_WITH_WARNINGS);
+                    importLog.addWarning(stepOutcome, "Updating submission status: CURATION_COMPLETE");
                 } else {
                     importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                 }
@@ -116,10 +115,11 @@ public class DepositionSubmissionImportService {
                     List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
                     if (associations != null) {
                         List<String> errors = associationValidationService.validateAssociations(studyDto.getStudyTag(), studyDto.getAccession(), associations);
-                        importLog.addErrors(errors, "Validating associations");
+                        importLog.addWarnings(errors, "Validating associations");
                     }
                 }
-                getLog().info("[{}] Associations validated. Found {} total errors.", submissionID, importLog.getErrorList().size());
+                getLog().info("[{}] Associations validated. Found {} errors and {} warnings.", submissionID, importLog.getErrorList().size(),
+                        importLog.getWarnings().size());
                 if (!importLog.getErrorList().isEmpty()) {
                     importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
                     outcome = false;
@@ -144,8 +144,8 @@ public class DepositionSubmissionImportService {
                             importStep = importLog.addStep(new ImportLogStep("Deleting unpublished data", submissionID));
                             result = cleanupPrePublishedStudies(studies);
                             if (result != null) {
-                                importLog.addError(result, "Deleting unpublished data");
-                                importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+                                importLog.addWarning(result, "Deleting unpublished data");
+                                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS_WITH_WARNINGS);
                             } else {
                                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                             }
@@ -153,9 +153,8 @@ public class DepositionSubmissionImportService {
                             importStep = importLog.addStep(new ImportLogStep("Updating submission status: CURATION_COMPLETE", submissionID));
                             result = ingestService.updateSubmissionStatus(depositionSubmission, "CURATION_COMPLETE", "CURATION_STARTED");
                             if (result != null) {
-                                importLog.addError(result, "Updating submission status: CURATION_COMPLETE");
-                                importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
-                                outcome = false;
+                                importLog.addWarning(result, "Updating submission status: CURATION_COMPLETE");
+                                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS_WITH_WARNINGS);
                             } else {
                                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                             }
@@ -164,7 +163,7 @@ public class DepositionSubmissionImportService {
                 }
             } else {
                 importLog.updateStatus(studiesStep.getId(), ImportLog.FAIL);
-                importLog.addError("Submission [" + submissionID + "] has no studies", "\"Verifying studies\"");
+                importLog.addError("Submission [" + submissionID + "] has no studies", "Verifying studies");
                 outcome = false;
             }
 
@@ -203,8 +202,8 @@ public class DepositionSubmissionImportService {
         }
 
         getLog().info("Import process finalized: {}", depositionSubmission.getSubmissionId());
-        getLog().info(importLog.pretty());
-        return Arrays.asList(new String[]{importLog.pretty()});
+        getLog().info(importLog.pretty(false));
+        return Arrays.asList(new String[]{importLog.pretty(true)});
     }
 
     private String cleanupPrePublishedStudies(List<DepositionStudyDto> studyDtoList) {

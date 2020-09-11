@@ -11,9 +11,13 @@ public class ImportLog {
 
     public final static int SUCCESS = 1;
 
+    public final static int SUCCESS_WITH_WARNINGS = 2;
+
     public final static int FAIL = -1;
 
     private List<String> errorList;
+
+    private List<String> warnings;
 
     private Map<Integer, ImportLogStep> steps;
 
@@ -21,6 +25,7 @@ public class ImportLog {
 
     public ImportLog() {
         errorList = new ArrayList<>();
+        warnings = new ArrayList<>();
         steps = new LinkedHashMap<>();
         stepOutcomes = new LinkedHashMap<>();
     }
@@ -40,47 +45,75 @@ public class ImportLog {
         }
     }
 
+    public void addWarnings(List<String> warningList, String prefix) {
+        if (warningList != null) {
+            for (String warning : warningList) {
+                this.addWarning(warning, prefix);
+            }
+        }
+    }
+
     public void addError(String error, String prefix) {
         errorList.add(prefix + " | " + error);
+    }
+
+    public void addWarning(String warning, String prefix) {
+        warnings.add(prefix + " | " + warning);
     }
 
     public List<String> getErrorList() {
         return errorList;
     }
 
+    public List<String> getWarnings() {
+        return warnings;
+    }
+
     public void updateStatus(String stepId, int status) {
         this.stepOutcomes.put(stepId, status);
     }
 
-    public String pretty() {
+    public String pretty(boolean web) {
         StringBuffer stringBuffer = new StringBuffer();
+        String separator = web ? "<br>" : "\n";
         boolean overall = true;
+        boolean hasWarnings = false;
         for (int value : stepOutcomes.values()) {
             if (value == FAIL) {
                 overall = false;
                 break;
             }
+            if (value == SUCCESS_WITH_WARNINGS) {
+                hasWarnings = true;
+            }
         }
         if (overall) {
-            stringBuffer.append("=== GENERAL OUTCOME: SUCCESS\n");
+            String txt = hasWarnings ? "SUCCESS_WITH_WARNINGS" : "SUCCESS";
+            stringBuffer.append("=== GENERAL OUTCOME: ").append(txt).append(separator);
         } else {
-            stringBuffer.append("=== GENERAL OUTCOME: FAIL\n");
+            stringBuffer.append("=== GENERAL OUTCOME: FAIL").append(separator);
         }
         for (int stepNo : steps.keySet()) {
             ImportLogStep importLogStep = steps.get(stepNo);
             int outcome = stepOutcomes.get(importLogStep.getId());
 
             stringBuffer.append(stepNo).append("[").append(outcomeAsString(outcome)).append("] :: ").append(importLogStep.toString());
-            stringBuffer.append("\n");
+            stringBuffer.append(separator);
         }
         if (!errorList.isEmpty()) {
-            stringBuffer.append("** Errors: **\n");
+            stringBuffer.append("** Errors: **").append(separator);
             for (String error : errorList) {
-                stringBuffer.append(error).append("\n");
+                stringBuffer.append(error).append(separator);
+            }
+        }
+        if (!warnings.isEmpty()) {
+            stringBuffer.append("** Warnings: **").append(separator);
+            for (String warning : warnings) {
+                stringBuffer.append(warning).append(separator);
             }
         }
 
-        return "\n" + stringBuffer.toString().trim();
+        return separator + stringBuffer.toString().trim();
     }
 
     private String outcomeAsString(int outcome) {
