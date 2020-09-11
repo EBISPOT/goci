@@ -1,6 +1,8 @@
 package uk.ac.ebi.spot.goci;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,13 @@ import java.util.*;
 @Service
 @Transactional
 public class DepositionSyncService {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
+
+    protected Logger getLog() {
+        return log;
+    }
+
     private final CurationStatus curationComplete;
     private final Curator levelOneCurator;
     private final CurationStatus awaitingCuration;
@@ -61,13 +70,13 @@ public class DepositionSyncService {
             Housekeeping housekeeping = study.getHousekeeping();
             if (housekeeping.getIsPublished()) {
                 studyPublished = true;
-            }else if (!housekeeping.getIsPublished() && housekeeping.getCatalogUnpublishDate() != null) {
+            } else if (!housekeeping.getIsPublished() && housekeeping.getCatalogUnpublishDate() != null) {
                 studyPublished = true;
-            }else if(housekeeping.getCurationStatus().getStatus().equals("Curation Abandoned")
-                    || housekeeping.getCurationStatus().getStatus().equals("Unpublished from catalog")){
+            } else if (housekeeping.getCurationStatus().getStatus().equals("Curation Abandoned")
+                    || housekeeping.getCurationStatus().getStatus().equals("Unpublished from catalog")) {
                 studyPublished = true;
             }
-            if(!studyPublished){
+            if (!studyPublished) {
                 return false;
             }
         }
@@ -136,57 +145,64 @@ public class DepositionSyncService {
 //            boolean isAvailable = isAvailable(p);
             DepositionPublication newPublication = createPublication(p);
             boolean isPublished = isPublished(p);
-            if(isPublished){
+            if (isPublished) {
                 newPublication.setStatus("PUBLISHED");
             }
             DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
-            if(initialSync) { // add all publications to mongo
+            if (initialSync) { // add all publications to mongo
+                getLog().info("Running INITIAL sync ...");
                 if (newPublication != null && depositionPublication == null) {
-                    if(isPublished) {
+                    if (isPublished) {
+                        getLog().info("Sending publication [{}] to Deposition App.", pubmedId);
                         System.out.println("adding published publication " + pubmedId + " to mongo");
-                        if(addSummaryStatsData(newPublication, p)){
+                        if (addSummaryStatsData(newPublication, p)) {
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                         }
-                    }else if(isUnpublished(p, bomMap.values())){//check if this pubmed id is associated with a
+                    } else if (isUnpublished(p, bomMap.values())) {//check if this pubmed id is associated with a
                         // prepublished submission
                         newPublication.setStatus("UNDER_SUBMISSION");
-                    }else {
+                    } else {
                         newPublication.setStatus("ELIGIBLE");
                     }
                     depositionPublicationService.addPublication(newPublication);
                 }
-            }else {
-                if(depositionPublication == null && newPublication != null) { // add new publication
-                    if(isPublished) {
-                        if(addSummaryStatsData(newPublication, p)) {
-                            System.out.println("adding published publication w/ sumstats " + pubmedId);
+            } else {
+                getLog().info("Running NORMAL sync ...");
+                if (depositionPublication == null && newPublication != null) { // add new publication
+                    if (isPublished) {
+                        if (addSummaryStatsData(newPublication, p)) {
+                            getLog().info("Sending publication W/ SUMSTATS [{}] to Deposition App.", pubmedId);
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                        }else {
+                        } else {
+                            getLog().info("Sending PUBLISHED publication [{}] to Deposition App.", pubmedId);
                             System.out.println("adding published publication " + pubmedId + " to mongo");
                         }
-                    }else if(isUnpublished(p, bomMap.values())){//check if this pubmed id is associated with a
+                    } else if (isUnpublished(p, bomMap.values())) {//check if this pubmed id is associated with a
                         // prepublished submission
                         newPublication.setStatus("UNDER_SUBMISSION");
-                    }else {
+                    } else {
                         newPublication.setStatus("ELIGIBLE");
+                        getLog().info("Sending ELIGIBLE publication [{}] to Deposition App.", pubmedId);
                         System.out.println("adding eligible publication " + pubmedId + " to mongo");
                     }
                     depositionPublicationService.addPublication(newPublication);
                     newPubs.add(newPublication.getPmid());
-                }else if(newPublication != null){//check publication status, update if needed
+                } else if (newPublication != null) {//check publication status, update if needed
                     if (isPublished && (depositionPublication.getStatus().equals("ELIGIBLE") || depositionPublication.getStatus().equals("CURATION_STARTED"))) { //sync newly
                         // published publications
                         newPublication.setStatus("PUBLISHED");
                         addSummaryStatsData(newPublication, p);
+                        getLog().info("Changing status of publication [{}] to: {}", pubmedId, newPublication.getStatus());
                         System.out.println("setting publication status to " + newPublication.getStatus() + " for " +
                                 " " + pubmedId);
                         newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                         depositionPublicationService.updatePublication(newPublication);
                         updatePubs.add(newPublication.getPmid());
-                    }else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
+                    } else if (isPublished && depositionPublication.getStatus().equals("PUBLISHED")) { //sync newly
                         //published summary stats
-                        if(addSummaryStatsData(newPublication, p)) {
+                        if (addSummaryStatsData(newPublication, p)) {
+                            getLog().info("Changing status of publication [{}] to: PUBLISHED_WITH_SS", pubmedId);
                             System.out.println("setting publication status to PUBLISHED_WITH_SS for " + pubmedId);
                             newPublication.setStatus("PUBLISHED_WITH_SS");
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
@@ -210,23 +226,28 @@ public class DepositionSyncService {
      * existing studies to indicate the different level of review. But we do want them stored in GOCI so they can be
      * searched and displayed.
      */
-    public void syncUnpublishedStudies(){
+    public void syncUnpublishedStudies() {
         List<String> newPubs = new ArrayList<>();
         List<String> updatePubs = new ArrayList<>();
         Map<String, DepositionSubmission> submissions = submissionService.getSubmissions();
+        getLog().info("Found {} submissions.", submissions.size());
         //if unpublished_studies does not have accession, add
         //check body of work, if not found, add
         //else if accession exists, check publication for change, update
         //curation import will need to prune unpublished_studies, ancestry and body_of_work
         submissions.forEach((s, submission) -> {
-            if(submission.getStatus().equals("SUBMITTED") && submission.getProvenanceType().equals("BODY_OF_WORK")){
+            if (submission.getStatus().equals("SUBMITTED") && submission.getProvenanceType().equals("BODY_OF_WORK")) {
+                getLog().info("Found new SUBMITTED & BODY_OF_WORK submission: {} | {}", submission.getSubmissionId(), submission.getBodyOfWork().getBodyOfWorkId());
                 BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
-                if(isEligible(bodyOfWorkDto)) {
+                if (isEligible(bodyOfWorkDto)) {
+                    getLog().info(" - Submission [{}] is eligible.", submission.getSubmissionId());
                     Set<UnpublishedStudy> studies = new HashSet<>();
                     submission.getStudies().forEach(studyDto -> {
                         String studyTag = studyDto.getStudyTag();
+                        getLog().info(" - Processing study tag: {}", studyTag);
                         UnpublishedStudy unpublishedStudy = unpublishedRepository.findByAccession(studyDto.getAccession());
                         if (unpublishedStudy == null) {
+                            getLog().info(" - Study tag [{}] not found. Adding it to DB.", studyTag);
                             unpublishedStudy =
                                     unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto, submission));
                             studies.add(unpublishedStudy);
@@ -237,13 +258,16 @@ public class DepositionSyncService {
                                 UnpublishedAncestry ancestry = UnpublishedAncestry.create(sampleDto, unpublishedStudy);
                                 ancestryList.add(ancestry);
                             }
+                            getLog().info(" - Study tag [{}] has {} ancestries.", ancestryList.size());
                             unpublishedAncestryRepo.save(ancestryList);
                             unpublishedStudy.setAncestries(ancestryList);
                             unpublishedRepository.save(unpublishedStudy);
                         }
                     });
+                    getLog().info(" - Looking for body of work [{}] in the DB.", bodyOfWorkDto.getBodyOfWorkId());
                     BodyOfWork bom = bodyOfWorkRepository.findByPublicationId(bodyOfWorkDto.getBodyOfWorkId());
-                    if(bom == null) {
+                    if (bom == null) {
+                        getLog().info(" - Body of work [{}] not found. Adding to DB.", bodyOfWorkDto.getBodyOfWorkId());
                         //add bodies of work
                         BodyOfWork bodyOfWork = BodyOfWork.create(bodyOfWorkDto);
                         bodyOfWork.setStudies(studies);
@@ -254,12 +278,15 @@ public class DepositionSyncService {
             }
         });
         Map<String, BodyOfWorkDto> bomMap = depositionPublicationService.getAllBodyOfWork();
-        bomMap.entrySet().stream().forEach(e->{
+        getLog().info("Processing remaining body of works: {}", bomMap.size());
+        bomMap.entrySet().stream().forEach(e -> {
             String bomId = e.getKey();
             BodyOfWorkDto dto = e.getValue();
             BodyOfWork bom = bodyOfWorkRepository.findByPublicationId(bomId);
+            getLog().info("Body of work [{}] exists in the DB: {}", bomId, (bom != null));
             BodyOfWork newBom = BodyOfWork.create(dto);
-            if(bom != null && isEligible(dto) && !bom.equals(newBom)){
+            if (bom != null && isEligible(dto) && !bom.equals(newBom)) {
+                getLog().info("Body of work [{}] present in the DB and requires updating.", bomId);
                 bom.update(newBom);
                 bodyOfWorkRepository.save(bom);
                 updatePubs.add(dto.getBodyOfWorkId());
@@ -272,22 +299,22 @@ public class DepositionSyncService {
 
     }
 
-    private List<DepositionSampleDto> getSamples(DepositionSubmission submission, String studyTag){
+    private List<DepositionSampleDto> getSamples(DepositionSubmission submission, String studyTag) {
         List<DepositionSampleDto> sampleDtoList = new ArrayList<>();
         submission.getSamples().forEach(depositionSampleDto -> {
-            if(depositionSampleDto.getStudyTag().equals(studyTag)){
+            if (depositionSampleDto.getStudyTag().equals(studyTag)) {
                 sampleDtoList.add(depositionSampleDto);
             }
         });
         return sampleDtoList;
     }
 
-    private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication){
+    private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication) {
         boolean hasFiles = false;
         List<DepositionSummaryStatsDto> summaryStatsDtoList = new ArrayList<>();
         Collection<Study> studies = publication.getStudies();
-        for(Study study: studies){
-            if(study.getAccessionId() != null) {
+        for (Study study : studies) {
+            if (study.getAccessionId() != null) {
                 DepositionSummaryStatsDto summaryStatsDto = new DepositionSummaryStatsDto();
                 summaryStatsDto.setStudyAccession(study.getAccessionId());
                 summaryStatsDto.setSampleDescription(study.getInitialSampleSize());
@@ -302,7 +329,7 @@ public class DepositionSyncService {
                 summaryStatsDtoList.add(summaryStatsDto);
             }
         }
-        if(summaryStatsDtoList.size() != 0) {
+        if (summaryStatsDtoList.size() != 0) {
             depositionPublication.setSummaryStatsDtoList(summaryStatsDtoList);
         }
         return hasFiles;
@@ -326,7 +353,7 @@ public class DepositionSyncService {
             List<String> accessionList = sumStatsMap.get(pubmedId);
             DepositionPublication depositionPublication = publicationMap.get(pubmedId);
             boolean isPublished = isPublished(p);
-            if(depositionPublication != null) {
+            if (depositionPublication != null) {
                 addSummaryStatsData(depositionPublication, p);
                 int newSumStatsSize = depositionPublication.getSummaryStatsDtoList() != null ?
                         depositionPublication.getSummaryStatsDtoList().size() : 0;
@@ -345,10 +372,10 @@ public class DepositionSyncService {
 
     private Map<String, DepositionPublication> buildPublicationMap(Map<String, DepositionSubmission> submissions) {
         Map<String, DepositionPublication> publicationMap = new HashMap<>();
-        submissions.forEach((s, submission) ->{
-            if(submission.getPublication() != null){
-            publicationMap.put(submission.getPublication().getPmid(),
-                submission.getPublication());
+        submissions.forEach((s, submission) -> {
+            if (submission.getPublication() != null) {
+                publicationMap.put(submission.getPublication().getPmid(),
+                        submission.getPublication());
             }
         });
         return publicationMap;
@@ -356,11 +383,11 @@ public class DepositionSyncService {
 
     private Map<String, List<String>> buildSumStatsMap(Map<String, DepositionSubmission> submissions) {
         Map<String, List<String>> sumStatsMap = new HashMap<>();
-        submissions.forEach((s, submission) ->{
-            if(submission.getPublication() != null){
+        submissions.forEach((s, submission) -> {
+            if (submission.getPublication() != null) {
                 List<String> sumStatsList = new ArrayList<>();
-                submission.getStudies().forEach(studyDto->{
-                    if(studyDto.getAccession() != null) {
+                submission.getStudies().forEach(studyDto -> {
+                    if (studyDto.getAccession() != null) {
                         sumStatsList.add(studyDto.getAccession());
                     }
                 });
@@ -378,9 +405,9 @@ public class DepositionSyncService {
             newPublication.setPmid(p.getPubmedId());
             String authorName = null;
             Author firstAuthor = p.getFirstAuthor();
-            if(firstAuthor.getLastName() == null || firstAuthor.getInitials() == null){
+            if (firstAuthor.getLastName() == null || firstAuthor.getInitials() == null) {
                 authorName = firstAuthor.getFullname();
-            }else {
+            } else {
                 authorName = firstAuthor.getLastName() + " " + firstAuthor.getInitials();
             }
             newPublication.setFirstAuthor(authorName);
@@ -396,31 +423,33 @@ public class DepositionSyncService {
     }
 
     private boolean isEligible(BodyOfWorkDto bodyOfWorkDto) {
-        if(!bodyOfWorkDto.getStatus().equals("UNDER_SUBMISSION")){
+        if (!bodyOfWorkDto.getStatus().equals("UNDER_SUBMISSION")) {
             return false;
-        }if (bodyOfWorkDto.getEmbargoUntilPublished() != null &&  bodyOfWorkDto.getEmbargoUntilPublished() == true && bodyOfWorkDto.getPmids() == null){
+        }
+        if (bodyOfWorkDto.getEmbargoUntilPublished() != null && bodyOfWorkDto.getEmbargoUntilPublished() == true && bodyOfWorkDto.getPmids() == null) {
             return false;
-        }if(bodyOfWorkDto.getEmbargoDate() != null && new LocalDate().isBefore(bodyOfWorkDto.getEmbargoDate())) {
+        }
+        if (bodyOfWorkDto.getEmbargoDate() != null && new LocalDate().isBefore(bodyOfWorkDto.getEmbargoDate())) {
             return false;
         } else {
             return true;
         }
     }
 
-    private boolean isUnpublished(Publication publication, Collection<BodyOfWorkDto> bomList){
-        if(bodyOfWorkRepository.findByPubMedId(publication.getPubmedId()) != null){
+    private boolean isUnpublished(Publication publication, Collection<BodyOfWorkDto> bomList) {
+        if (bodyOfWorkRepository.findByPubMedId(publication.getPubmedId()) != null) {
             return true;
-        }else{
+        } else {
             List<BodyOfWork> bodiesOfWork = bodyOfWorkRepository.findAll();
             for (BodyOfWork bom : bodiesOfWork) {
                 if (publication.getPubmedId().equals(bom.getPubMedId())) {
                     return true;
-                }else if(bom.getPubMedId() != null && bom.getPubMedId().contains(publication.getPubmedId())){
-                    return  true;
+                } else if (bom.getPubMedId() != null && bom.getPubMedId().contains(publication.getPubmedId())) {
+                    return true;
                 }
             }
-            for(BodyOfWorkDto bom: bomList){
-                if(bom.getPmids() != null) {
+            for (BodyOfWorkDto bom : bomList) {
+                if (bom.getPmids() != null) {
                     String bomId = String.join(",", bom.getPmids());
                     if (bomId.contains(publication.getPubmedId())) {
                         return true;
