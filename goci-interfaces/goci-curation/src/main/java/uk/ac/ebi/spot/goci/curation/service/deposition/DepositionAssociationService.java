@@ -169,11 +169,10 @@ public class DepositionAssociationService {
                         importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
                         continue;
                     }
-                    importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                 } else {
-                    importLog.addError(errorBuffer.toString().trim(), "Creating association");
-                    importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+                    importLog.addWarning(errorBuffer.toString().trim(), "Creating association");
                 }
+                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
             }
         }
         return studyNote.toString();
