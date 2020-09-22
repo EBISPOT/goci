@@ -23,7 +23,7 @@ public class DepositionSampleServiceTest {
             DepositionSampleDto dto = null;
             dto = mapper.readValue(json, DepositionSampleDto.class);
             String description = service.buildDescription(dto);
-            assertEquals("500 Italian individuals", description);
+            assertEquals("500 Italian ancestry individuals", description);
 
             json = "{\n" + "\t\"study_tag\": \"Study1\",\n" + "\t\"size\": 200,\n" +
                     "\t\"sample_description\": \"Sample description\",\n" +
@@ -32,7 +32,7 @@ public class DepositionSampleServiceTest {
                     "}";
             dto = mapper.readValue(json, DepositionSampleDto.class);
             description = service.buildDescription(dto);
-            assertEquals("200 French, Spanish individuals", description);
+            assertEquals("200 French ancestry, Spanish ancestry individuals", description);
             
             json = "{\n" + "\t\"study_tag\": \"Study2\",\n" + "\t\"size\": 500,\n" + "\t\"cases\": 300,\n" +
                     "\t\"controls\": 200,\n" + "\t\"sample_description\": \"Sample description\",\n" +
@@ -40,7 +40,7 @@ public class DepositionSampleServiceTest {
                     "\t\"country_recruitement\": \"NR\",\n" + "\t\"stage\": \"discovery\"\n" + "}";
             dto = mapper.readValue(json, DepositionSampleDto.class);
             description = service.buildDescription(dto);
-            assertEquals("300 Asian unspecified cases, 200 Asian unspecified controls", description);
+            assertEquals("300 Asian ancestry cases, 200 Asian ancestry controls", description);
 
             json = "{\n" + "\t\"study_tag\": \"Study1\",\n" + "\t\"size\": 200,\n" +
                     "\t\"sample_description\": \"Sample description\",\n" +
