@@ -571,7 +571,7 @@ public class AssociationControllerTest {
 
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
-        when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
+        when(associationOperationsService.checkSnpAssociationInteractionFormErrorsForView(Matchers.any(
                 SnpAssociationInteractionForm.class), Matchers.anyString()))
                 .thenReturn(errors);
 
@@ -587,7 +587,7 @@ public class AssociationControllerTest {
         //verify properties of bound object
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
-        verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
+        verify(associationOperationsService).checkSnpAssociationInteractionFormErrorsForView(formArgumentCaptor.capture(),
                 Matchers.anyString());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verifyZeroInteractions(snpInteractionAssociationService);
@@ -662,7 +662,7 @@ public class AssociationControllerTest {
         //verify properties of bound object
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
-        verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
+        verify(associationOperationsService).checkSnpAssociationInteractionFormErrorsForView(formArgumentCaptor.capture(),
                 Matchers.anyString());
         verify(snpInteractionAssociationService).createAssociation(formArgumentCaptor.capture());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
@@ -795,7 +795,7 @@ public class AssociationControllerTest {
         // Stubbing
         when(studyRepository.findOne(Matchers.anyLong())).thenReturn(STUDY);
         when(associationRepository.findOne(Matchers.anyLong())).thenReturn(ASSOCIATION);
-        when(associationOperationsService.checkSnpAssociationInteractionFormErrors(Matchers.any(
+        when(associationOperationsService.checkSnpAssociationInteractionFormErrorsForView(Matchers.any(
                 SnpAssociationInteractionForm.class), Matchers.anyString())).thenReturn(errors);
         when(associationOperationsService.determineIfAssociationIsOrType(Matchers.any(Association.class))).thenReturn(
                 "or");
@@ -815,11 +815,11 @@ public class AssociationControllerTest {
         //verify properties of bound object
         ArgumentCaptor<SnpAssociationInteractionForm> formArgumentCaptor =
                 ArgumentCaptor.forClass(SnpAssociationInteractionForm.class);
-        verify(associationOperationsService).checkSnpAssociationInteractionFormErrors(formArgumentCaptor.capture(),
+        verify(associationOperationsService).checkSnpAssociationInteractionFormErrorsForView(formArgumentCaptor.capture(),
                 Matchers.anyString());
         verify(studyRepository, times(1)).findOne(Matchers.anyLong());
         verify(associationRepository, times(1)).findOne(Matchers.anyLong());
-        verify(associationOperationsService, times(1)).checkSnpAssociationInteractionFormErrors(Matchers.any(
+        verify(associationOperationsService, times(1)).checkSnpAssociationInteractionFormErrorsForView(Matchers.any(
                 SnpAssociationInteractionForm.class), Matchers.anyString());
         verify(associationOperationsService, never()).saveEditedAssociationFromForm(Matchers.any(Study.class),
                 Matchers.any(Association.class),

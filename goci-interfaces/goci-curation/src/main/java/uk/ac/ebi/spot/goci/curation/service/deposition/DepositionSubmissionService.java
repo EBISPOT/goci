@@ -64,9 +64,6 @@ public class DepositionSubmissionService {
     @Value("${deposition.token}")
     private String depositionToken;
 
-    @Value("classpath:submissions.json")
-    private Resource submissionFile;
-
     public DepositionSubmissionService(@Autowired PublicationService publicationService,
                                        @Autowired StudyService studyService,
                                        @Autowired StudyOperationsService studyOperationsService,
@@ -177,7 +174,7 @@ public class DepositionSubmissionService {
         testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
         testSub.setStatus(depositionSubmission.getStatus());
         testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
-        testSub.setSubmissionType(getSubmissionType(depositionSubmission));
+        testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
         if (depositionSubmission.getBodyOfWork() != null) {
             BodyOfWorkDto bodyOfWork = depositionSubmission.getBodyOfWork();
             if (bodyOfWork.getPmids() != null && bodyOfWork.getPmids().size() != 0) {
@@ -211,12 +208,12 @@ public class DepositionSubmissionService {
         return testSub;
     }
 
-
+/*
     public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
         List<String> statusMessages = new ArrayList<>();
 
         getLog().info("[IMPORT] Evaluating submission type for: {}", depositionSubmission.getSubmissionId());
-        Submission.SubmissionType submissionType = getSubmissionType(depositionSubmission);
+        Submission.SubmissionType submissionType = DepositionUtil.getSubmissionType(depositionSubmission);
         getLog().info("[IMPORT] Found submission type for: {}", submissionType.name());
 
         Curator curator = curatorRepository.findByEmail(currentUser.getEmail());
@@ -260,7 +257,7 @@ public class DepositionSubmissionService {
             getLog().info("[IMPORT] Found SUM_STATS submission.", studies.size());
 
             getLog().info("[IMPORT] Moving summary stats from unpublished to published.");
-            depositionStudyService.publishSummaryStats(studies, dbStudies, currentUser);
+            depositionStudyService.publishSummaryStats(studies, dbStudies);
             getLog().info("[IMPORT] Moving summary stats done.");
 
             depositionSubmission.setStatus("CURATION_COMPLETE");
@@ -299,6 +296,7 @@ public class DepositionSubmissionService {
         }
         return statusMessages;
     }
+    */
 
     public Submission updateSubmission(Submission submission, SecureUser currentUser) {
         String pubMedID = submission.getPubMedID();
@@ -315,7 +313,7 @@ public class DepositionSubmissionService {
     }
 
     public String checkSubmissionErrors(DepositionSubmission submission) {
-        Submission.SubmissionType type = getSubmissionType(submission);
+        Submission.SubmissionType type = DepositionUtil.getSubmissionType(submission);
         if (type.equals(Submission.SubmissionType.UNKNOWN)) {
             boolean hasSumStats = false;
             boolean hasMetadata = false;
@@ -340,55 +338,7 @@ public class DepositionSubmissionService {
         return null;
     }
 
-    public Submission.SubmissionType getSubmissionType(DepositionSubmission submission) {
-        if (submission.getBodyOfWork() != null && submission.getPublication() == null) {
-            return Submission.SubmissionType.PRE_PUBLISHED;
-        } else if (submission.getBodyOfWork() == null && submission.getPublication() == null) {
-            return Submission.SubmissionType.UNKNOWN;
-        } else if (submission.getPublication() != null) {
-            String publicationStatus = submission.getPublication().getStatus();
-            boolean hasSumStats = false;
-            boolean hasMetadata = false;
-            boolean hasAssociations = false;
-            if (publicationStatus.equals("UNDER_SUBMISSION")) {
-                hasMetadata = true;
-            } else if (publicationStatus.equals("UNDER_SUMMARY_STATS_SUBMISSION")) {
-                hasSumStats = true;
-            }
-            if (submission.getStudies() != null) {
-                for (DepositionStudyDto studyDto : submission.getStudies()) {
-                    if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") &&
-                            !studyDto.getSummaryStatisticsFile().equals("NR")) {
-                        hasSumStats = true;
-                    }
-                }
-            }
-            if (submission.getAssociations() != null) {
-                for (DepositionAssociationDto associationDto : submission.getAssociations()) {
-                    if (associationDto.getStudyTag() != null) {
-                        hasAssociations = true;
-                    }
-                }
-            }
-            if (hasMetadata && hasSumStats && hasAssociations) {
-                return Submission.SubmissionType.METADATA_AND_SUM_STATS_AND_TOP_ASSOCIATIONS;
-            }
-            if (hasMetadata && hasSumStats && !hasAssociations) {
-                return Submission.SubmissionType.METADATA_AND_SUM_STATS;
-            }
-            if (hasMetadata && !hasSumStats && hasAssociations) {
-                return Submission.SubmissionType.METADATA_AND_TOP_ASSOCIATIONS;
-            }
-            if (hasMetadata && !hasSumStats && !hasAssociations) {
-                return Submission.SubmissionType.METADATA;
-            }
-            if (!hasMetadata && hasSumStats && !hasAssociations) {
-                return Submission.SubmissionType.SUM_STATS;
-            }
-        }
-        return Submission.SubmissionType.UNKNOWN;
-    }
-
+    /*
     @Transactional
     String processStudy(DepositionSubmission depositionSubmission, DepositionStudyDto studyDto, SecureUser currentUser,
                         Publication publication, Curator curator) {
@@ -468,4 +418,5 @@ public class DepositionSubmissionService {
             }
         });
     }
+    */
 }

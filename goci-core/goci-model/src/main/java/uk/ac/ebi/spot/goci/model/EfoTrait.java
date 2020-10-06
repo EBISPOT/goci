@@ -12,8 +12,8 @@ import java.util.Collection;
  * Created by emma on 04/12/14.
  *
  * @author emma
- *         <p>
- *         Model object representing an EFO trait which is normally assigned at the SNP level
+ * <p>
+ * Model object representing an EFO trait which is normally assigned at the SNP level
  */
 
 @Entity
@@ -98,5 +98,10 @@ public class EfoTrait {
 
     public void setShortForm(String shortForm) {
         this.shortForm = shortForm;
+    }
+
+    @Override
+    public String toString() {
+        return uri + " (" + trait + ")";
     }
 }

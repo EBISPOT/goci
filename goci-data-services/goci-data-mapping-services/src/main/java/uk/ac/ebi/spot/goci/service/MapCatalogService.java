@@ -10,13 +10,14 @@ import uk.ac.ebi.spot.goci.model.AssociationReport;
 import uk.ac.ebi.spot.goci.repository.AssociationReportRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by emma on 05/02/2016.
  *
  * @author emma
- *         <p>
- *         Service used to map all associations in the catalog.
+ * <p>
+ * Service used to map all associations in the catalog.
  */
 @Service
 public class MapCatalogService {
@@ -60,11 +61,10 @@ public class MapCatalogService {
         getLog().info("Mapping all associations in database, total number: " + associations.size());
         try {
             mappingService.validateAndMapAllAssociations(associations, performer);
-        }
-        catch (EnsemblMappingException e) {
+        } catch (EnsemblMappingException e) {
             throw new EnsemblMappingException("Attempt to map all associations failed", e);
         }
-        mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports, false,0,0);
+        mappingErrorComparisonService.compareOldVersusNewErrors(oldAssociationReports, false, 0, 0);
     }
 
     public void mapCatalogContentsNight(String performer) throws EnsemblMappingException {
@@ -73,8 +73,7 @@ public class MapCatalogService {
 
         try {
             mappingService.validateAndMapAllAssociations(associations, performer);
-        }
-        catch (EnsemblMappingException e) {
+        } catch (EnsemblMappingException e) {
             throw new EnsemblMappingException("Attempt to map all associations failed", e);
         }
 
@@ -88,10 +87,14 @@ public class MapCatalogService {
 
         try {
             mappingService.validateAndMapAllAssociations(associationsToMap, performer);
-        }
-        catch (EnsemblMappingException e) {
+        } catch (EnsemblMappingException e) {
             throw new EnsemblMappingException("Attempt to map all associations failed", e);
         }
+
+    }
+
+    public List<String> validateMappingForAssociation(Association association, String rsId) {
+        return mappingService.validateSingleAssociation(association, rsId);
 
     }
 

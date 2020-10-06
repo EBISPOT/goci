@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSampleDto;
 import uk.ac.ebi.spot.goci.repository.AncestralGroupRepository;
@@ -12,8 +13,10 @@ import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.CountryRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class DepositionSampleService {
@@ -36,13 +39,16 @@ public class DepositionSampleService {
     public DepositionSampleService() {
     }
 
-    public String saveSamples(SecureUser currentUser, String studyTag, Study study, List<DepositionSampleDto> samples) {
+    @Transactional
+    public String saveSamples(String studyTag, Study study, List<DepositionSampleDto> samples, ImportLog importLog) {
         //find samples in study
         StringBuffer studyNote = new StringBuffer();
         String initialSampleSize = "";
         String replicateSampleSize = "";
         for (DepositionSampleDto sampleDto : samples) {
             if (sampleDto.getStudyTag().equals(studyTag)) {
+                ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating sample", study.getAccessionId()));
+
                 Ancestry ancestry = new Ancestry();
                 if (sampleDto.getStage().equalsIgnoreCase("Discovery")) {
                     ancestry.setType("initial");
@@ -57,9 +63,18 @@ public class DepositionSampleService {
                 String countryRecruitment = sampleDto.getCountryRecruitement();
                 if (countryRecruitment != null) {
                     String[] countries = countryRecruitment.split("\\||,");
+                    Map<String, String> countryMap = new HashMap<>();
                     for (String country : countries) {
-                        countryList.add(countryRepository.findByCountryNameIgnoreCase(country.trim()));
+                        countryMap.put(country.trim(), "");
+                    }
 
+                    for (String country : countryMap.keySet()) {
+                        Country cCountry = countryRepository.findByCountryNameIgnoreCase(country);
+                        if (cCountry == null) {
+                            importLog.addError("Unable to find country: " + country, "Creating sample");
+                        } else {
+                            countryList.add(cCountry);
+                        }
                     }
                 }
                 ancestry.setCountryOfRecruitment(countryList);
@@ -74,20 +89,17 @@ public class DepositionSampleService {
                 List<AncestralGroup> ancestryGroups = new ArrayList<>();
                 if (ancestryCat != null) {
                     String[] groups = ancestryCat.split("\\||,");
-                    getLog().info("[IMPORT] Ancestry groups provided: {}", groups.length);
+                    getLog().info("Ancestry groups provided: {}", ancestryCat);
                     for (String group : groups) {
                         AncestralGroup ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
                         ancestryGroups.add(ancestryGroup);
                     }
                 }
-                getLog().info("[IMPORT] Ancestry groups mapped: {}", ancestryGroups.size());
+                getLog().info("Ancestry groups mapped: {}", ancestryGroups);
                 ancestry.setAncestralGroups(ancestryGroups);
                 ancestry.setStudy(study);
-                try {
-                    ancestryRepository.save(ancestry);
-                } catch (Exception e) {
-                    getLog().info("[IMPORT] Unable to save ancestry: {}", e.getMessage(), e);
-                }
+                ancestryRepository.save(ancestry);
+
                 AncestryExtension ancestryExtension = new AncestryExtension();
                 ancestryExtension.setAncestry(ancestry);
                 if (sampleDto.getAncestry() != null) {
@@ -97,13 +109,10 @@ public class DepositionSampleService {
                 ancestryExtension.setNumberCases(sampleDto.getCases());
                 ancestryExtension.setNumberControls(sampleDto.getControls());
                 ancestryExtension.setSampleDescription(sampleDto.getSampleDescription());
-                try {
-                    extensionRepository.save(ancestryExtension);
-                    ancestry.setAncestryExtension(ancestryExtension);
-                    ancestryRepository.save(ancestry);
-                } catch (Exception e) {
-                    getLog().info("[IMPORT] Unable to save ancestry extension: {}", e.getMessage(), e);
-                }
+                extensionRepository.save(ancestryExtension);
+                ancestry.setAncestryExtension(ancestryExtension);
+                ancestryRepository.save(ancestry);
+                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
             }
         }
         initialSampleSize = initialSampleSize.trim();
@@ -119,8 +128,9 @@ public class DepositionSampleService {
         }
         studyNote.append("initial: " + initialSampleSize + "\n");
         studyNote.append("replication: " + replicateSampleSize + "\n");
-        study.setInitialSampleSize(initialSampleSize);
-        study.setReplicateSampleSize(replicateSampleSize);
+        study.setInitialSampleSize(initialSampleSize.trim());
+        study.setReplicateSampleSize(replicateSampleSize.trim());
+
         return studyNote.toString();
     }
 
