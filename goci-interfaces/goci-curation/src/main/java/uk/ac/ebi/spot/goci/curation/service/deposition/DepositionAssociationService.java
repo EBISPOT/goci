@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service.deposition;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,13 +87,15 @@ public class DepositionAssociationService {
                 }
                 association.setPvalueDescription(associationDto.getPValueText());
                 String rsID = associationDto.getVariantID();
-                getLog().info("Processing rdID: {}", rsID);
-                if (rsID != null) {
+                getLog().info("[IMPORT] Processing rdID: {}", rsID);
+                if (StringUtils.isNotBlank(rsID)) {
                     SingleNucleotidePolymorphism snp = lociService.createSnp(rsID);
                     studyNote.append("added SNP " + rsID + "\n");//does this fail
                     RiskAllele riskAllele =
                             lociService.createRiskAllele(rsID + "-" + associationDto.getEffectAllele(), snp);
-                    if (associationDto.getProxyVariant() != null) {
+                    getLog().info("[IMPORT] Risk allele created: {}", riskAllele.getId());
+
+                    if (StringUtils.isNotBlank(associationDto.getProxyVariant())) {
                         List<SingleNucleotidePolymorphism> proxySnps = new ArrayList<>();
                         proxySnps.add(lociService.createSnp(associationDto.getProxyVariant()));
                         riskAllele.setProxySnps(proxySnps);
@@ -142,7 +145,9 @@ public class DepositionAssociationService {
                 AssociationExtension associationExtension = new AssociationExtension();
                 associationExtension.setAssociation(association);
                 associationExtension.setEffectAllele(associationDto.getEffectAllele());
-                associationExtension.setOtherAllele(associationDto.getOtherAllele());
+                if (StringUtils.isNotBlank(associationDto.getOtherAllele())) {
+                    associationExtension.setOtherAllele(associationDto.getOtherAllele());
+                }
 
                 associationOperationsService.saveAssociation(association, study, new ArrayList<>());
                 extensionRepository.save(associationExtension);

@@ -130,7 +130,7 @@ $(document).ready(function() {
                 }
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                $("#error_text").html("Something went wrong. Please, contact the helpdesk.");
+                $("#error_text").html("Something went wrong: " + XMLHttpRequest.responseText);
                 $("#main_error").show();
             }
         });

@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.repository.CountryRepository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -114,11 +115,16 @@ public class DepositionSampleService {
                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
             }
         }
-        if (initialSampleSize.endsWith(", ")) {
-            initialSampleSize = initialSampleSize.substring(0, initialSampleSize.length() - 2);
+        initialSampleSize = initialSampleSize.trim();
+        replicateSampleSize = replicateSampleSize.trim();
+        if (initialSampleSize.endsWith(",")) {
+            initialSampleSize = initialSampleSize.substring(0, initialSampleSize.length() - 1);
         }
-        if (replicateSampleSize.endsWith(", ")) {
-            replicateSampleSize = replicateSampleSize.substring(0, replicateSampleSize.length() - 2);
+        if (replicateSampleSize.endsWith(",")) {
+            replicateSampleSize = replicateSampleSize.substring(0, replicateSampleSize.length() - 1);
+        }
+        if (replicateSampleSize.equalsIgnoreCase("")) {
+            replicateSampleSize = "NA";
         }
         studyNote.append("initial: " + initialSampleSize + "\n");
         studyNote.append("replication: " + replicateSampleSize + "\n");
@@ -129,32 +135,66 @@ public class DepositionSampleService {
     }
 
     String buildDescription(DepositionSampleDto sampleDto) {
-        String ancestry = null;
+        String ancestry;
         if (sampleDto.getAncestry() != null) {
-            ancestry = sampleDto.getAncestry().replaceAll("\\|", ", ");
+            ancestry = sampleDto.getAncestry().trim();
         } else {
-            ancestry = sampleDto.getAncestryCategory().replaceAll("\\|", ", ");
+            ancestry = sampleDto.getAncestryCategory().trim();
         }
         if (ancestry.trim().equalsIgnoreCase("NR")) {
             if (sampleDto.getCases() != null && sampleDto.getControls() != null && sampleDto.getCases() != 0 && sampleDto.getControls() != 0) {
-                ancestry = String.format("%,d", sampleDto.getCases()) + " cases, " +
-                        String.format("%,d", sampleDto.getControls()) + " controls";
-            } else if (sampleDto.getSize() != -1) {
-                ancestry = String.format("%,d", sampleDto.getSize()) + " individuals";
+                ancestry = String.format("%,d", sampleDto.getCases()) + " " + AncestryConstants.CASES + ", " + String.format("%,d", sampleDto.getControls()) + " " + AncestryConstants.CONTROLS;
             } else {
-                ancestry += " individuals";
+                if (sampleDto.getSize() != -1) {
+                    ancestry = String.format("%,d", sampleDto.getSize()) + " " + AncestryConstants.INDIVIDUALS;
+                } else {
+                    ancestry += " " + AncestryConstants.INDIVIDUALS;
+                }
             }
-        } else {
+            return ancestry;
+        }
+
+        List<String> ancestryList = Arrays.asList(ancestry.split("\\|"));
+        ancestry = "";
+        for (String entry : ancestryList) {
+            String adaptEntry = adaptEntry(entry);
+
             if (sampleDto.getCases() != null && sampleDto.getControls() != null && sampleDto.getCases() != 0 && sampleDto.getControls() != 0) {
-                ancestry = String.format("%,d", sampleDto.getCases()) + " " + ancestry + " cases, " +
-                        String.format("%,d", sampleDto.getControls()) + " " + ancestry + " controls";
-            } else if (sampleDto.getSize() != -1) {
-                ancestry = String.format("%,d", sampleDto.getSize()) + " " + ancestry + " individuals";
+                ancestry += String.format("%,d", sampleDto.getCases()) + " " + adaptEntry + " " + AncestryConstants.CASES + ", " +
+                        String.format("%,d", sampleDto.getControls()) + " " + adaptEntry + " " + AncestryConstants.CONTROLS;
             } else {
-                ancestry += " individuals";
+                ancestry += adaptEntry;
+            }
+
+            ancestry += ", ";
+        }
+        ancestry = ancestry.trim();
+        if (ancestry.endsWith(",")) {
+            ancestry = ancestry.substring(0, ancestry.length() - 1).trim();
+        }
+        if (!ancestry.endsWith(AncestryConstants.CONTROLS)) {
+            ancestry += " " + AncestryConstants.INDIVIDUALS;
+            if (sampleDto.getSize() != -1) {
+                ancestry = String.format("%,d", sampleDto.getSize()) + " " + ancestry;
             }
         }
+
         return ancestry;
+    }
+
+    private String adaptEntry(String entry) {
+        entry = entry.trim();
+        if (entry.contains(AncestryConstants.UNSPECIFIED)) {
+            return entry.replace(AncestryConstants.UNSPECIFIED, AncestryConstants.ANCESTRY);
+        }
+        if (entry.contains(" or ")) {
+            return entry;
+        }
+
+        if (!Arrays.asList(AncestryConstants.ANCESTRY_CATS).contains(entry.toLowerCase())) {
+            entry += " " + AncestryConstants.ANCESTRY;
+        }
+        return entry;
     }
 
 }
