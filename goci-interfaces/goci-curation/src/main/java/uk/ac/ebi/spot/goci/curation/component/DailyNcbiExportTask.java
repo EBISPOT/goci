@@ -3,28 +3,24 @@ package uk.ac.ebi.spot.goci.curation.component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import uk.ac.ebi.spot.goci.curation.service.FtpFileService;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 import uk.ac.ebi.spot.goci.repository.CatalogExportRepository;
-import uk.ac.ebi.spot.goci.service.GOCIMailService;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by emma on 17/03/15.
@@ -96,7 +92,6 @@ public class DailyNcbiExportTask {
             } catch (Exception exception) {
                 emailSubject="FTP NCBI: File upload FAILED!!";
             }
-
             mailService.sendNcbiFTPUploadEmail(emailSubject);
         }
         else {
@@ -104,22 +99,12 @@ public class DailyNcbiExportTask {
         }
     }
 
-    @RequestMapping( value = "dailyNcbiExport", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    ResponseEntity<String> manualNcbiExport() {
-        String result = "";
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.add("Content-Type", "application/json; charset=utf-8");
-
-        try {
-            scheduleNcbiExport();
-        } catch (Exception exception) {
-            // Nothing to do. Mail will be sent in both cases.
-        }
-
-        result = new StringBuilder("{\"success\":\"Sent an e-mail to Devops").append("\"}").toString();
-        return new ResponseEntity<>(result,responseHeaders, HttpStatus.OK);
-
+    @GetMapping("/dailyNcbiExport")
+    public ResponseEntity<Object> manualNcbiExport() throws IOException {
+        Map<String, Object> result = new HashMap<>();
+        scheduleNcbiExport();
+        result.put("success", "Sent an e-mail to Devops");
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

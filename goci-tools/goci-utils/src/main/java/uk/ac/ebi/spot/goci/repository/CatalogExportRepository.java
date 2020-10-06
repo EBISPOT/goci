@@ -219,21 +219,20 @@ public class CatalogExportRepository {
                                 existingValues.put(binding, combinedValue);
                             }
                             else if (binding.getDatabaseName().isPresent()) {
-                                throw new RuntimeException(
-                                        "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
-                                                "differ in row ID '" + id + "': " +
-                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
-                                                "This would result in a new row, causing duplicated unique IDs");
-
+                                String report =
+                                        String.format("Non-concatenable values for %s differ in rowID '%s' " +
+                                                              "existing = %s, new = %s This would result in " +
+                                                              "a new row, causing duplicated unique IDs",
+                                                      binding.getDatabaseName().get(), id, existingValue, newValue);
+                                log.error(report);
                             }
                             else {
-                                throw new RuntimeException(
-                                        "Non-concatenatable values for " + binding.toString() + " " +
-                                                "differ in row ID '" + id + "': " +
-                                                "existing = " + existingValue + ", new = " + newValue + ".\n" +
-                                                "This would result in a new row, causing duplicated unique IDs");
-
-
+                                String report =
+                                        String.format("Non-concatenable values for %s differ in rowID '%s' " +
+                                                              "existing = %s, new = %s This would result in " +
+                                                              "a new row, causing duplicated unique IDs",
+                                                      binding.toString(), id, existingValue, newValue);
+                                log.error(report);
                             }
                         }
                         // Need to include a special case for chromosome name
@@ -249,7 +248,7 @@ public class CatalogExportRepository {
                             }
                             else if (binding.getDatabaseName().isPresent()) {
                                 throw new RuntimeException(
-                                        "Non-concatenatable values for " + binding.getDatabaseName().get() + " " +
+                                        "Non-concatenable values for " + binding.getDatabaseName().get() + " " +
                                                 "differ in row ID '" + id + "': " +
                                                 "existing = " + existingValue + ", new = " + newValue + ".\n" +
                                                 "This would result in a new row, causing duplicated unique IDs");
@@ -257,7 +256,7 @@ public class CatalogExportRepository {
                             }
                             else {
                                 throw new RuntimeException(
-                                        "Non-concatenatable values for " + binding.toString() + " " +
+                                        "Non-concatenable values for " + binding.toString() + " " +
                                                 "differ in row ID '" + id + "': " +
                                                 "existing = " + existingValue + ", new = " + newValue + ".\n" +
                                                 "This would result in a new row, causing duplicated unique IDs");
