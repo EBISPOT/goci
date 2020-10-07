@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
 import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToDevelopers;
 import uk.ac.ebi.spot.goci.curation.model.mail.NcbiExportEmailToDevelopers;
+import uk.ac.ebi.spot.goci.curation.model.mail.SubmissionImportEmailToDevelopers;
+import uk.ac.ebi.spot.goci.curation.service.deposition.ImportLog;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.service.GOCIMailService;
 
@@ -16,8 +18,8 @@ import uk.ac.ebi.spot.goci.service.GOCIMailService;
  * Created by emma on 10/02/15.
  *
  * @author emma
- *         <p>
- *         Provides email notification to curators and developers
+ * <p>
+ * Provides email notification to curators and developers
  */
 @Service
 public class MailService extends GOCIMailService {
@@ -86,7 +88,6 @@ public class MailService extends GOCIMailService {
      * Send notification to dev list if no Ensembl release can be identified by nightly checks
      */
     public void sendReleaseNotIdentifiedProblem() {
-
         CurationSystemEmailToDevelopers email = new CurationSystemEmailToDevelopers();
         email.setTo(this.devMailTo);
         email.setLink(this.link);
@@ -99,7 +100,6 @@ public class MailService extends GOCIMailService {
      * Send notification to dev list if Ensembl API is down
      */
     public void sendEnsemblPingFailureMail() {
-
         CurationSystemEmailToDevelopers email = new CurationSystemEmailToDevelopers();
         email.setTo(this.devMailTo);
         email.setLink(this.link);
@@ -116,5 +116,14 @@ public class MailService extends GOCIMailService {
         email.createNCBIFTPEmail(subject);
         sendEmail(email);
 
+    }
+
+    public void sendSubmissionImportNotification(boolean outcome, String pmid, String submissionID, ImportLog importLog) {
+        SubmissionImportEmailToDevelopers email = new SubmissionImportEmailToDevelopers();
+        email.setTo(this.devMailTo);
+        email.setLink(this.link);
+        email.setFrom(this.getFrom());
+        email.createBody(outcome, pmid, submissionID, importLog);
+        sendEmail(email);
     }
 }

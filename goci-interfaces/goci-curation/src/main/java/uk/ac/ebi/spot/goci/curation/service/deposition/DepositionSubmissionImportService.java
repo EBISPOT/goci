@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
@@ -55,6 +56,9 @@ public class DepositionSubmissionImportService {
     @Autowired
     private StudiesProcessingService studiesProcessingService;
 
+    @Autowired
+    private MailService mailService;
+
     public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
         ImportLog importLog = new ImportLog();
         getLog().info("Evaluating submission type for: {}", depositionSubmission.getSubmissionId());
@@ -101,10 +105,6 @@ public class DepositionSubmissionImportService {
                 importLog.addErrors(result.getRight(), "Publishing summary stats");
                 outcome = false;
             }
-
-            /**
-             * TODO: Send notification
-             */
         } else {
             ImportLogStep studiesStep = importLog.addStep(new ImportLogStep("Verifying studies", submissionID));
             if (studies != null) {// && dbStudies.size() == 1) { //only do this for un-curated publications
@@ -166,10 +166,6 @@ public class DepositionSubmissionImportService {
                 importLog.addError("Submission [" + submissionID + "] has no studies", "Verifying studies");
                 outcome = false;
             }
-
-            /**
-             * TODO: Send notification
-             */
         }
 
         if (outcome) {
@@ -201,9 +197,12 @@ public class DepositionSubmissionImportService {
             }
         }
 
+        mailService.sendSubmissionImportNotification(outcome, depositionSubmission.getPublication().getPmid(),
+                submissionID, importLog);
+
         getLog().info("Import process finalized: {}", depositionSubmission.getSubmissionId());
         getLog().info(importLog.pretty(false));
-        return Arrays.asList(new String[]{importLog.pretty(true)});
+        return Arrays.asList(new String[]{importLog.prettyShort()});
     }
 
     private String cleanupPrePublishedStudies(List<DepositionStudyDto> studyDtoList) {

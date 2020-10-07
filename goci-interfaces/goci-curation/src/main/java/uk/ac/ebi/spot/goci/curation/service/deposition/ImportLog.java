@@ -73,6 +73,36 @@ public class ImportLog {
         this.stepOutcomes.put(stepId, status);
     }
 
+    public String prettyShort() {
+        StringBuffer stringBuffer = new StringBuffer();
+        String separator = "<br>";
+        boolean overall = true;
+        boolean hasWarnings = false;
+        for (int value : stepOutcomes.values()) {
+            if (value == FAIL) {
+                overall = false;
+                break;
+            }
+            if (value == SUCCESS_WITH_WARNINGS) {
+                hasWarnings = true;
+            }
+        }
+        if (overall) {
+            String txt = hasWarnings ? "SUCCESS_WITH_WARNINGS" : "SUCCESS";
+            stringBuffer.append("=== GENERAL OUTCOME: ").append(txt).append(separator);
+        } else {
+            stringBuffer.append("=== GENERAL OUTCOME: FAIL").append(separator);
+        }
+        if (!errorList.isEmpty()) {
+            stringBuffer.append("** Errors: **").append(separator);
+            for (String error : errorList) {
+                stringBuffer.append(error).append(separator);
+            }
+        }
+
+        return separator + stringBuffer.toString().trim();
+    }
+
     public String pretty(boolean web) {
         StringBuffer stringBuffer = new StringBuffer();
         String separator = web ? "<br>" : "\n";
