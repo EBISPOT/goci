@@ -45,6 +45,9 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @RestResource(exported = false)
     Collection<Study> findByPublicationIdPubmedId(String pubmedId);
 
+    @RestResource(exported = false)
+    Collection<Study> findTop10ByPublicationIdPubmedId(String pubmedId);
+
     Page<Study> findByPublicationIdPubmedId(String pubmedId, Pageable pageable);
 
 
