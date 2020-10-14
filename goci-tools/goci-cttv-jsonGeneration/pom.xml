@@ -63,11 +63,9 @@
             <artifactId>javax.json</artifactId>
             <version>1.0.4</version>
         </dependency>
-
-        <!-- oracle JDBC drivers for db comms -->
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
         </dependency>
 
         <dependency>
@@ -87,11 +85,6 @@
         </dependency>
 
     </dependencies>
-
-
-
-
-
 
 
 </project>
