@@ -64,6 +64,8 @@ public class DepositionSubmissionService {
     @Value("${deposition.token}")
     private String depositionToken;
 
+    private SubmissionImportProgressService submissionImportProgressService;
+
     public DepositionSubmissionService(@Autowired PublicationService publicationService,
                                        @Autowired StudyService studyService,
                                        @Autowired StudyOperationsService studyOperationsService,
@@ -76,7 +78,8 @@ public class DepositionSubmissionService {
                                        @Autowired PublicationExtensionRepository authorRepository,
                                        @Autowired BodyOfWorkRepository bodyOfWorkRepository,
                                        @Autowired UnpublishedStudyRepository unpublishedRepository,
-                                       @Autowired UnpublishedAncestryRepository unpublishedAncestryRepo) {
+                                       @Autowired UnpublishedAncestryRepository unpublishedAncestryRepo,
+                                       @Autowired SubmissionImportProgressService submissionImportProgressService) {
         this.publicationService = publicationService;
         this.studyService = studyService;
         this.studyOperationsService = studyOperationsService;
@@ -89,6 +92,7 @@ public class DepositionSubmissionService {
         this.bodyOfWorkRepository = bodyOfWorkRepository;
         this.unpublishedRepository = unpublishedRepository;
         this.unpublishedAncestryRepo = unpublishedAncestryRepo;
+        this.submissionImportProgressService = submissionImportProgressService;
 
         levelOnePlaceholderStatus = statusRepository.findByStatus("Awaiting Literature");
     }
@@ -204,6 +208,10 @@ public class DepositionSubmissionService {
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
+        }
+        boolean importInProgress = submissionImportProgressService.importInProgress(depositionSubmission.getSubmissionId());
+        if (importInProgress) {
+            testSub.setStatus("IMPORT_IN_PROGRESS");
         }
         return testSub;
     }

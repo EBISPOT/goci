@@ -118,12 +118,15 @@ public class MailService extends GOCIMailService {
 
     }
 
-    public void sendSubmissionImportNotification(boolean outcome, String pmid, String submissionID, ImportLog importLog) {
+    public void sendSubmissionImportNotification(boolean outcome, String pmid, String submissionID, ImportLog importLog, String userEmail) {
         SubmissionImportEmailToDevelopers email = new SubmissionImportEmailToDevelopers();
         email.setTo(this.devMailTo);
         email.setLink(this.link);
         email.setFrom(this.getFrom());
         email.createBody(outcome, pmid, submissionID, importLog);
+        sendEmail(email);
+
+        email.setTo(userEmail);
         sendEmail(email);
     }
 }
