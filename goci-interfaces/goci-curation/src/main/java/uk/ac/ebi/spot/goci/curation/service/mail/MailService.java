@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToCurator;
-import uk.ac.ebi.spot.goci.curation.model.mail.CurationSystemEmailToDevelopers;
-import uk.ac.ebi.spot.goci.curation.model.mail.NcbiExportEmailToDevelopers;
-import uk.ac.ebi.spot.goci.curation.model.mail.SubmissionImportEmailToDevelopers;
+import uk.ac.ebi.spot.goci.curation.model.mail.*;
 import uk.ac.ebi.spot.goci.curation.service.deposition.ImportLog;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.service.GOCIMailService;
@@ -127,6 +124,15 @@ public class MailService extends GOCIMailService {
         sendEmail(email);
 
         email.setTo(userEmail);
+        sendEmail(email);
+    }
+
+    public void sendWeeklyReportErrorCreationEmail(String error) {
+        WeeklyReportErrorToDevelopers email = new WeeklyReportErrorToDevelopers();
+        email.setTo(this.devMailTo);
+        email.setLink(this.link);
+        email.setFrom(this.getFrom());
+        email.createWeeklyReportEmail(error);
         sendEmail(email);
     }
 }

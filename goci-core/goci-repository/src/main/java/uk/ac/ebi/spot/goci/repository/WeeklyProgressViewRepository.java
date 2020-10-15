@@ -23,15 +23,17 @@ public interface WeeklyProgressViewRepository extends JpaRepository<WeeklyProgre
     @Query("SELECT DISTINCT weekStartDay FROM WeeklyProgressView ORDER BY weekStartDay ASC") List<Date> getAllWeekStartDates();
 
     // Works with String[]
-    @Query(value = "SELECT DISTINCT P.PUBMED_ID, listagg(S.ID, ',') WITHIN GROUP (ORDER BY S.ID) STUDY_IDS " +
+    @Query(value = "SELECT DISTINCT P.PUBMED_ID, listagg(S.ID, ',', ON OVERFLOW TRUNCATE) WITHIN GROUP (ORDER BY S.ID) STUDY_IDS " +
             "FROM STUDY S, PUBLICATION P WHERE P.ID=S.PUBLICATION_ID GROUP BY P.PUBMED_ID" ,
             nativeQuery = true)
     List<Map.Entry> getAllPublicationToStudyMappings();
 
     // Get Publications and Studies for only Targeted Arrays defined as those from Open Targets
-    @Query(value = "SELECT DISTINCT P.PUBMED_ID, listagg(S.ID, ',') WITHIN GROUP (ORDER BY S.ID) STUDY_IDS " +
+    @Query(value = "SELECT DISTINCT P.PUBMED_ID, listagg(S.ID, ',', ON OVERFLOW TRUNCATE) WITHIN GROUP (ORDER BY S.ID) STUDY_IDS " +
             "FROM STUDY S, PUBLICATION P " +
             "WHERE P.ID=S.PUBLICATION_ID AND S.OPEN_TARGETS=1 " +
             "GROUP BY P.PUBMED_ID", nativeQuery = true)
     List<Map.Entry> getAllPublicationToTargetedArrayStudyMappings();
+
+
 }
