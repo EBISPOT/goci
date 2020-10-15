@@ -4,6 +4,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.*;
@@ -59,7 +60,11 @@ public class DepositionSubmissionImportService {
     @Autowired
     private MailService mailService;
 
-    public List<String> importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser) {
+    @Autowired
+    private SubmissionImportProgressService submissionImportProgressService;
+
+    @Async
+    public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser, Long submissionImportId) {
         ImportLog importLog = new ImportLog();
         getLog().info("Evaluating submission type for: {}", depositionSubmission.getSubmissionId());
         Submission.SubmissionType submissionType = DepositionUtil.getSubmissionType(depositionSubmission);
@@ -198,11 +203,14 @@ public class DepositionSubmissionImportService {
         }
 
         mailService.sendSubmissionImportNotification(outcome, depositionSubmission.getPublication().getPmid(),
-                submissionID, importLog);
+                submissionID, importLog, currentUser.getEmail());
 
         getLog().info("Import process finalized: {}", depositionSubmission.getSubmissionId());
         getLog().info(importLog.pretty(false));
-        return Arrays.asList(new String[]{importLog.prettyShort()});
+
+        submissionImportProgressService.deleteImport(submissionImportId);
+
+//        return Arrays.asList(new String[]{importLog.prettyShort()});
     }
 
     private String cleanupPrePublishedStudies(List<DepositionStudyDto> studyDtoList) {

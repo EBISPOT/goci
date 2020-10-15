@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +19,20 @@ import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionImportService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionUtil;
-import uk.ac.ebi.spot.goci.model.Publication;
+import uk.ac.ebi.spot.goci.curation.service.deposition.SubmissionImportProgressService;
 import uk.ac.ebi.spot.goci.model.SecureUser;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
+import uk.ac.ebi.spot.goci.model.deposition.SubmissionImportProgress;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/submissions")
@@ -50,15 +53,19 @@ public class SubmissionController {
     @Autowired
     private ObjectMapper mapper;
 
+    private SubmissionImportProgressService submissionImportProgressService;
+
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
 
     public SubmissionController(@Autowired DepositionSubmissionService submissionService,
                                 @Autowired CurrentUserDetailsService currentUserDetailsService,
-                                @Autowired DepositionSubmissionImportService depositionSubmissionImportService) {
+                                @Autowired DepositionSubmissionImportService depositionSubmissionImportService,
+                                @Autowired SubmissionImportProgressService submissionImportProgressService) {
         this.submissionService = submissionService;
         this.currentUserDetailsService = currentUserDetailsService;
         this.depositionSubmissionImportService = depositionSubmissionImportService;
+        this.submissionImportProgressService = submissionImportProgressService;
     }
 
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
@@ -84,10 +91,10 @@ public class SubmissionController {
         return "single_submission";
     }
 
-    private Submission buildSubmission(DepositionSubmission depositionSubmission){
+    private Submission buildSubmission(DepositionSubmission depositionSubmission) {
         Submission testSub = new Submission();
         testSub.setId(depositionSubmission.getSubmissionId());
-        if(depositionSubmission.getPublication() != null) {
+        if (depositionSubmission.getPublication() != null) {
             testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
             testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
             testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
@@ -98,19 +105,19 @@ public class SubmissionController {
             testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
             testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
             testSub.setPublicationDate(depositionSubmission.getPublication().getPublicationDate());
-            if(depositionSubmission.getPublication().getCorrespondingAuthor() != null) {
+            if (depositionSubmission.getPublication().getCorrespondingAuthor() != null) {
                 DepositionAuthor author = depositionSubmission.getPublication().getCorrespondingAuthor();
-                if(author.getGroup() != null){
+                if (author.getGroup() != null) {
                     testSub.setCorrespondingAuthor(author.getGroup());
-                }else{
+                } else {
                     testSub.setCorrespondingAuthor(author.getFirstName() + ' ' + author.getLastName());
                 }
             }
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
                 testSub.setStatus("REVIEW");
             }
-        }else if(depositionSubmission.getBodyOfWork() != null){
-            if(depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
+        } else if (depositionSubmission.getBodyOfWork() != null) {
+            if (depositionSubmission.getBodyOfWork().getFirstAuthor() != null) {
                 if (depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup() != null) {
                     testSub.setAuthor(depositionSubmission.getBodyOfWork().getFirstAuthor().getGroup());
                 } else {
@@ -118,11 +125,11 @@ public class SubmissionController {
                             depositionSubmission.getBodyOfWork().getFirstAuthor().getLastName());
                 }
             }
-            if(depositionSubmission.getBodyOfWork().getCorrespondingAuthors() != null) {
+            if (depositionSubmission.getBodyOfWork().getCorrespondingAuthors() != null) {
                 DepositionAuthor author = depositionSubmission.getBodyOfWork().getCorrespondingAuthors().get(0);
-                if(author.getGroup() != null){
+                if (author.getGroup() != null) {
                     testSub.setCorrespondingAuthor(author.getGroup());
-                }else{
+                } else {
                     testSub.setCorrespondingAuthor(author.getFirstName() + ' ' + author.getLastName());
                 }
             }
@@ -136,6 +143,11 @@ public class SubmissionController {
                 testSub.setStatus("REVIEW");
             }
         }
+
+        boolean importInProgress = submissionImportProgressService.importInProgress(depositionSubmission.getSubmissionId());
+        if (importInProgress) {
+            testSub.setStatus("IMPORT_IN_PROGRESS");
+        }
         return testSub;
     }
 
@@ -148,13 +160,19 @@ public class SubmissionController {
         try {
             Map<String, Submission> submissionList = submissionService.getSubmissions();
             DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionID);
-            Submission submission = submissionList.get(submissionID);
             SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
-            statusMessages = depositionSubmissionImportService.importSubmission(depositionSubmission, currentUser);
 
-            submission.setStatus("IMPORTED");
+            boolean importInProgress = submissionImportProgressService.importInProgress(depositionSubmission.getSubmissionId());
+            if (importInProgress) {
+                statusMessages = Arrays.asList(new String []{ "Import is already in progress. Please wait."});
+            } else {
+                SubmissionImportProgress submissionImportProgress = submissionImportProgressService.createNewImport(currentUser.getEmail(), depositionSubmission.getSubmissionId());
+                depositionSubmissionImportService.importSubmission(depositionSubmission, currentUser, submissionImportProgress.getId());
+                statusMessages = Arrays.asList(new String []{ "Import task has been submitted. You will receive an email when it's done."});
+            }
+
             model.addAttribute("submissions", submissionList.values());
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             StringWriter stringWriter = new StringWriter();
             e.printStackTrace(new PrintWriter(stringWriter));
@@ -169,7 +187,7 @@ public class SubmissionController {
     @RequestMapping(value = "/{submissionID}/testError", produces = MediaType.TEXT_HTML_VALUE, method =
             RequestMethod.POST)
     public String importSubmissionError(@PathVariable String submissionID, Model model, HttpServletRequest request,
-                                   RedirectAttributes redirectAttributes) {
+                                        RedirectAttributes redirectAttributes) {
         StringWriter stringWriter = new StringWriter();
         new Throwable().printStackTrace(new PrintWriter(stringWriter));
         List<String> statusMessages = Arrays.asList(new String[]{"Error 1", "Error 2", stringWriter.getBuffer().toString()});
