@@ -50,7 +50,6 @@ public class SingleStudyProcessingService {
     @Autowired
     private StudyExtensionRepository studyExtensionRepository;
 
-    @Transactional
     public Study processStudy(DepositionStudyDto studyDto, Publication publication) {
         Curator levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         CurationStatus levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
