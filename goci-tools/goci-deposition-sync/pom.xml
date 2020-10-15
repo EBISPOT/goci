@@ -67,8 +67,8 @@
 
         <!-- oracle JDBC drivers for db comms -->
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>ojdbc7</artifactId>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
         </dependency>
 
     </dependencies>

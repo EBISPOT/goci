@@ -89,13 +89,6 @@
             <groupId>org.apache.xmlgraphics</groupId>
             <artifactId>batik-transcoder</artifactId>
         </dependency>
-
-        <!--<dependency>-->
-        <!--<groupId>com.oracle</groupId>-->
-        <!--<artifactId>ojdbc7</artifactId>-->
-        <!--</dependency>-->
-
-
     </dependencies>
 
 </project>
