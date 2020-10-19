@@ -9,5 +9,5 @@ import java.util.List;
 @RepositoryRestResource(exported = false)
 public interface WeeklyReportRepository extends JpaRepository<WeeklyReport, Long> {
 
-    List<WeeklyReport> findByTypeAndWeekCode(String type, int weekCode);
+    List<WeeklyReport> findByTypeAndWeekCode(String type, Long weekCode);
 }

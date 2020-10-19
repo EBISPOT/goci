@@ -48,7 +48,7 @@ public class NewWeeklyReportService {
     @Autowired
     private MailService mailService;
 
-    @Scheduled(cron = "0 30 0 * * SUN")
+    @Scheduled(cron = "0 30 0 * * MON")
     public void createWeeklyReports() {
         log.info("Creating weekly reports ...");
         double sTime = System.currentTimeMillis();
@@ -359,7 +359,7 @@ public class NewWeeklyReportService {
 
             weeklyReport.setTimestamp(timestamp);
             weeklyReport.setType(type);
-            weeklyReport.setWeekCode(weekCode);
+            weeklyReport.setWeekCode(Long.valueOf(weekCode));
             weeklyReport.setWeekDate(reportsWeeklyProgressView.getWeekDate());
 
             weeklyReportRepository.save(weeklyReport);
@@ -380,7 +380,7 @@ public class NewWeeklyReportService {
         Calendar todayCalendar = Calendar.getInstance();
         int weekCode = todayCalendar.get(Calendar.WEEK_OF_YEAR);
         log.info("Retrieving weekly report for type and weekcode: {} | {}", type, weekCode);
-        List<WeeklyReport> weeklyReports = weeklyReportRepository.findByTypeAndWeekCode(type, weekCode);
+        List<WeeklyReport> weeklyReports = weeklyReportRepository.findByTypeAndWeekCode(type, Long.valueOf(weekCode));
         log.info("Found {} entries", weeklyReports.size());
 
         for (WeeklyReport weeklyReport : weeklyReports) {
