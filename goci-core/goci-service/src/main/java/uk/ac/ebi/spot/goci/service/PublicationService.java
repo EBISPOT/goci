@@ -50,17 +50,20 @@ public class PublicationService {
     }
 
 
+    @Transactional(readOnly = true)
     public Optional<Publication> findOptionalByPubmedId(String pubmedId) {
         Publication publication = publicationRepository.findByPubmedId(pubmedId);
         return getValue(publication);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Collection<Study>> findOptionalStudiesByPubmedId(String pubmedId) {
         Publication publication = publicationRepository.findByPubmedId(pubmedId);
         return (publication != null) ? Optional.of(publication.getStudies()) : Optional.empty();
     }
 
 
+    @Transactional(readOnly = true)
     public Publication findByPumedId(String pubmedId) {
         Optional<Publication> publication= findOptionalByPubmedId(pubmedId);
         return (publication.isPresent()) ? publication.get() : null;
@@ -71,12 +74,14 @@ public class PublicationService {
         return (publication.isPresent()) ? publication.get() : new Publication();
     }
 
+    @Transactional(readOnly = true)
     public Collection<Study> findStudiesByPubmedId(String pubmedId) {
         Optional<Collection<Study>> listStudies= findOptionalStudiesByPubmedId(pubmedId);
         return (listStudies.isPresent())? listStudies.get() : null;
     }
 
 
+    @Transactional(readOnly = true)
     public List<Publication> findAll() {
         Sort ascPubmedId = new Sort(new Sort.Order(Sort.Direction.DESC, "pubmedId"));
         return publicationRepository.findAll(ascPubmedId);
@@ -124,6 +129,7 @@ public class PublicationService {
         return publication;
     }
 
+    @Transactional(readOnly = true)
     public void loadAssociatedData(Publication publication) {
         int studiesCount = publication.getStudies().size();
 
