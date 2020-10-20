@@ -24,7 +24,6 @@ public class SubmissionImportProgressService {
 
     public boolean importInProgress(String submissionId) {
         Optional<SubmissionImportProgress> submissionImportProgressOptional = submissionImportProgressRepository.findBySubmissionId(submissionId);
-        log.info("Submission import status for [{}]: {}", submissionId, submissionImportProgressOptional.isPresent());
         return submissionImportProgressOptional.isPresent();
     }
 
