@@ -126,6 +126,8 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @RestResource(exported = false)
     Page<Study> findByPublicationIdFirstAuthorFullnameContainingIgnoreCase(String author, Pageable pageable);
 
+    List<Study> findByPublicationId(Long publicationId);
+
     @RestResource(exported = false)
     Page<Study> findByPublicationIdFirstAuthorFullnameStandardContainingIgnoreCase(String author, Pageable pageable);
 
@@ -175,5 +177,6 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @Query(value = "SELECT 'GCST' || accession_seq.nextval FROM dual", nativeQuery =
             true)
     String getNextAccessionId();
+
 }
 
