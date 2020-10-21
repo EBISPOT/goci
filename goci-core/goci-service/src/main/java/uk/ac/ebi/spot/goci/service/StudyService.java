@@ -208,7 +208,12 @@ public class StudyService {
         return studies;
     }
 
-
+    @Transactional(readOnly = true)
+    public Collection<Study> findByPublicationId(Long publicationId) {
+        Collection<Study> studies = studyRepository.findByPublicationId(publicationId);
+        studies.forEach(this::loadAssociatedData);
+        return studies;
+    }
 
     public void loadAssociatedData(Study study) {
         int efoTraitCount = study.getEfoTraits().size();
@@ -405,4 +410,5 @@ public class StudyService {
     public void save(Study study) {
         studyRepository.save(study);
     }
+
 }

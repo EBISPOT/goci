@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PublicationService;
+import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -63,6 +64,9 @@ public class DepositionSubmissionImportService {
     @Autowired
     private SubmissionImportProgressService submissionImportProgressService;
 
+    @Autowired
+    private StudyService studyService;
+
     @Async
     public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser, Long submissionImportId) {
         ImportLog importLog = new ImportLog();
@@ -78,8 +82,7 @@ public class DepositionSubmissionImportService {
         getLog().info("[{}] Found publication: {}", submissionID, publication.getPubmedId());
 
         getLog().info("[{}] Looking for studies in the local DB ...", submissionID);
-        Collection<Study> dbStudies =
-                publicationService.findStudiesByPubmedId(depositionSubmission.getPublication().getPmid());
+        Collection<Study> dbStudies = studyService.findByPublicationId(publication.getId());
         List<Long> dbStudyIds = dbStudies.stream().map(Study::getId).collect(Collectors.toList());
         getLog().info("[{}] Found {} studies: {}", submissionID, dbStudies.size(), dbStudyIds);
 
