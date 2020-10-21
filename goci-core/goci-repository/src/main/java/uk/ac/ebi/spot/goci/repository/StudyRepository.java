@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.repository;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,8 +20,8 @@ import java.util.List;
  * Created by emma on 20/11/14.
  *
  * @author emma
- *         <p>
- *         Repository accessing Study entity object
+ * <p>
+ * Repository accessing Study entity object
  */
 
 
@@ -56,6 +55,7 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     Page<Study> findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(Long status,
                                                                            Long curator,
                                                                            Pageable pageable);
+
     @RestResource(exported = false)
     Page<Study> findByHousekeepingCurationStatusId(Long status, Pageable pageable);
 
@@ -114,7 +114,7 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     Page<Study> findDistinctByNotesTextNoteContainingIgnoreCase(String query, Pageable pageable);
 
     @RestResource(exported = false)
-    //Removed Distinct because publicationDate is another table. With distinct returns just the Study attributes
+        //Removed Distinct because publicationDate is another table. With distinct returns just the Study attributes
     Page<Study> findByNotesTextNoteContainingIgnoreCase(String query, Pageable pageable);
 
     // THOR to change
@@ -125,8 +125,6 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     //Page<Study> findByAuthorContainingIgnoreCase(String author, Pageable pageable);
     @RestResource(exported = false)
     Page<Study> findByPublicationIdFirstAuthorFullnameContainingIgnoreCase(String author, Pageable pageable);
-
-    List<Study> findByPublicationId(Long publicationId);
 
     @RestResource(exported = false)
     Page<Study> findByPublicationIdFirstAuthorFullnameStandardContainingIgnoreCase(String author, Pageable pageable);
