@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -226,6 +227,8 @@ public class MappingService {
                     getLog().debug("Running mapping....");
                     ensemblMappingResult =
                             ensemblMappingPipeline.run_pipeline(snpRsId, authorReportedGeneNamesLinkedToSnp, eRelease);
+
+                    getLog().debug("Ensembl result: {}", new ObjectMapper().writeValueAsString(ensemblMappingResult));
                 } catch (Exception e) {
                     getLog().error("Encountered a " + e.getClass().getSimpleName() +
                             " whilst trying to run mapping of SNP " + snpRsId +
@@ -237,6 +240,8 @@ public class MappingService {
                 // First remove old locations and genomic contexts
                 snpLocationMappingService.removeExistingSnpLocations(snpLinkedToLocus);
                 snpGenomicContextMappingService.removeExistingGenomicContexts(snpLinkedToLocus);
+
+                getLog().debug("Removed existing data.");
 
                 Collection<Location> locations = ensemblMappingResult.getLocations();
                 Collection<GenomicContext> snpGenomicContexts = ensemblMappingResult.getGenomicContexts();
@@ -255,16 +260,23 @@ public class MappingService {
                             singleNucleotidePolymorphismRepository.findByRsId(currentSnpId);
                     // Create a new entry in the SingleNucleotidePolymorphism SQL table for the current rsID
                     // Add the current SingleNucleotidePolymorphism to the "merged" rsID
+
+                    getLog().debug("Looking for merged data: {}", currentSnp);
+
                     if (currentSnp == null) {
+                        getLog().debug("[{}] Current SNP not null ... saving new data ...", currentSnp);
                         currentSnp = new SingleNucleotidePolymorphism();
                         currentSnp.setRsId(currentSnpId);
                         currentSnp.setFunctionalClass(snpLinkedToLocus.getFunctionalClass());
                         singleNucleotidePolymorphismRepository.save(currentSnp);
+                        getLog().debug("[{}] Current SNP saved..", currentSnp);
                         currentSnp = singleNucleotidePolymorphismRepository.findByRsId(currentSnpId);
                     }
                     snpLinkedToLocus.setCurrentSnp(currentSnp);
                 }
+                getLog().debug("[{}] Saving SNP linked to locus.", snpLinkedToLocus.getRsId());
                 singleNucleotidePolymorphismRepository.save(snpLinkedToLocus);
+                getLog().debug("[{}] SNP linked to locus saved.", snpLinkedToLocus.getRsId());
 
                 // Store location information for SNP
                 if (!locations.isEmpty()) {
@@ -304,8 +316,10 @@ public class MappingService {
 
         // Create association report based on whether there is errors or not
         if (!associationPipelineErrors.isEmpty()) {
+            getLog().debug("Processing association errors");
             associationReportService.processAssociationErrors(association, associationPipelineErrors);
         } else {
+            getLog().debug("Updating association details");
             associationReportService.updateAssociationReportDetails(association);
         }
 
