@@ -209,8 +209,8 @@ public class StudyService {
     }
 
     @Transactional(readOnly = true)
-    public Collection<Study> findByPublicationId(Long publicationId) {
-        Collection<Study> studies = studyRepository.findByPublicationId(publicationId);
+    public Collection<Study> findByPublication(String pubmedId) {
+        Collection<Study> studies = studyRepository.findByPublicationIdPubmedId(pubmedId);
         studies.forEach(this::loadAssociatedData);
         return studies;
     }

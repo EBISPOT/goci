@@ -82,7 +82,7 @@ public class DepositionSubmissionImportService {
         getLog().info("[{}] Found publication: {}", submissionID, publication.getPubmedId());
 
         getLog().info("[{}] Looking for studies in the local DB ...", submissionID);
-        Collection<Study> dbStudies = studyService.findByPublicationId(publication.getId());
+        Collection<Study> dbStudies = studyService.findByPublication(depositionSubmission.getPublication().getPmid());
         List<Long> dbStudyIds = dbStudies.stream().map(Study::getId).collect(Collectors.toList());
         getLog().info("[{}] Found {} studies: {}", submissionID, dbStudies.size(), dbStudyIds);
 
