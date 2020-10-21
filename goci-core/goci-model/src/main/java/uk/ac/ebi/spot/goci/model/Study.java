@@ -155,7 +155,7 @@ public class Study implements Trackable {
      * associationNote.However, we decide that the study onject should only include studyNotes, thus the blow
      * annotation was used instead.
      */
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     @JoinColumn(name="genericId", referencedColumnName="id",insertable=false,updatable=false)
     @Where(clause="content_type='Study'")
     @JsonIgnore

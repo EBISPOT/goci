@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.service.mail.MailService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
@@ -68,6 +69,7 @@ public class DepositionSubmissionImportService {
     private StudyService studyService;
 
     @Async
+    @Transactional
     public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser, Long submissionImportId) {
         ImportLog importLog = new ImportLog();
         getLog().info("Evaluating submission type for: {}", depositionSubmission.getSubmissionId());

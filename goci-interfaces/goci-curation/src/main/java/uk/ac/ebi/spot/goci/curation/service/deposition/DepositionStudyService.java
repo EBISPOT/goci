@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.service.HousekeepingOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
@@ -214,6 +215,7 @@ public class DepositionStudyService {
     }
     */
 
+    @Transactional
     public String deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
         try {
             if (dbStudies != null) {
