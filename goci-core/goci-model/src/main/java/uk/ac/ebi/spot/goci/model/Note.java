@@ -23,6 +23,7 @@ public abstract class Note {
     @OneToOne
     private NoteSubject noteSubject;
 
+    @Lob
     @NotNull
     private String textNote;
 

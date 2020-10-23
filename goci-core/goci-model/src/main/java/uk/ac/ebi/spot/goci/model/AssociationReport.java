@@ -1,9 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -20,16 +17,22 @@ public class AssociationReport {
 
     private Date lastUpdateDate;
 
+    @Lob
     private String snpError;
 
+    @Lob
     private String snpGeneOnDiffChr;
 
+    @Lob
     private String noGeneForSymbol;
 
+    @Lob
     private String restServiceError;
 
+    @Lob
     private String suspectVariationError;
 
+    @Lob
     private String geneError;
 
     private Boolean errorCheckedByCurator = false;
