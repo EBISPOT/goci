@@ -7,10 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Data
@@ -37,27 +34,35 @@ public class WeeklyReport {
     @Column(name = "week_date")
     private Date weekDate;
 
+    @Lob
     @Column(name = "studies_created")
     private String studiesCreated;
 
+    @Lob
     @Column(name = "studies_level1")
     private String studiesLevel1Completed;
 
+    @Lob
     @Column(name = "studies_level2")
     private String studiesLevel2Completed;
 
+    @Lob
     @Column(name = "studies_published")
     private String studiesPublished;
 
+    @Lob
     @Column(name = "pubs_created")
     private String publicationsCreated;
 
+    @Lob
     @Column(name = "pubs_level1")
     private String publicationsLevel1Completed;
 
+    @Lob
     @Column(name = "pubs_level2")
     private String publicationsLevel2Completed;
 
+    @Lob
     @Column(name = "pubs_published")
     private String publicationsPublished;
 }
