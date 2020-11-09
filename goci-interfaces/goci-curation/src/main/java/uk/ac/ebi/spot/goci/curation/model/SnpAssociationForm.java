@@ -32,7 +32,7 @@ public abstract class SnpAssociationForm {
     @Max(value=9,message = "The Mantissa must be between [1..9]")
     private Integer pvalueMantissa;
 
-    @Max(value=-6, message = "The exponent must < -5")
+    @Max(value=-5, message = "The exponent must <= -5")
     private Integer pvalueExponent;
 
     private List<SnpMappingForm> snpMappingForms = new ArrayList<>();
