@@ -12,12 +12,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.model.deposition.BodyOfWorkDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionPublication;
-import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPublicationListWrapper;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPublicationListWrapper;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -51,7 +50,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         try {
             String response = template.getForObject(url, String.class, params);
             publication = template.getForObject(url, DepositionPublication.class, params);
-        }catch(HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
         }
         return publication;
@@ -83,6 +82,17 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     }
 
     @Override
+    public void deletePublication(DepositionPublication depositionPublication) {
+        String url = depositionIngestUri + "/publications/" + depositionPublication.getPmid();
+        try {
+            template.delete(url);
+        } catch (Exception e) {
+            System.out.println("Encoutered exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public DepositionSubmission retrieveSubmission(String id) {
         log.info("Retrieving submission using id [{}]", id);
         DepositionSubmission submission = null;
@@ -92,7 +102,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         try {
             String response = template.getForObject(url, String.class, params);
             submission = template.getForObject(url, DepositionSubmission.class, params);
-        }catch(HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
         }
         return submission;
@@ -126,13 +136,13 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
             BodyOfWorkDto[] bomArray = template.getForObject(url, BodyOfWorkDto[].class,
                     params);
             //while(i < publications.getPage().getTotalPages()){
-            if(bomArray != null){
-                Arrays.stream(bomArray).forEach(bom->bomMap.put(bom.getBodyOfWorkId(), bom));
+            if (bomArray != null) {
+                Arrays.stream(bomArray).forEach(bom -> bomMap.put(bom.getBodyOfWorkId(), bom));
             }
             params.put("page", ++i);
 //                publications = template.getForObject(url, DepositionPublicationListWrapper.class,
 //                        params);
-        }catch(HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
         }
         return bomMap;
@@ -151,12 +161,12 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
             String response = template.getForObject(url, String.class, params);
             DepositionPublicationListWrapper publications = template.getForObject(url, DepositionPublicationListWrapper.class,
                     params);
-            while(i < publications.getPage().getTotalPages()) {
+            while (i < publications.getPage().getTotalPages()) {
                 addPublications(publicationMap, publications);
                 params.put("page", ++i);
                 publications = template.getForObject(url, DepositionPublicationListWrapper.class, params);
             }
-        }catch(HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
         }
         return publicationMap;
@@ -176,22 +186,22 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
             params.put("page", ++i);
 //                publications = template.getForObject(url, DepositionPublicationListWrapper.class,
 //                        params);
-        }catch(HttpClientErrorException e){
+        } catch (HttpClientErrorException e) {
             System.out.println(e.getMessage());
         }
         return publicationMap;
     }
 
     private void addPublications(Map<String, DepositionPublication> publicationMap,
-                                 DepositionPublicationListWrapper publications){
+                                 DepositionPublicationListWrapper publications) {
         addPublications(publicationMap,
                 publications.getPublications().getPublications().toArray(new DepositionPublication[0]));
     }
 
-        private void addPublications(Map<String, DepositionPublication> publicationMap,
-                                 DepositionPublication[] publications){
-        if(publications != null){// && publications.getPublications() != null) {
-            for (DepositionPublication publication : publications){//.getPublications().getPublications()) {
+    private void addPublications(Map<String, DepositionPublication> publicationMap,
+                                 DepositionPublication[] publications) {
+        if (publications != null) {// && publications.getPublications() != null) {
+            for (DepositionPublication publication : publications) {//.getPublications().getPublications()) {
                 publicationMap.put(publication.getPmid(), publication);
             }
         }
