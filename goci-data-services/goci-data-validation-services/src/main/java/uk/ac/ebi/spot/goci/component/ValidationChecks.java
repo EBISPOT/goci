@@ -236,8 +236,29 @@ public class ValidationChecks {
             error = "Value is greater than or equal to zero";
         }
 
-        if ((error == null) && ((Math.abs(value)) < 6)) {
+        if ((error == null) && ((Math.abs(value)) < 5)) {
             error = "Exponent must be < -5";
+        }
+
+        return error;
+    }
+
+    /**
+     * Checking the 1e-5 case - the only one allowed for an exponent = -5
+     */
+    // GOCI-1554
+    public String checkExponentIs5AndMantissaIs1(Integer mantissa, Integer exponent) {
+        String error = null;
+
+        if (mantissa == null) {
+            error = "Mantissa is empty";
+        }
+        if (exponent == null) {
+            error = "Exponent is empty";
+        }
+
+        if ((error == null) && (Math.abs(exponent) == 5) && (mantissa != 1)) {
+            error = "Exponent can only be -5 if p-value is 1e-5.";
         }
 
         return error;

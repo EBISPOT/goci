@@ -214,8 +214,6 @@ public class DepositionSubmissionImportService {
         getLog().info(importLog.pretty(false));
 
         submissionImportProgressService.deleteImport(submissionImportId);
-
-//        return Arrays.asList(new String[]{importLog.prettyShort()});
     }
 
     private String cleanupPrePublishedStudies(List<DepositionStudyDto> studyDtoList) {

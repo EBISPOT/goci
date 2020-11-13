@@ -109,6 +109,7 @@ public class ValidationChecksTest {
         assertThat(validationChecks.checkExponentIsPresentAndNegative(null)).isEqualTo("Value is empty");
         assertThat(validationChecks.checkExponentIsPresentAndNegative(100)).isEqualTo("Value is greater than or equal to zero");
         assertThat(validationChecks.checkExponentIsPresentAndNegative(-7)).isNull();
+        assertThat(validationChecks.checkExponentIsPresentAndNegative(-5)).isNull();
     }
 
     @Test

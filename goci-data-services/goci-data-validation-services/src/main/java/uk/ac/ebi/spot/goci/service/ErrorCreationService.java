@@ -126,6 +126,11 @@ public class ErrorCreationService {
         return ErrorProcessingService.createError(errorMessage, "P-value exponent", false);
     }
 
+    public ValidationError checkExponentIs5AndMantissaIs1(Integer mantissa, Integer exponent) {
+        String errorMessage = validationChecks.checkExponentIs5AndMantissaIs1(mantissa, exponent);
+        return ErrorProcessingService.createError(errorMessage, "P-value exponent", false);
+    }
+
     // Loci attributes checks
     public ValidationError checkGene(String gene, String eRelease) {
         String errorMessage = validationChecks.checkGene(gene, eRelease);

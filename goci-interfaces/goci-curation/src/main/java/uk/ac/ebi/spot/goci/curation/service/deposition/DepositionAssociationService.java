@@ -81,7 +81,13 @@ public class DepositionAssociationService {
                 if (pValue != null && pValue.toLowerCase().contains("e")) {
                     String[] pValues = pValue.toLowerCase().split("e");
                     int exponent = Integer.valueOf(pValues[1]);
+
                     int mantissa = (int) Math.round(Double.valueOf(pValues[0]));
+                    if (mantissa == 10) {
+                        mantissa = 1;
+                        exponent = exponent + 1;
+                    }
+
                     association.setPvalueExponent(exponent);
                     association.setPvalueMantissa(mantissa);
                 }
