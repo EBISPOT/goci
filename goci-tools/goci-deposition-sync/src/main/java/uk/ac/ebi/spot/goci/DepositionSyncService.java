@@ -97,9 +97,6 @@ public class DepositionSyncService {
 
         try {
             //read all publications from GOCI
-            List<String> newPubs = new ArrayList<>();
-            List<String> updatePubs = new ArrayList<>();
-            List<String> sumStatsPubs = new ArrayList<>();
             List<Publication> gociPublications = publicationService.findAll();
             //if publication not in Deposition, insert
             Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
@@ -136,9 +133,9 @@ public class DepositionSyncService {
                             }
 
                             depositionPublicationService.deletePublication(depositionPublication);
+                            syncLog.addRetired(pubmedId, getInvalidStatus(p));
                         }
 
-                        syncLog.addRetired(pubmedId, getInvalidStatus(p));
                         continue;
                     }
                 }
@@ -157,35 +154,33 @@ public class DepositionSyncService {
                         getLog().info("Sending publication [{}] with status: {}", pubmedId, newPublication.getStatus());
                         depositionPublicationService.addPublication(newPublication);
                         syncLog.addNewPublication(pubmedId, newPublication.getStatus());
-                        newPubs.add(newPublication.getPmid());
                     } else {
                         if (depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUBMISSION") ||
                                 depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUMMARY_STATS_SUBMISSION")) {
                             continue;
                         }
 
-                        getLog().info("Updating publication [{}] with status: {}", pubmedId, newPublication.getStatus());
-                        newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                        depositionPublicationService.updatePublication(newPublication);
-                        if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED")) {
-                            syncLog.addPublishedPublication();
-                            updatePubs.add(newPublication.getPmid());
+                        if (!newPublication.getStatus().equalsIgnoreCase(depositionPublication.getStatus())) {
+                            getLog().info("Updating publication [{}] with status: {}", pubmedId, newPublication.getStatus());
+                            newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
+                            depositionPublicationService.updatePublication(newPublication);
+                            if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED")) {
+                                syncLog.addPublishedPublication();
+                            } else {
+                                if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED_WITH_SS")) {
+                                    syncLog.addSSPublication();
+                                } else {
+                                    syncLog.addEligiblePublication();
+                                }
+                            }
                         } else {
-                            if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED_WITH_SS")) {
-                                syncLog.addSSPublication();
-                                sumStatsPubs.add(newPublication.getPmid());
+                            if (hasSS) {
+                                depositionPublicationService.updatePublication(newPublication);
                             }
                         }
                     }
                 }
             }
-
-            System.out.println("created " + newPubs.size());
-            System.out.println(Arrays.toString(newPubs.toArray()));
-            System.out.println("published " + updatePubs.size());
-            System.out.println(Arrays.toString(updatePubs.toArray()));
-            System.out.println("added sum stats " + sumStatsPubs.size());
-            System.out.println(Arrays.toString(sumStatsPubs.toArray()));
         } catch (Exception e) {
             getLog().error("Encountered error: {}", e.getMessage(), e);
 
