@@ -60,8 +60,15 @@ public class SyncLog {
         StringBuffer sb = new StringBuffer();
         sb.append(" - Errors: " + noErrors + "\n");
         if (noErrors != 0) {
+            if (errorMap.containsKey("PROCESS")) {
+                sb.append(errorMap.get("PROCESS") + "\n");
+                sb.append("-----------------------------\n");
+            }
+
             for (String key : errorMap.keySet()) {
-                sb.append(" -- [" + key + "]: " + errorMap.get(key) + "\n");
+                if (!key.equalsIgnoreCase("PROCESS")) {
+                    sb.append(" -- [" + key + "]: " + errorMap.get(key) + "\n");
+                }
             }
         }
         sb.append("-----------------------------\n");

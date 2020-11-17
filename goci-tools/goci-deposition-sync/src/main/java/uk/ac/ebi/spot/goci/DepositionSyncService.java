@@ -16,6 +16,8 @@ import uk.ac.ebi.spot.goci.service.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.email.DepositionSyncEmailService;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 @Service
@@ -121,10 +123,11 @@ public class DepositionSyncService {
                             syncLog.addError(pubmedId, "Publication retired has an incompatible status in Deposition: " + depositionPublication.getStatus());
                             continue;
                         }
+
+                        depositionPublicationService.deletePublication(depositionPublication);
                     }
 
                     syncLog.addRetired(pubmedId, getInvalidStatus(p));
-                    depositionPublicationService.deletePublication(depositionPublication);
                     continue;
                 }
 
@@ -154,8 +157,6 @@ public class DepositionSyncService {
                     } else {
                         if (depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUBMISSION") ||
                                 depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUMMARY_STATS_SUBMISSION")) {
-                            getLog().info("ERROR: Cannot update publication [{}]. Publication under submission: {}", pubmedId, depositionPublication.getStatus());
-                            syncLog.addError(pubmedId, "Cannot update publication. Publication under submission: " + depositionPublication.getStatus());
                             continue;
                         }
 
@@ -183,7 +184,13 @@ public class DepositionSyncService {
             System.out.println(Arrays.toString(sumStatsPubs.toArray()));
         } catch (Exception e) {
             getLog().error("Encountered error: {}", e.getMessage(), e);
-            syncLog.addError("PROCESS", e.toString());
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            pw.flush();
+            syncLog.addError("PROCESS", sw.toString());
+            pw.close();
         }
 
         depositionSyncEmailService.sendSubmissionImportNotification(syncLog.getLog());
