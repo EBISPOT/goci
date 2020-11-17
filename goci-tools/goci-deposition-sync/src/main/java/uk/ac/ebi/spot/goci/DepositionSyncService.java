@@ -16,6 +16,8 @@ import uk.ac.ebi.spot.goci.service.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.email.DepositionSyncEmailService;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 @Service
@@ -62,18 +64,21 @@ public class DepositionSyncService {
 
     private boolean isPublished(Publication publication) {
         for (Study study : publication.getStudies()) {
-            boolean studyPublished = false;
+//            boolean studyPublished = false;
             Housekeeping housekeeping = study.getHousekeeping();
             if (housekeeping.getIsPublished()) {
+                return true;
+/*
                 studyPublished = true;
             } else if (!housekeeping.getIsPublished() && housekeeping.getCatalogUnpublishDate() != null) {
                 studyPublished = true;
             }
             if (!studyPublished) {
                 return false;
+*/
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -113,30 +118,32 @@ public class DepositionSyncService {
                 boolean isValid = isValid(p);
                 boolean hasSS = addSummaryStatsData(newPublication, p);
                 boolean bomAssoc = isUnpublished(p, bomMap.values());
-                if (!isValid) {
-                    getLog().info("Publication NOT ELIGIBLE: {}", pubmedId);
-                    getLog().info("Attempting to delete publication from the Deposition App.");
-                    if (depositionPublication != null) {
-                        if (depositionPublication.getStatus().startsWith("UNDER") || depositionPublication.getStatus().startsWith("CURATION")) {
-                            syncLog.addError(pubmedId, "Publication retired has an incompatible status in Deposition: " + depositionPublication.getStatus());
-                            continue;
-                        }
-                    }
-
-                    syncLog.addRetired(pubmedId, getInvalidStatus(p));
-                    depositionPublicationService.deletePublication(depositionPublication);
-                    continue;
-                }
 
                 newPublication.setStatus("ELIGIBLE");
                 if (isPublished) {
                     newPublication.setStatus("PUBLISHED");
+                    if (hasSS) {
+                        newPublication.setStatus("PUBLISHED_WITH_SS");
+                    }
+                } else {
+                    if (!isValid) {
+                        getLog().info("Publication NOT ELIGIBLE: {}", pubmedId);
+                        getLog().info("Attempting to delete publication from the Deposition App.");
+                        if (depositionPublication != null) {
+                            if (depositionPublication.getStatus().startsWith("UNDER") || depositionPublication.getStatus().startsWith("CURATION")) {
+                                syncLog.addError(pubmedId, "Publication retired has an incompatible status in Deposition: " + depositionPublication.getStatus());
+                                continue;
+                            }
+
+                            depositionPublicationService.deletePublication(depositionPublication);
+                        }
+
+                        syncLog.addRetired(pubmedId, getInvalidStatus(p));
+                        continue;
+                    }
                 }
                 if (bomAssoc) {
                     newPublication.setStatus("UNDER_SUBMISSION");
-                }
-                if (hasSS) {
-                    newPublication.setStatus("PUBLISHED_WITH_SS");
                 }
                 if (initialSync) { // add all publications to mongo
                     getLog().info("Running INITIAL sync ...");
@@ -154,8 +161,6 @@ public class DepositionSyncService {
                     } else {
                         if (depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUBMISSION") ||
                                 depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUMMARY_STATS_SUBMISSION")) {
-                            getLog().info("ERROR: Cannot update publication [{}]. Publication under submission: {}", pubmedId, depositionPublication.getStatus());
-                            syncLog.addError(pubmedId, "Cannot update publication. Publication under submission: " + depositionPublication.getStatus());
                             continue;
                         }
 
@@ -183,20 +188,29 @@ public class DepositionSyncService {
             System.out.println(Arrays.toString(sumStatsPubs.toArray()));
         } catch (Exception e) {
             getLog().error("Encountered error: {}", e.getMessage(), e);
-            syncLog.addError("PROCESS", e.toString());
+
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
+            pw.flush();
+            syncLog.addError("PROCESS", sw.toString());
+            pw.close();
         }
 
         depositionSyncEmailService.sendSubmissionImportNotification(syncLog.getLog());
     }
 
     private boolean isValid(Publication publication) {
+        int totalCount = 0;
+        int ineligible = 0;
         for (Study study : publication.getStudies()) {
+            totalCount++;
             Housekeeping housekeeping = study.getHousekeeping();
             if (INELIGIBLE_STATUSES.contains(housekeeping.getCurationStatus().getStatus().toLowerCase())) {
-                return false;
+                ineligible++;
             }
         }
-        return true;
+        return totalCount != ineligible;
     }
 
     private String getInvalidStatus(Publication publication) {
