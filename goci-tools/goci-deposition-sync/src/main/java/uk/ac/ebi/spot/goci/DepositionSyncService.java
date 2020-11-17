@@ -8,10 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
-import uk.ac.ebi.spot.goci.repository.*;
+import uk.ac.ebi.spot.goci.repository.BodyOfWorkRepository;
+import uk.ac.ebi.spot.goci.repository.UnpublishedAncestryRepository;
+import uk.ac.ebi.spot.goci.repository.UnpublishedStudyRepository;
 import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
 import uk.ac.ebi.spot.goci.service.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
+import uk.ac.ebi.spot.goci.service.email.DepositionSyncEmailService;
 
 import java.util.*;
 
@@ -28,13 +31,10 @@ public class DepositionSyncService {
     private static List<String> INELIGIBLE_STATUSES = Arrays.asList(new String[]{
             "curation abandoned",
             "cnv paper",
-            "scientific pilot"
+            "scientific pilot",
+            "permanently unpublished from catalog"
     });
 
-    private final CurationStatus curationComplete;
-    private final Curator levelOneCurator;
-    private final CurationStatus awaitingCuration;
-    private final CurationStatus awaitingLiterature;
     private final DepositionSubmissionService submissionService;
     private final BodyOfWorkRepository bodyOfWorkRepository;
     private final UnpublishedStudyRepository unpublishedRepository;
@@ -42,32 +42,22 @@ public class DepositionSyncService {
     private PublicationService publicationService;
 
     private DepositionPublicationService depositionPublicationService;
-
-    private CurationStatusRepository statusRepository;
-
-    private CuratorRepository curatorRepository;
+    private DepositionSyncEmailService depositionSyncEmailService;
 
     public DepositionSyncService(@Autowired PublicationService publicationService,
                                  @Autowired DepositionPublicationService depositionPublicationService,
-                                 @Autowired CurationStatusRepository statusRepository,
-                                 @Autowired CuratorRepository curatorRepository,
                                  @Autowired DepositionSubmissionService submissionService,
+                                 @Autowired DepositionSyncEmailService depositionSyncEmailService,
                                  @Autowired BodyOfWorkRepository bodyOfWorkRepository,
                                  @Autowired UnpublishedStudyRepository unpublishedRepository,
                                  @Autowired UnpublishedAncestryRepository unpublishedAncestryRepo) {
-        this.curatorRepository = curatorRepository;
-        this.statusRepository = statusRepository;
         this.depositionPublicationService = depositionPublicationService;
         this.publicationService = publicationService;
         this.submissionService = submissionService;
+        this.depositionSyncEmailService = depositionSyncEmailService;
         this.bodyOfWorkRepository = bodyOfWorkRepository;
         this.unpublishedRepository = unpublishedRepository;
         this.unpublishedAncestryRepo = unpublishedAncestryRepo;
-
-        curationComplete = statusRepository.findByStatus("Publish study");
-        levelOneCurator = curatorRepository.findByLastName("Level 1 Curator");
-        awaitingCuration = statusRepository.findByStatus("Awaiting Curation");
-        awaitingLiterature = statusRepository.findByStatus("Awaiting literature");
     }
 
     private boolean isPublished(Publication publication) {
@@ -98,83 +88,105 @@ public class DepositionSyncService {
      * This is the reverse of the Import endpoint, where a submission is received from Curation and added into GOCI.
      */
     public void syncPublications(boolean initialSync) {
-        //read all publications from GOCI
-        List<String> newPubs = new ArrayList<>();
-        List<String> updatePubs = new ArrayList<>();
-        List<String> sumStatsPubs = new ArrayList<>();
-        List<Publication> gociPublications = publicationService.findAll();
-        //if publication not in Deposition, insert
-        Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
-        Map<String, BodyOfWorkDto> bomMap = depositionPublicationService.getAllBodyOfWork();
-        for (Publication p : gociPublications) {
-            String pubmedId = p.getPubmedId();
-            //System.out.println("checking pmid " + pubmedId);
-            DepositionPublication newPublication = createPublication(p);
-            if (newPublication == null) {
-                System.out.println("ERROR: Unable to process publication: " + pubmedId + ". Could not create new publication object.");
-                continue;
-            }
-            DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
+        SyncLog syncLog = new SyncLog();
 
-            boolean isPublished = isPublished(p);
-            boolean isValid = isValid(p);
-            boolean hasSS = addSummaryStatsData(newPublication, p);
-            boolean bomAssoc = isUnpublished(p, bomMap.values());
-            if (!isValid) {
-                getLog().info("Publication NOT ELIGIBLE: {}", pubmedId);
-                getLog().info("Attempting to delete publication from the Deposition App.");
-                depositionPublicationService.deletePublication(depositionPublication);
-                continue;
-            }
-
-            newPublication.setStatus("ELIGIBLE");
-            if (isPublished) {
-                newPublication.setStatus("PUBLISHED");
-            }
-            if (bomAssoc) {
-                newPublication.setStatus("UNDER_SUBMISSION");
-            }
-            if (hasSS) {
-                newPublication.setStatus("PUBLISHED_WITH_SS");
-            }
-            if (initialSync) { // add all publications to mongo
-                getLog().info("Running INITIAL sync ...");
-                if (depositionPublication == null) {
-                    getLog().info("Sending publication [{}] with status: {}", pubmedId, newPublication.getStatus());
-                    depositionPublicationService.addPublication(newPublication);
+        try {
+            //read all publications from GOCI
+            List<String> newPubs = new ArrayList<>();
+            List<String> updatePubs = new ArrayList<>();
+            List<String> sumStatsPubs = new ArrayList<>();
+            List<Publication> gociPublications = publicationService.findAll();
+            //if publication not in Deposition, insert
+            Map<String, DepositionPublication> depositionPublications = depositionPublicationService.getAllPublications();
+            Map<String, BodyOfWorkDto> bomMap = depositionPublicationService.getAllBodyOfWork();
+            for (Publication p : gociPublications) {
+                String pubmedId = p.getPubmedId();
+                //System.out.println("checking pmid " + pubmedId);
+                DepositionPublication newPublication = createPublication(p);
+                if (newPublication == null) {
+                    System.out.println("ERROR: Unable to process publication: " + pubmedId + ". Could not create new publication object.");
+                    continue;
                 }
-            } else {
-                getLog().info("Running NORMAL sync ...");
-                if (depositionPublication == null) { // add new publication
-                    getLog().info("Sending publication [{}] with status: {}", pubmedId, newPublication.getStatus());
-                    depositionPublicationService.addPublication(newPublication);
-                    newPubs.add(newPublication.getPmid());
-                } else {
-                    if (depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUBMISSION") ||
-                            depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUMMARY_STATS_SUBMISSION")) {
-                        getLog().info("ERROR: Cannot update publication [{}]. Publication under submission: {}", pubmedId, depositionPublication.getStatus());
-                        continue;
+                DepositionPublication depositionPublication = depositionPublications.get(pubmedId);
+
+                boolean isPublished = isPublished(p);
+                boolean isValid = isValid(p);
+                boolean hasSS = addSummaryStatsData(newPublication, p);
+                boolean bomAssoc = isUnpublished(p, bomMap.values());
+                if (!isValid) {
+                    getLog().info("Publication NOT ELIGIBLE: {}", pubmedId);
+                    getLog().info("Attempting to delete publication from the Deposition App.");
+                    if (depositionPublication != null) {
+                        if (depositionPublication.getStatus().startsWith("UNDER") || depositionPublication.getStatus().startsWith("CURATION")) {
+                            syncLog.addError(pubmedId, "Publication retired has an incompatible status in Deposition: " + depositionPublication.getStatus());
+                            continue;
+                        }
                     }
 
-                    getLog().info("Updating publication [{}] with status: {}", pubmedId, newPublication.getStatus());
-                    newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
-                    depositionPublicationService.updatePublication(newPublication);
-                    if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED")) {
-                        updatePubs.add(newPublication.getPmid());
+                    syncLog.addRetired(pubmedId, getInvalidStatus(p));
+                    depositionPublicationService.deletePublication(depositionPublication);
+                    continue;
+                }
+
+                newPublication.setStatus("ELIGIBLE");
+                if (isPublished) {
+                    newPublication.setStatus("PUBLISHED");
+                }
+                if (bomAssoc) {
+                    newPublication.setStatus("UNDER_SUBMISSION");
+                }
+                if (hasSS) {
+                    newPublication.setStatus("PUBLISHED_WITH_SS");
+                }
+                if (initialSync) { // add all publications to mongo
+                    getLog().info("Running INITIAL sync ...");
+                    if (depositionPublication == null) {
+                        getLog().info("Sending publication [{}] with status: {}", pubmedId, newPublication.getStatus());
+                        depositionPublicationService.addPublication(newPublication);
+                    }
+                } else {
+                    getLog().info("Running NORMAL sync ...");
+                    if (depositionPublication == null) { // add new publication
+                        getLog().info("Sending publication [{}] with status: {}", pubmedId, newPublication.getStatus());
+                        depositionPublicationService.addPublication(newPublication);
+                        syncLog.addNewPublication(pubmedId, newPublication.getStatus());
+                        newPubs.add(newPublication.getPmid());
                     } else {
-                        if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED_WITH_SS")) {
-                            sumStatsPubs.add(newPublication.getPmid());
+                        if (depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUBMISSION") ||
+                                depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUMMARY_STATS_SUBMISSION")) {
+                            getLog().info("ERROR: Cannot update publication [{}]. Publication under submission: {}", pubmedId, depositionPublication.getStatus());
+                            syncLog.addError(pubmedId, "Cannot update publication. Publication under submission: " + depositionPublication.getStatus());
+                            continue;
+                        }
+
+                        getLog().info("Updating publication [{}] with status: {}", pubmedId, newPublication.getStatus());
+                        newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
+                        depositionPublicationService.updatePublication(newPublication);
+                        if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED")) {
+                            syncLog.addPublishedPublication();
+                            updatePubs.add(newPublication.getPmid());
+                        } else {
+                            if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED_WITH_SS")) {
+                                syncLog.addSSPublication();
+                                sumStatsPubs.add(newPublication.getPmid());
+                            }
                         }
                     }
                 }
             }
+
+            System.out.println("created " + newPubs.size());
+            System.out.println(Arrays.toString(newPubs.toArray()));
+            System.out.println("published " + updatePubs.size());
+            System.out.println(Arrays.toString(updatePubs.toArray()));
+            System.out.println("added sum stats " + sumStatsPubs.size());
+            System.out.println(Arrays.toString(sumStatsPubs.toArray()));
+        } catch (Exception e) {
+            getLog().error("Encountered error: {}", e.getMessage(), e);
+            syncLog.addError("PROCESS", e.toString());
         }
-        System.out.println("created " + newPubs.size());
-        System.out.println(Arrays.toString(newPubs.toArray()));
-        System.out.println("published " + updatePubs.size());
-        System.out.println(Arrays.toString(updatePubs.toArray()));
-        System.out.println("added sum stats " + sumStatsPubs.size());
-        System.out.println(Arrays.toString(sumStatsPubs.toArray()));
+
+        depositionSyncEmailService.sendSubmissionImportNotification(syncLog.getLog());
     }
 
     private boolean isValid(Publication publication) {
@@ -187,6 +199,15 @@ public class DepositionSyncService {
         return true;
     }
 
+    private String getInvalidStatus(Publication publication) {
+        for (Study study : publication.getStudies()) {
+            Housekeeping housekeeping = study.getHousekeeping();
+            if (INELIGIBLE_STATUSES.contains(housekeeping.getCurationStatus().getStatus().toLowerCase())) {
+                return housekeeping.getCurationStatus().getStatus();
+            }
+        }
+        return null;
+    }
 
     /**
      * method to import new studies from deposition that do not have a PubMed ID. We want to keep them separate from
