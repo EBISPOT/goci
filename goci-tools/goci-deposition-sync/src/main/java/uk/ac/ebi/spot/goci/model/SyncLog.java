@@ -7,6 +7,8 @@ public class SyncLog {
 
     private int noNewCreated;
 
+    private int noEligible;
+
     private int noPublished;
 
     private int noSumStats;
@@ -23,6 +25,7 @@ public class SyncLog {
 
     public SyncLog() {
         noNewCreated = 0;
+        noEligible = 0;
         noPublished = 0;
         noSumStats = 0;
         noRetired = 0;
@@ -56,6 +59,10 @@ public class SyncLog {
         noSumStats++;
     }
 
+    public void addEligiblePublication() {
+        noEligible++;
+    }
+
     public String getLog() {
         StringBuffer sb = new StringBuffer();
         sb.append(" - Errors: " + noErrors + "\n");
@@ -86,9 +93,11 @@ public class SyncLog {
             }
 
         }
+        sb.append(" - Eligible publications: " + noEligible + "\n");
         sb.append(" - Published publications: " + noPublished + "\n");
         sb.append(" - Publications published with summary stats: " + noSumStats + "\n");
 
         return sb.toString().trim();
     }
+
 }

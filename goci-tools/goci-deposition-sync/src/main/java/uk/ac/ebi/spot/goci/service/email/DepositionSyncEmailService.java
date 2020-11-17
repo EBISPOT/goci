@@ -27,6 +27,5 @@ public class DepositionSyncEmailService extends GOCIMailService {
         email.setFrom(this.getFrom());
         email.createBody(reportBody);
         sendEmail(email);
-        sendEmail(email);
     }
 }
