@@ -64,18 +64,21 @@ public class DepositionSyncService {
 
     private boolean isPublished(Publication publication) {
         for (Study study : publication.getStudies()) {
-            boolean studyPublished = false;
+//            boolean studyPublished = false;
             Housekeeping housekeeping = study.getHousekeeping();
             if (housekeeping.getIsPublished()) {
+                return true;
+/*
                 studyPublished = true;
             } else if (!housekeeping.getIsPublished() && housekeeping.getCatalogUnpublishDate() != null) {
                 studyPublished = true;
             }
             if (!studyPublished) {
                 return false;
+*/
             }
         }
-        return true;
+        return false;
     }
 
     /**
@@ -115,31 +118,32 @@ public class DepositionSyncService {
                 boolean isValid = isValid(p);
                 boolean hasSS = addSummaryStatsData(newPublication, p);
                 boolean bomAssoc = isUnpublished(p, bomMap.values());
-                if (!isValid) {
-                    getLog().info("Publication NOT ELIGIBLE: {}", pubmedId);
-                    getLog().info("Attempting to delete publication from the Deposition App.");
-                    if (depositionPublication != null) {
-                        if (depositionPublication.getStatus().startsWith("UNDER") || depositionPublication.getStatus().startsWith("CURATION")) {
-                            syncLog.addError(pubmedId, "Publication retired has an incompatible status in Deposition: " + depositionPublication.getStatus());
-                            continue;
-                        }
-
-                        depositionPublicationService.deletePublication(depositionPublication);
-                    }
-
-                    syncLog.addRetired(pubmedId, getInvalidStatus(p));
-                    continue;
-                }
 
                 newPublication.setStatus("ELIGIBLE");
                 if (isPublished) {
                     newPublication.setStatus("PUBLISHED");
+                    if (hasSS) {
+                        newPublication.setStatus("PUBLISHED_WITH_SS");
+                    }
+                } else {
+                    if (!isValid) {
+                        getLog().info("Publication NOT ELIGIBLE: {}", pubmedId);
+                        getLog().info("Attempting to delete publication from the Deposition App.");
+                        if (depositionPublication != null) {
+                            if (depositionPublication.getStatus().startsWith("UNDER") || depositionPublication.getStatus().startsWith("CURATION")) {
+                                syncLog.addError(pubmedId, "Publication retired has an incompatible status in Deposition: " + depositionPublication.getStatus());
+                                continue;
+                            }
+
+                            depositionPublicationService.deletePublication(depositionPublication);
+                        }
+
+                        syncLog.addRetired(pubmedId, getInvalidStatus(p));
+                        continue;
+                    }
                 }
                 if (bomAssoc) {
                     newPublication.setStatus("UNDER_SUBMISSION");
-                }
-                if (hasSS) {
-                    newPublication.setStatus("PUBLISHED_WITH_SS");
                 }
                 if (initialSync) { // add all publications to mongo
                     getLog().info("Running INITIAL sync ...");
@@ -197,13 +201,16 @@ public class DepositionSyncService {
     }
 
     private boolean isValid(Publication publication) {
+        int totalCount = 0;
+        int ineligible = 0;
         for (Study study : publication.getStudies()) {
+            totalCount++;
             Housekeeping housekeeping = study.getHousekeeping();
             if (INELIGIBLE_STATUSES.contains(housekeeping.getCurationStatus().getStatus().toLowerCase())) {
-                return false;
+                ineligible++;
             }
         }
-        return true;
+        return totalCount != ineligible;
     }
 
     private String getInvalidStatus(Publication publication) {
