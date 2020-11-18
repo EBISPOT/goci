@@ -125,8 +125,8 @@ public class DepositionSyncService {
                 } else {
                     if (!isValid) {
                         getLog().info("Publication NOT ELIGIBLE: {}", pubmedId);
-                        getLog().info("Attempting to delete publication from the Deposition App.");
                         if (depositionPublication != null) {
+                            getLog().info("Attempting to delete publication from the Deposition App.");
                             if (depositionPublication.getStatus().startsWith("UNDER") || depositionPublication.getStatus().startsWith("CURATION")) {
                                 syncLog.addError(pubmedId, "Publication retired has an incompatible status in Deposition: " + depositionPublication.getStatus());
                                 continue;
@@ -143,15 +143,13 @@ public class DepositionSyncService {
                     newPublication.setStatus("UNDER_SUBMISSION");
                 }
                 if (initialSync) { // add all publications to mongo
-                    getLog().info("Running INITIAL sync ...");
                     if (depositionPublication == null) {
                         getLog().info("Sending publication [{}] with status: {}", pubmedId, newPublication.getStatus());
                         depositionPublicationService.addPublication(newPublication);
                     }
                 } else {
-                    getLog().info("Running NORMAL sync ...");
                     if (depositionPublication == null) { // add new publication
-                        getLog().info("Sending publication [{}] with status: {}", pubmedId, newPublication.getStatus());
+                        getLog().info("Sending new publication [{}] with status: {}", pubmedId, newPublication.getStatus());
                         depositionPublicationService.addPublication(newPublication);
                         syncLog.addNewPublication(pubmedId, newPublication.getStatus());
                     } else {
@@ -161,7 +159,7 @@ public class DepositionSyncService {
                         }
 
                         if (!newPublication.getStatus().equalsIgnoreCase(depositionPublication.getStatus())) {
-                            getLog().info("Updating publication [{}] with status: {}", pubmedId, newPublication.getStatus());
+                            getLog().info("[Status change] Updating publication [{}] with status: {}", pubmedId, newPublication.getStatus());
                             newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                             depositionPublicationService.updatePublication(newPublication);
                             if (newPublication.getStatus().equalsIgnoreCase("PUBLISHED")) {
@@ -175,6 +173,8 @@ public class DepositionSyncService {
                             }
                         } else {
                             if (hasSS) {
+                                getLog().info("[Same status] Updating publication [{}] with status: {}", pubmedId, newPublication.getStatus());
+                                newPublication.setFirstAuthor(p.getFirstAuthor().getFullnameStandard());
                                 depositionPublicationService.updatePublication(newPublication);
                             }
                         }
