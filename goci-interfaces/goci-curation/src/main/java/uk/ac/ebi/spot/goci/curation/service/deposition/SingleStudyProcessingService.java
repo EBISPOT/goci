@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service.deposition;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,7 @@ public class SingleStudyProcessingService {
     @Autowired
     private StudyExtensionRepository studyExtensionRepository;
 
-    public Study processStudy(DepositionStudyDto studyDto, Publication publication) {
+    public Pair<Study, List<EfoTrait>> processStudy(DepositionStudyDto studyDto, Publication publication) {
         Curator levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         CurationStatus levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
 
@@ -150,7 +151,7 @@ public class SingleStudyProcessingService {
         study.setStudyExtension(studyExtension);
         studyService.save(study);
 
-        return study;
+        return Pair.of(study, efoTraitList);
     }
 
 }
