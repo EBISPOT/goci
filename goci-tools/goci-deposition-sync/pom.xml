@@ -38,6 +38,10 @@
             <groupId>uk.ac.ebi.spot</groupId>
             <artifactId>goci-repository</artifactId>
         </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-email-service</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>

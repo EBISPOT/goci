@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.service.deposition;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +71,11 @@ public class StudiesProcessingService {
             studyNote.append("created " + studyTag + "\n");
 
             Study study;
+            List<EfoTrait> efoTraits;
             try {
-                study = singleStudyProcessingService.processStudy(studyDto, publication);
+                Pair<Study, List<EfoTrait>> pair = singleStudyProcessingService.processStudy(studyDto, publication);
+                study = pair.getLeft();
+                efoTraits = pair.getRight();
             } catch (Exception e) {
                 getLog().error("Unable to create study [{} | {}]: {}", studyDto.getStudyTag(), studyDto.getAccession(), e.getMessage(), e);
                 importLog.addError("Unable to create study [" + studyDto.getStudyTag() + " | " + studyDto.getAccession() + "]: " + e.getMessage(), "Creating study [" + studyDto.getAccession() + "]");
@@ -88,7 +92,7 @@ public class StudiesProcessingService {
             publicationService.save(publication);
             if (associations != null) {
                 getLog().info("Found {} associations in the submission retrieved from the Deposition App.", associations.size());
-                studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study, associations, importLog));
+                studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study, associations, efoTraits, importLog));
             }
             if (samples != null) {
                 getLog().info("Found {} samples in the submission retrieved from the Deposition App.", samples.size());

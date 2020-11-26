@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,26 +58,13 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     @Override
     public void addPublication(DepositionPublication depositionPublication) {
         String url = depositionIngestUri + "/publications";
-        try {
-            String message = mapper.writeValueAsString(depositionPublication);
-            System.out.println(message);
-            DepositionPublication response = template.postForObject(url, depositionPublication, DepositionPublication.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        template.postForObject(url, depositionPublication, DepositionPublication.class);
     }
 
     @Override
     public void updatePublication(DepositionPublication depositionPublication) {
         String url = depositionIngestUri + "/publications/" + depositionPublication.getPmid();
-        try {
-            String message = mapper.writeValueAsString(depositionPublication);
-            System.out.println(message);
-            template.put(url, depositionPublication);
-            System.out.println("updated " + depositionPublication);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
+        template.put(url, depositionPublication);
     }
 
     @Override
