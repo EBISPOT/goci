@@ -93,6 +93,12 @@ public class Publication {
     @Transient
     private boolean activeSubmission = false;
 
+    @Transient
+    private boolean openTargets = false;
+
+    @Transient
+    private boolean userRequested = false;
+
     // JPA no-args constructor
     public Publication() {
     }
@@ -189,4 +195,20 @@ public class Publication {
     public boolean getActiveSubmission(){ return activeSubmission;}
 
     public void setActiveSubmission(boolean activeSubmission){this.activeSubmission = activeSubmission;}
+
+    public boolean isOpenTargets() {
+        return openTargets;
+    }
+
+    public void setOpenTargets(boolean openTargets) {
+        this.openTargets = openTargets;
+    }
+
+    public boolean isUserRequested() {
+        return userRequested;
+    }
+
+    public void setUserRequested(boolean userRequested) {
+        this.userRequested = userRequested;
+    }
 }
