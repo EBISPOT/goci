@@ -23,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
+import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
 import uk.ac.ebi.spot.goci.curation.service.*;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.model.*;
@@ -166,16 +167,12 @@ public class PublicationController {
     public String viewPublication(Model model, @PathVariable Long publicationId) {
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
         Set<String> studiesWithFiles = new HashSet<>();
-        /*
-        TODO: Un-comment before commit!!
-
-        for(Study study: publication.getStudies()){
+        for (Study study : publication.getStudies()) {
             List<StudyFileSummary> studyFiles = studyFileService.getStudyFiles(study.getId());
-            if(studyFiles != null && studyFiles.size() != 0){
+            if (studyFiles != null && studyFiles.size() != 0) {
                 studiesWithFiles.add(study.getId().toString());
             }
         }
-        */
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         if (pubmedMap.containsKey(publication.getPubmedId())) {
             publication.setActiveSubmission(true);
