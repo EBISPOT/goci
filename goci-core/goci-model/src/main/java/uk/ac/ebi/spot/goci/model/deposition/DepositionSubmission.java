@@ -2,13 +2,11 @@ package uk.ac.ebi.spot.goci.model.deposition;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -56,6 +54,9 @@ public class DepositionSubmission {
 
     @JsonProperty("date_submitted")
     private LocalDate dateSubmitted;
+
+    @JsonProperty("metadata")
+    private DepositionMetadataDto metadata;
 
     @JsonProperty("created")
     private DepositionProvenance created;

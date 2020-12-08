@@ -159,7 +159,7 @@ public class SubmissionController {
         List<String> errorMessages = new ArrayList<>();
         try {
             Map<String, Submission> submissionList = submissionService.getSubmissions();
-            DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionID);
+            DepositionSubmission depositionSubmission = submissionService.getSubmissionForImport(submissionID);
             SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
 
             boolean importInProgress = submissionImportProgressService.importInProgress(depositionSubmission.getSubmissionId());

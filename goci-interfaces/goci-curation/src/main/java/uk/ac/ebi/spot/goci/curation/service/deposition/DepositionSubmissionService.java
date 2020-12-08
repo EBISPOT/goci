@@ -34,6 +34,9 @@ public class DepositionSubmissionService {
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
 
+    @Value("${deposition.ingest.uri.v2}")
+    private String depositionIngestURLV2;
+
     @Value("${deposition.token}")
     private String depositionToken;
 
@@ -94,7 +97,24 @@ public class DepositionSubmissionService {
                         params);
 
         return submission;
+    }
 
+    public DepositionSubmission getSubmissionForImport(String submissionID) {
+        Map<String, String> params = new HashMap<>();
+        params.put("submissionID", submissionID);
+        DepositionSubmission submission =
+                template.getForObject(depositionIngestURLV2 + "/submissions/{submissionID}", DepositionSubmission.class,
+                        params);
+
+        return submission;
+    }
+
+    public List<DepositionStudyDto> getStudiesForSubmission(String submissionID, int page) {
+        Map<String, String> params = new HashMap<>();
+        params.put("submissionId", submissionID);
+        params.put("page", Integer.toString(page));
+        DepositionStudyDto[] studies = template.getForObject(depositionIngestURLV2 + "/studies?submissionId={submissionId}&page={page}", DepositionStudyDto[].class, params);
+        return Arrays.asList(studies);
     }
 
     public DepositionProvenance getProvenance(String pmid) {

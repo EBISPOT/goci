@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import uk.ac.ebi.spot.goci.model.*;
+import uk.ac.ebi.spot.goci.model.Study;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -68,9 +70,19 @@ public class DepositionStudyDto {
     @JsonProperty("cohort")
     private String cohort;
 
+    @JsonProperty("associations")
+    private List<DepositionAssociationDto> associations;
+
+    @JsonProperty("samples")
+    private List<DepositionSampleDto> samples;
+
+    @JsonProperty("notes")
+    private List<DepositionNoteDto> notes;
+
     @JsonProperty("cohort_id")
     private String cohortId;
-    public Study buildStudy(){
+
+    public Study buildStudy() {
         Study study = new Study();
         study.setStudyTag(studyTag);
         study.setAccessionId(accession);

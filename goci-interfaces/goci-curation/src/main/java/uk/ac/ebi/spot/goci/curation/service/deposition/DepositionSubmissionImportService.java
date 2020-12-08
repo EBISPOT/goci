@@ -88,7 +88,13 @@ public class DepositionSubmissionImportService {
         List<Long> dbStudyIds = dbStudies.stream().map(Study::getId).collect(Collectors.toList());
         getLog().info("[{}] Found {} studies: {}", submissionID, dbStudies.size(), dbStudyIds);
 
-        List<DepositionStudyDto> studies = depositionSubmission.getStudies();
+//        List<DepositionStudyDto> studies = depositionSubmission.getStudies();
+        /**
+         * TODO: Retrieve studies via new method
+         */
+        List<DepositionStudyDto> studies = new ArrayList<>();
+
+
         List<String> gcsts = studies.stream().map(DepositionStudyDto::getAccession).collect(Collectors.toList());
         getLog().info("[{}] Found {} studies in the submission retrieved from the Deposition App: {}", submissionID, studies.size(), gcsts);
 
