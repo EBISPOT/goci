@@ -29,7 +29,7 @@ $(document).ready(function () {
     });
 
     $('#changeOpenTargets').click(function () {
-        $('#changeOpenTargets').prop( "disabled", true );
+        $(':input[type="submit"]').prop('disabled', true);
         var url = window.location.pathname;
         var pubmedId = url.substring(url.lastIndexOf('/') + 1);
         $('#loadingResults').show();
@@ -49,7 +49,7 @@ $(document).ready(function () {
     $('#changeUserRequested').click(function () {
         var url = window.location.pathname;
         var pubmedId = url.substring(url.lastIndexOf('/') + 1);
-        $('#changeUserRequested').prop( "disabled", true );
+        $(':input[type="submit"]').prop('disabled', true);
         $('#loadingResults').show();
         $.ajax({
             type: "PUT",
