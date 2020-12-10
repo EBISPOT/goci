@@ -28,6 +28,44 @@ $(document).ready(function () {
         $('.table-checkbox').prop("checked", $('#select_all').prop("checked"));
     });
 
+    $('#changeOpenTargets').click(function () {
+        $(':input[type="submit"]').prop('disabled', true);
+        var url = window.location.pathname;
+        var pubmedId = url.substring(url.lastIndexOf('/') + 1);
+        $('#loadingResults').show();
+        $.ajax({
+            type: "PUT",
+            url: pubmedId + "/changeOpenTargets",
+            contentType: 'application/json',
+            //Response
+            success: function (data) {
+                $('#changeOpenTargets').prop( "disabled", false );
+                $('#loadingResults').hide();
+                //Reload page
+                location.reload();
+            }
+        })
+    });
+    $('#changeUserRequested').click(function () {
+        var url = window.location.pathname;
+        var pubmedId = url.substring(url.lastIndexOf('/') + 1);
+        $(':input[type="submit"]').prop('disabled', true);
+        $('#loadingResults').show();
+        $.ajax({
+            type: "PUT",
+            url: pubmedId + "/changeUserRequested",
+            contentType: 'application/json',
+            //Response
+            success: function (data) {
+                $('#changeUserRequested').prop( "disabled", false );
+                $('#loadingResults').hide();
+                //Reload page
+                location.reload();
+            }
+        })
+    });
+
+
     $('#assignStatus').click(function () {
         $('#assignStatus').prop( "disabled", true );
         $('#loadingResults').show();
@@ -254,7 +292,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             //Response
             success: function (data) {
-                $('#deleteStudies').prop( "disabled", false );
+                $('#addSumStats').prop( "disabled", false );
                 $('#loadingResults').hide();
                 var msg = '';
                 for (let [key, value] of Object.entries(data)) {
@@ -266,6 +304,36 @@ $(document).ready(function () {
             }
         })
     });
+    $('#approveAssociations').click(function () {
+        $('#loadingResults').show();
+        $('#approveAssociations').prop( "disabled", true );
+        var data = {}
+        data.ids = []
+        $('.table-checkbox:checked').each(function () {
+            var v = $(this).attr('id')
+            v = this.id
+            data.ids.push(v)
+        })
+        $.ajax({
+            type: "POST",
+            url: "approve_associations",
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            //Response
+            success: function (data) {
+                $('#approveAssociations').prop( "disabled", false );
+                $('#loadingResults').hide();
+                var msg = '';
+                for (let [key, value] of Object.entries(data)) {
+                    msg += value + '\n';
+                }
+                alert(msg);
+                //Reload page
+                location.reload();
+            }
+        })
+    });
+
     // turn the element to select2 select style
     $('#curationStatus').select2({
         placeholder: "Select a Curation Status",

@@ -1,25 +1,26 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import org.apache.commons.text.similarity.*;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.text.similarity.CosineDistance;
+import org.apache.commons.text.similarity.JaroWinklerSimilarity;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
@@ -32,7 +33,6 @@ import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
 import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
@@ -75,7 +75,8 @@ public class PublicationController {
     private DepositionSubmissionService submissionService;
     @Autowired
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
-
+    @Autowired
+    private BulkOperationsService bulkOperationsService;
 
     @RequestMapping(value = "/match", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public @ResponseBody
@@ -87,7 +88,7 @@ public class PublicationController {
         EuropePMCData europePMCResult = europepmcPubMedSearchService.createStudyByPubmed(pubmedId);
         Map<String, String> searchProps = new HashMap<>();
         List<Map<String, String>> data = new ArrayList<>();
-        if(!europePMCResult.getError()) {
+        if (!europePMCResult.getError()) {
             try {
                 searchProps.put("pubMedID", europePMCResult.getPublication().getPubmedId());
                 searchProps.put("author", europePMCResult.getFirstAuthor().getFullname());
@@ -109,11 +110,11 @@ public class PublicationController {
                     props.put("author", submission.getAuthor());
                     props.put("title", submission.getTitle());
                     props.put("doi", submission.getDoi());
-                    if(matchString.equals("")){
+                    if (matchString.equals("")) {
                         props.put("cosScore", new Integer(0).toString());
                         props.put("levDistance", new Integer(0).toString());
                         props.put("jwScore", new Integer(0).toString());
-                    }else{
+                    } else {
                         Double score = cosScore.apply(searchString, matchString) * 100;
                         Integer ldScore = levenshteinDistance.apply(searchString, matchString);
                         Double jwScore = jwDistance.apply(searchString, matchString) * 100;
@@ -127,7 +128,7 @@ public class PublicationController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{
+        } else {
             results.put("error", "ID " + pubmedId + " not found");
         }
         results.put("data", data);
@@ -135,47 +136,51 @@ public class PublicationController {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
-        return new ResponseEntity<>(results,responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(results, responseHeaders, HttpStatus.OK);
     }
 
     private CharSequence buildSearch(String author, String title) throws IOException {
         StringBuffer result = new StringBuffer();
         EnglishAnalyzer filter = new EnglishAnalyzer();
-        if(author == null){
+        if (author == null) {
             author = "";
         }
-        if(title == null){
+        if (title == null) {
             title = "";
         }
         String search = author.toLowerCase() + " " + title.toLowerCase();
         TokenStream stream = filter.tokenStream("", search.toString());
         stream.reset();
         CharTermAttribute term = stream.addAttribute(CharTermAttribute.class);
-        while(stream.incrementToken()){
+        while (stream.incrementToken()) {
             result.append(term.toString()).append(" ");
         }
         stream.close();
         return result.toString().trim();
     }
-    private Integer normalizeScore(int score){
+
+    private Integer normalizeScore(int score) {
         return 100 - score > 0 ? 100 - score : 0;
     }
+
     @RequestMapping(value = "/{publicationId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewPublication(Model model, @PathVariable Long publicationId) {
-
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
         Set<String> studiesWithFiles = new HashSet<>();
-        for(Study study: publication.getStudies()){
+        for (Study study : publication.getStudies()) {
             List<StudyFileSummary> studyFiles = studyFileService.getStudyFiles(study.getId());
-            if(studyFiles != null && studyFiles.size() != 0){
+            if (studyFiles != null && studyFiles.size() != 0) {
                 studiesWithFiles.add(study.getId().toString());
             }
         }
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
-            if(pubmedMap.containsKey(publication.getPubmedId())){
-                publication.setActiveSubmission(true);
-                publication.setSubmissionId(pubmedMap.get(publication.getPubmedId()));
-            }
+        if (pubmedMap.containsKey(publication.getPubmedId())) {
+            publication.setActiveSubmission(true);
+            publication.setSubmissionId(pubmedMap.get(publication.getPubmedId()));
+        }
+        Pair<Boolean, Boolean> flagStatus = bulkOperationsService.getFlagStatus(publication);
+        publication.setOpenTargets(flagStatus.getLeft());
+        publication.setUserRequested(flagStatus.getRight());
 
         model.addAttribute("publication", publication);
         model.addAttribute("studyFiles", studiesWithFiles);
@@ -206,6 +211,28 @@ public class PublicationController {
         return curatorRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "lastName").ignoreCase()));
     }
 
+    @RequestMapping(value = "/{publicationId}/changeOpenTargets",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.PUT)
+    public @ResponseBody
+    Map<String, String> changeOpenTargets(@PathVariable Long publicationId, HttpServletRequest request) {
+        SecureUser user = userDetailsService.getUserFromRequest(request);
+        Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
+        bulkOperationsService.flipOpenTargets(publication, user);
+        return new HashMap<>();
+    }
+
+    @RequestMapping(value = "/{publicationId}/changeUserRequested",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.PUT)
+    public @ResponseBody
+    Map<String, String> changeUserRequested(@PathVariable Long publicationId, HttpServletRequest request) {
+        SecureUser user = userDetailsService.getUserFromRequest(request);
+        Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
+        bulkOperationsService.flipUserRequested(publication, user);
+        return new HashMap<>();
+    }
+
     @RequestMapping(value = "/status_update",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST)
@@ -219,13 +246,13 @@ public class PublicationController {
             StatusAssignment status = new StatusAssignment();
             status.setStatusId(jsonObject.get("status").asLong());
             // Find the study and the curator user wishes to assign
-           ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
-           studyIds.forEach(node -> {
-               Long studyId = node.asLong();
-               Study study = studyRepository.getOne(studyId);
-               studyOperationsService.assignStudyStatus(study, status, user);
-               result.put(studyId.toString(), "Updated");
-           });
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                studyOperationsService.assignStudyStatus(study, status, user);
+                result.put(studyId.toString(), "Updated");
+            });
             // Return success message to view
 //            message = "Successfully updated " + studyIds.size() + " study statuses";
         } catch (IOException e) {
@@ -267,7 +294,7 @@ public class PublicationController {
             method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> updateBackgroundTraits(@RequestBody String data,
-                                              HttpServletRequest request) {
+                                               HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
             SecureUser user = userDetailsService.getUserFromRequest(request);
@@ -296,7 +323,7 @@ public class PublicationController {
             method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> updateDiseaseTraits(@RequestBody String data,
-                                              HttpServletRequest request) {
+                                            HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
             SecureUser user = userDetailsService.getUserFromRequest(request);
@@ -325,7 +352,7 @@ public class PublicationController {
             method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> updateEfoTraits(@RequestBody String data,
-                                           HttpServletRequest request) {
+                                        HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
             SecureUser user = userDetailsService.getUserFromRequest(request);
@@ -359,7 +386,7 @@ public class PublicationController {
             method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> updateBackgroundEfoTraits(@RequestBody String data,
-                                        HttpServletRequest request) {
+                                                  HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
             SecureUser user = userDetailsService.getUserFromRequest(request);
@@ -393,7 +420,7 @@ public class PublicationController {
             method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> deleteStudies(@RequestBody String data,
-                                                  HttpServletRequest request) {
+                                      HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
             SecureUser user = userDetailsService.getUserFromRequest(request);
@@ -422,7 +449,7 @@ public class PublicationController {
             method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> addSummaryStats(@RequestBody String data,
-                                      HttpServletRequest request) {
+                                        HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
             SecureUser user = userDetailsService.getUserFromRequest(request);
@@ -444,12 +471,38 @@ public class PublicationController {
         return result;
     }
 
+    @RequestMapping(value = "/approve_associations",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            method = RequestMethod.POST)
+    public @ResponseBody
+    Map<String, String> approveAssociations(@RequestBody String data,
+                                            HttpServletRequest request) {
+        Map<String, String> result = new HashMap<>();
+        List<String> allMessages = new ArrayList<>();
+        try {
+            SecureUser user = userDetailsService.getUserFromRequest(request);
+            JsonNode jsonObject = objectMapper.readTree(data);
+            // Find the study and the curator user wishes to assign
+            ArrayNode studyIds = (ArrayNode) jsonObject.get("ids");
+            studyIds.forEach(node -> {
+                Long studyId = node.asLong();
+                Study study = studyRepository.getOne(studyId);
+                List<String> outcome = bulkOperationsService.approveAssociations(study, user);
+                allMessages.addAll(outcome);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        result.put("ERRORS", StringUtils.join(allMessages, "\n"));
+        return result;
+    }
+
     @RequestMapping(value = "/update_genotyping_technology",
             produces = MediaType.APPLICATION_JSON_VALUE,
             method = RequestMethod.POST)
     public @ResponseBody
     Map<String, String> updateGenotypingTechnology(@RequestBody String data,
-                                                  HttpServletRequest request) {
+                                                   HttpServletRequest request) {
         Map<String, String> result = new HashMap<>();
         try {
             SecureUser user = userDetailsService.getUserFromRequest(request);
