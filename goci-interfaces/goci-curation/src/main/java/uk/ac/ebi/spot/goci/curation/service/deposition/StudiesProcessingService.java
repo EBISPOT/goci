@@ -10,6 +10,7 @@ import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.repository.NoteRepository;
 import uk.ac.ebi.spot.goci.repository.NoteSubjectRepository;
+import uk.ac.ebi.spot.goci.service.EnsemblRestTemplateService;
 import uk.ac.ebi.spot.goci.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 public class StudiesProcessingService {
@@ -56,72 +58,114 @@ public class StudiesProcessingService {
     @Autowired
     private DepositionAssociationService depositionAssociationService;
 
-    public boolean processStudies(DepositionSubmission depositionSubmission, SecureUser currentUser, Publication publication, Curator curator, ImportLog importLog) {
-        for (DepositionStudyDto studyDto : depositionSubmission.getStudies()) {
-            getLog().info("[{}] Processing study: {} | {}.", depositionSubmission.getSubmissionId(), studyDto.getStudyTag(), studyDto.getAccession());
+    @Autowired
+    private DepositionStudiesImportService depositionStudiesImportService;
 
-            ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating study [" + studyDto.getAccession() + "]", depositionSubmission.getSubmissionId()));
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
-            List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
-            List<DepositionSampleDto> samples = depositionSubmission.getSamples();
+    @Autowired
+    private EnsemblRestTemplateService ensemblRestTemplateService;
 
-            List<DepositionNoteDto> notes = depositionSubmission.getNotes();
-            String studyTag = studyDto.getStudyTag();
-            studyNote.append("created " + studyTag + "\n");
+    public boolean processStudies(String submissionId, SecureUser currentUser, Publication publication, Curator curator, ImportLog importLog) {
+        Stream<SubmissionImportStudy> submissionImportStudyStream = depositionStudiesImportService.streamBySubmissionId(submissionId);
+        submissionImportStudyStream.forEach(submissionImportStudy -> process(submissionId, submissionImportStudy, currentUser, publication, curator, importLog));
+        submissionImportStudyStream.close();
 
-            Study study;
-            List<EfoTrait> efoTraits;
-            try {
-                Pair<Study, List<EfoTrait>> pair = singleStudyProcessingService.processStudy(studyDto, publication);
-                study = pair.getLeft();
-                efoTraits = pair.getRight();
-            } catch (Exception e) {
-                getLog().error("Unable to create study [{} | {}]: {}", studyDto.getStudyTag(), studyDto.getAccession(), e.getMessage(), e);
-                importLog.addError("Unable to create study [" + studyDto.getStudyTag() + " | " + studyDto.getAccession() + "]: " + e.getMessage(), "Creating study [" + studyDto.getAccession() + "]");
-                importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
-                return false;
-            }
-            Collection<Study> pubStudies = publication.getStudies();
-            if (pubStudies == null) {
-                pubStudies = new ArrayList<>();
-            }
-            pubStudies.add(study);
-            publication.setStudies(pubStudies);
-            studyService.save(study);
-            publicationService.save(publication);
-            if (associations != null) {
-                getLog().info("Found {} associations in the submission retrieved from the Deposition App.", associations.size());
-                studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study, associations, efoTraits, importLog));
-            }
-            if (samples != null) {
-                getLog().info("Found {} samples in the submission retrieved from the Deposition App.", samples.size());
-                studyNote.append(depositionSampleService.saveSamples(studyTag, study, samples, importLog));
-            }
+        long count = depositionStudiesImportService.countUnsuccessful(submissionId);
+        getLog().info("Found {} unsuccessfully processed studies", count);
+        return count == 0;
+    }
 
-            getLog().info("Creating events ...");
-            Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " + "creation");
-            List<Event> events = new ArrayList<>();
-            events.add(event);
-            study.setEvents(events);
-            getLog().info("Adding notes ...");
-            this.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION", curator,
-                    "Import study creation", currentUser);
-            if (notes != null) {
-                //find notes in study
-                for (DepositionNoteDto noteDto : notes) {
-                    if (noteDto.getStudyTag().equals(studyTag)) {
-                        this.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(),
-                                curator, noteDto.getNoteSubject(), currentUser);
-                    }
-                }
-            }
-            studyService.save(study);
-            importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+    private void process(String submissionId, SubmissionImportStudy submissionImportStudy, SecureUser currentUser, Publication publication, Curator curator, ImportLog importLog) {
+        submissionImportStudy = depositionStudiesImportService.enrich(submissionImportStudy);
+        if (submissionImportStudy.getDepositionStudyDto() == null) {
+            getLog().error("Unable to process study [{}] - to study object found.", submissionImportStudy.getId());
+            ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating study from proxy [" + submissionImportStudy.getId() + "]", submissionId));
+            importLog.addError("Unable to process study [" + submissionImportStudy.getId() + "] - to study object found.", "Creating study from proxy [" + submissionImportStudy.getId() + "]");
+            importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+
+            submissionImportStudy.setFinalized(true);
+            submissionImportStudy.setSuccess(false);
+            depositionStudiesImportService.save(submissionImportStudy);
+            return;
         }
 
-        getLog().info("All done ...");
-        return true;
+        DepositionStudyDto studyDto = submissionImportStudy.getDepositionStudyDto();
+        getLog().info("[{}] Processing study: {} | {}.", submissionId, studyDto.getStudyTag(), studyDto.getAccession());
+        ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating study [" + studyDto.getAccession() + "]", submissionId));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
+
+        String studyTag = studyDto.getStudyTag();
+        studyNote.append("created " + studyTag + "\n");
+
+        Study study;
+        List<EfoTrait> efoTraits;
+        try {
+            Pair<Study, List<EfoTrait>> pair = singleStudyProcessingService.processStudy(studyDto, publication);
+            study = pair.getLeft();
+            efoTraits = pair.getRight();
+        } catch (Exception e) {
+            getLog().error("Unable to create study [{} | {}]: {}", studyDto.getStudyTag(), studyDto.getAccession(), e.getMessage(), e);
+            importLog.addError("Unable to create study [" + studyDto.getStudyTag() + " | " + studyDto.getAccession() + "]: " + e.getMessage(), "Creating study [" + studyDto.getAccession() + "]");
+            importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+
+            submissionImportStudy.setFinalized(true);
+            submissionImportStudy.setSuccess(false);
+            depositionStudiesImportService.save(submissionImportStudy);
+            return;
+        }
+        Collection<Study> pubStudies = publication.getStudies();
+        if (pubStudies == null) {
+            pubStudies = new ArrayList<>();
+        }
+        pubStudies.add(study);
+        publication.setStudies(pubStudies);
+        studyService.save(study);
+        publicationService.save(publication);
+        if (studyDto.getAssociations() != null) {
+            getLog().info("Found {} associations in the submission retrieved from the Deposition App.", studyDto.getAssociations().size());
+            String eRelease = ensemblRestTemplateService.getRelease();
+            for (DepositionAssociationDto associationDto : studyDto.getAssociations()) {
+                Pair<Boolean, String> pair = depositionAssociationService.saveAssociation(currentUser, study, associationDto, efoTraits, eRelease, importLog);
+                if (pair.getLeft()) {
+                    studyNote.append(pair.getRight() + "\n");
+                } else {
+                    submissionImportStudy.setFinalized(true);
+                    submissionImportStudy.setSuccess(false);
+                    depositionStudiesImportService.save(submissionImportStudy);
+                    return;
+                }
+            }
+        }
+        if (studyDto.getSamples() != null) {
+            getLog().info("Found {} samples in the submission retrieved from the Deposition App.", studyDto.getSamples().size());
+            for (DepositionSampleDto sampleDto : studyDto.getSamples()) {
+                studyNote.append(depositionSampleService.saveSample(study, sampleDto, importLog) + "\n");
+            }
+        }
+
+        getLog().info("Creating events ...");
+        Event event = eventOperationsService.createEvent("STUDY_CREATION", currentUser, "Import study " + "creation");
+        List<Event> events = new ArrayList<>();
+        events.add(event);
+        study.setEvents(events);
+        getLog().info("Adding notes ...");
+        this.addStudyNote(study, studyDto.getStudyTag(), studyNote.toString(), "STUDY_CREATION", curator,
+                "Import study creation", currentUser);
+        if (studyDto.getNotes() != null) {
+            //find notes in study
+            for (DepositionNoteDto noteDto : studyDto.getNotes()) {
+                if (noteDto.getStudyTag().equals(studyTag)) {
+                    this.addStudyNote(study, studyDto.getStudyTag(), noteDto.getNote(), noteDto.getStatus(),
+                            curator, noteDto.getNoteSubject(), currentUser);
+                }
+            }
+        }
+        studyService.save(study);
+        importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+
+        submissionImportStudy.setFinalized(true);
+        submissionImportStudy.setSuccess(true);
+        depositionStudiesImportService.save(submissionImportStudy);
     }
 
     private void addStudyNote(Study study, String studyTag, String noteText, String noteStatus, Curator noteCurator,

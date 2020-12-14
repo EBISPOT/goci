@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uk.ac.ebi.spot.goci.model.Study;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -15,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionStudyDto {
+public class DepositionStudyDto implements Serializable {
     @JsonProperty("study_tag")
     private String studyTag;
 

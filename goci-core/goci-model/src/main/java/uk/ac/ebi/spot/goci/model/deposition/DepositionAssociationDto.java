@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
@@ -14,7 +15,8 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionAssociationDto {
+public class DepositionAssociationDto implements Serializable {
+
     @JsonProperty("study_tag")
     private String studyTag;
 

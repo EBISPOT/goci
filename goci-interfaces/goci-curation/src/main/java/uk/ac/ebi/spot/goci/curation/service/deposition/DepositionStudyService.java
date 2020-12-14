@@ -11,6 +11,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
+import uk.ac.ebi.spot.goci.model.deposition.SubmissionImportStudy;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.EventOperationsService;
 import uk.ac.ebi.spot.goci.service.StudyService;
@@ -18,6 +19,7 @@ import uk.ac.ebi.spot.goci.service.StudyService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Component
 public class DepositionStudyService {
@@ -58,7 +60,8 @@ public class DepositionStudyService {
     StudyExtensionRepository studyExtensionRepository;
     @Autowired
     EventOperationsService eventOperationsService;
-
+    @Autowired
+    DepositionStudiesImportService depositionStudiesImportService;
 
     public void publishSummaryStats(Study study, String studyTag) {
         study.setFullPvalueSet(true);
@@ -68,41 +71,49 @@ public class DepositionStudyService {
         studyService.save(study);
     }
 
-    public Pair<Boolean, List<String>> publishSummaryStats(Collection<DepositionStudyDto> studyDtos, Collection<Study> dbStudies) {
-        getLog().info("Publishing summary stats: {} | {}", studyDtos.size(), dbStudies.size());
+    public List<String> publishSummaryStats(String submissionID, Collection<Study> dbStudies) {
+        getLog().info("Publishing summary stats: {} | {}", submissionID, dbStudies.size());
         List<String> errors = new ArrayList<>();
-        boolean outcome = true;
         List<Long> studyIds = new ArrayList<>();
         for (Study study : dbStudies) {
             studyIds.add(study.getId());
         }
+        List<Long> markedForDeletion = new ArrayList<>();
+        List<Long> studiesDone = new ArrayList<>();
+
+        Stream<SubmissionImportStudy> submissionImportStudyStream = depositionStudiesImportService.streamBySubmissionId(submissionID);
+        submissionImportStudyStream.forEach(submissionImportStudy -> processStudy(submissionImportStudy, studyIds, studiesDone, errors, markedForDeletion));
+        submissionImportStudyStream.close();
+        getLog().info("Publishing summary stats done.");
+
+        for (Long studyId : studyIds) {
+            if (!studiesDone.contains(studyId)) {
+                getLog().warn(" - Study [{}] has no study tag.", studyId);
+                publishSummaryStats(studyService.findOne(studyId), null);
+            }
+        }
+
+        depositionStudiesImportService.deleteStudies(markedForDeletion);
+        return errors;
+    }
+
+    @Transactional
+    void processStudy(SubmissionImportStudy submissionImportStudy, List<Long> studyIds, List<Long> studiesDone, List<String> errors, List<Long> markedForDeletion) {
         try {
-            for (DepositionStudyDto studyDto : studyDtos) {
-                String tag = studyDto.getStudyTag();
-                boolean match = false;
-                for (Long studyId : studyIds) {
-                    Study study = studyService.findOne(studyId);
-                    if (study.getAccessionId().equals(studyDto.getAccession())) {
-                        publishSummaryStats(study, tag);
-                        match = true;
-                    }
-                }
-                if (!match) {
-                    for (Long studyId : studyIds) {
-                        getLog().warn(" - Study [{}] has no study tag.", studyId);
-                        errors.add("Warning: Study [" + studyId + "] has no study tag.");
-                        publishSummaryStats(studyService.findOne(studyId), null);
-                    }
+            String tag = submissionImportStudy.getTag();
+            for (Long studyId : studyIds) {
+                Study study = studyService.findOne(studyId);
+                if (study.getAccessionId().equals(submissionImportStudy.getAccessionId())) {
+                    publishSummaryStats(study, tag);
+                    markedForDeletion.add(submissionImportStudy.getId());
+                    studiesDone.add(studyId);
+                    break;
                 }
             }
-            getLog().info("Publishing summary stats done.");
         } catch (Exception e) {
             getLog().error("Encountered error: {}", e.getMessage(), e);
             errors.add("Error: " + e.getMessage());
-            outcome = false;
         }
-
-        return Pair.of(outcome, errors);
     }
 
     @Transactional

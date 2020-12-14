@@ -12,11 +12,7 @@ import uk.ac.ebi.spot.goci.repository.AncestryExtensionRepository;
 import uk.ac.ebi.spot.goci.repository.AncestryRepository;
 import uk.ac.ebi.spot.goci.repository.CountryRepository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class DepositionSampleService {
@@ -40,81 +36,76 @@ public class DepositionSampleService {
     }
 
     @Transactional
-    public String saveSamples(String studyTag, Study study, List<DepositionSampleDto> samples, ImportLog importLog) {
-        //find samples in study
+    public String saveSample(Study study, DepositionSampleDto sampleDto, ImportLog importLog) {
         StringBuffer studyNote = new StringBuffer();
         String initialSampleSize = "";
         String replicateSampleSize = "";
-        for (DepositionSampleDto sampleDto : samples) {
-            if (sampleDto.getStudyTag().equals(studyTag)) {
-                ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating sample", study.getAccessionId()));
+        ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating sample", study.getAccessionId()));
 
-                Ancestry ancestry = new Ancestry();
-                if (sampleDto.getStage().equalsIgnoreCase("Discovery")) {
-                    ancestry.setType("initial");
-                    initialSampleSize += buildDescription(sampleDto) + ", ";
-                } else if (sampleDto.getStage().equalsIgnoreCase("Replication")) {
-                    ancestry.setType("replication");
-                    replicateSampleSize += buildDescription(sampleDto) + ", ";
+        Ancestry ancestry = new Ancestry();
+        if (sampleDto.getStage().equalsIgnoreCase("Discovery")) {
+            ancestry.setType("initial");
+            initialSampleSize += buildDescription(sampleDto) + ", ";
+        } else if (sampleDto.getStage().equalsIgnoreCase("Replication")) {
+            ancestry.setType("replication");
+            replicateSampleSize += buildDescription(sampleDto) + ", ";
+        } else {
+            studyNote.append("unknown ancestry type: " + sampleDto.getStage());
+        }
+        List<Country> countryList = new ArrayList<>();
+        String countryRecruitment = sampleDto.getCountryRecruitement();
+        if (countryRecruitment != null) {
+            String[] countries = countryRecruitment.split("\\||,");
+            Map<String, String> countryMap = new HashMap<>();
+            for (String country : countries) {
+                countryMap.put(country.trim(), "");
+            }
+
+            for (String country : countryMap.keySet()) {
+                Country cCountry = countryRepository.findByCountryNameIgnoreCase(country);
+                if (cCountry == null) {
+                    importLog.addError("Unable to find country: " + country, "Creating sample");
                 } else {
-                    studyNote.append("unknown ancestry type: " + sampleDto.getStage());
+                    countryList.add(cCountry);
                 }
-                List<Country> countryList = new ArrayList<>();
-                String countryRecruitment = sampleDto.getCountryRecruitement();
-                if (countryRecruitment != null) {
-                    String[] countries = countryRecruitment.split("\\||,");
-                    Map<String, String> countryMap = new HashMap<>();
-                    for (String country : countries) {
-                        countryMap.put(country.trim(), "");
-                    }
-
-                    for (String country : countryMap.keySet()) {
-                        Country cCountry = countryRepository.findByCountryNameIgnoreCase(country);
-                        if (cCountry == null) {
-                            importLog.addError("Unable to find country: " + country, "Creating sample");
-                        } else {
-                            countryList.add(cCountry);
-                        }
-                    }
-                }
-                ancestry.setCountryOfRecruitment(countryList);
-                if (sampleDto.getSize() != -1) {
-                    ancestry.setNumberOfIndividuals(sampleDto.getSize());
-                }
-                ancestralGroupRepository.findByAncestralGroup(sampleDto.getAncestry());
-                String ancestryCat = sampleDto.getAncestryCategory();
+            }
+        }
+        ancestry.setCountryOfRecruitment(countryList);
+        if (sampleDto.getSize() != -1) {
+            ancestry.setNumberOfIndividuals(sampleDto.getSize());
+        }
+        ancestralGroupRepository.findByAncestralGroup(sampleDto.getAncestry());
+        String ancestryCat = sampleDto.getAncestryCategory();
 //                if(ancestryCat != null && !ancestryCat.endsWith("ancestry")){
 //                    ancestryCat += " ancestry";
 //                }
-                List<AncestralGroup> ancestryGroups = new ArrayList<>();
-                if (ancestryCat != null) {
-                    String[] groups = ancestryCat.split("\\||,");
-                    getLog().info("Ancestry groups provided: {}", ancestryCat);
-                    for (String group : groups) {
-                        AncestralGroup ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
-                        ancestryGroups.add(ancestryGroup);
-                    }
-                }
-                getLog().info("Ancestry groups mapped: {}", ancestryGroups);
-                ancestry.setAncestralGroups(ancestryGroups);
-                ancestry.setStudy(study);
-                ancestryRepository.save(ancestry);
-
-                AncestryExtension ancestryExtension = new AncestryExtension();
-                ancestryExtension.setAncestry(ancestry);
-                if (sampleDto.getAncestry() != null) {
-                    ancestryExtension.setAncestryDescriptor(sampleDto.getAncestry().replaceAll("\\|", ", "));
-                }
-                ancestryExtension.setIsolatedPopulation(sampleDto.getAncestryDescription());
-                ancestryExtension.setNumberCases(sampleDto.getCases());
-                ancestryExtension.setNumberControls(sampleDto.getControls());
-                ancestryExtension.setSampleDescription(sampleDto.getSampleDescription());
-                extensionRepository.save(ancestryExtension);
-                ancestry.setAncestryExtension(ancestryExtension);
-                ancestryRepository.save(ancestry);
-                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+        List<AncestralGroup> ancestryGroups = new ArrayList<>();
+        if (ancestryCat != null) {
+            String[] groups = ancestryCat.split("\\||,");
+            getLog().info("Ancestry groups provided: {}", ancestryCat);
+            for (String group : groups) {
+                AncestralGroup ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
+                ancestryGroups.add(ancestryGroup);
             }
         }
+        getLog().info("Ancestry groups mapped: {}", ancestryGroups);
+        ancestry.setAncestralGroups(ancestryGroups);
+        ancestry.setStudy(study);
+        ancestryRepository.save(ancestry);
+
+        AncestryExtension ancestryExtension = new AncestryExtension();
+        ancestryExtension.setAncestry(ancestry);
+        if (sampleDto.getAncestry() != null) {
+            ancestryExtension.setAncestryDescriptor(sampleDto.getAncestry().replaceAll("\\|", ", "));
+        }
+        ancestryExtension.setIsolatedPopulation(sampleDto.getAncestryDescription());
+        ancestryExtension.setNumberCases(sampleDto.getCases());
+        ancestryExtension.setNumberControls(sampleDto.getControls());
+        ancestryExtension.setSampleDescription(sampleDto.getSampleDescription());
+        extensionRepository.save(ancestryExtension);
+        ancestry.setAncestryExtension(ancestryExtension);
+        ancestryRepository.save(ancestry);
+        importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
         initialSampleSize = initialSampleSize.trim();
         replicateSampleSize = replicateSampleSize.trim();
         if (initialSampleSize.endsWith(",")) {
