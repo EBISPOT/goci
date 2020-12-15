@@ -60,7 +60,7 @@
               th:object="${submission}">
             <button id="importButton" type="submit" class="btn btn-sm col-sm-1"
                     th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-                    th:disabled="${!submission.status.equals('SUBMITTED')}"
+                    th:disabled="${!submission.importStatus.toString().equals('READY')}"
                     th:text="${submission.submissionType.toString().equals('IMPORT_IN_PROGRESS')} ? Processing : Import"></button>
         </form>
         <button class="btn btn-sm btn-primary col-sm-1" id="toggleSubmission">Show/Hide Submission</button>
