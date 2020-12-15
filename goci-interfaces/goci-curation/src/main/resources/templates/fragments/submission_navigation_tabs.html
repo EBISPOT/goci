@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+<body th:fragment="tabs">
+<div class="container-fluid">
+    <div class="row">
+        <ul class="nav nav-tabs">
+            <li><a th:href="@{/submissions}">Ready to import</a></li>
+            <li><a th:href="@{/imported_submissions}">Imported</a></li>
+            <li><a th:href="@{/other_submissions}">Other</a></li>
+        </ul>
+
+    </div>
+</div>
+<br/>
+</body>
+</html>
