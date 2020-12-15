@@ -67,6 +67,21 @@ public class DepositionSubmissionService {
         return getSubmissions(url);
     }
 
+    public Map<String, Submission> getImportedSubmissions() {
+        String url = "/submissions?status=CURATION_COMPLETE";
+        return getSubmissions(url);
+    }
+
+    public Map<String, Submission> getReadyToImportSubmissions() {
+        String url = "/submissions?status=SUBMITTED";
+        return getSubmissions(url);
+    }
+
+    public Map<String, Submission> getOtherSubmissions() {
+        String url = "/submissions?status=OTHER";
+        return getSubmissions(url);
+    }
+
     private Map<String, Submission> getSubmissions(String url) {
 
         Map<String, Submission> submissionList = new TreeMap<>();

@@ -70,7 +70,7 @@ public class SubmissionController {
 
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String allSubmissionsPage(Model model) {
-        Map<String, Submission> submissionList = submissionService.getSubmissions();
+        Map<String, Submission> submissionList = submissionService.getReadyToImportSubmissions();
         model.addAttribute("submissions", submissionList.values());
         return "view_submissions";
     }
