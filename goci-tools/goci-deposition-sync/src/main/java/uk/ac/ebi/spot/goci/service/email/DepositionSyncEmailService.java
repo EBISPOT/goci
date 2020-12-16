@@ -20,7 +20,19 @@ public class DepositionSyncEmailService extends GOCIMailService {
         super(javaMailSender);
     }
 
-    public void sendSubmissionImportNotification(String reportBody) {
+    public void sendSyncNotification(String reportBody) {
+        DepositionSyncReportEmail email = new DepositionSyncReportEmail();
+        email.setTo(this.devMailTo);
+        email.setLink(this.link);
+        email.setFrom(this.getFrom());
+        email.createBody(reportBody);
+        sendEmail(email);
+    }
+
+    public void sendImportNotification(String reportBody) {
+        if (reportBody == null) {
+            return;
+        }
         DepositionSyncReportEmail email = new DepositionSyncReportEmail();
         email.setTo(this.devMailTo);
         email.setLink(this.link);
