@@ -240,7 +240,7 @@ public class DepositionSyncService {
         //curation import will need to prune unpublished_studies, ancestry and body_of_work
         submissions.forEach((s, submission) -> {
             Submission.SubmissionType submissionType = DepositionUtil.getSubmissionType(submission);
-            if (submissionType == Submission.SubmissionType.SUM_STATS) {
+            if (submission.getStatus().equals("SUBMITTED") && submissionType == Submission.SubmissionType.SUM_STATS) {
                 autoImportSumStatsSubmission(submission, importLog);
             }
 
