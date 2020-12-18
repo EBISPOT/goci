@@ -70,7 +70,7 @@ public class SubmissionController {
 
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String allSubmissionsPage(Model model) {
-        Map<String, Submission> submissionList = submissionService.getSubmissions();
+        Map<String, Submission> submissionList = submissionService.getReadyToImportSubmissions();
         model.addAttribute("submissions", submissionList.values());
         return "view_submissions";
     }
@@ -94,7 +94,8 @@ public class SubmissionController {
     private Submission buildSubmission(DepositionSubmission depositionSubmission) {
         Submission testSub = new Submission();
         testSub.setId(depositionSubmission.getSubmissionId());
-        if (depositionSubmission.getPublication() != null) {
+        testSub.setImportStatus(Submission.ImportStatus.NOT_READY);
+            if (depositionSubmission.getPublication() != null) {
             testSub.setPubMedID(depositionSubmission.getPublication().getPmid());
             testSub.setAuthor(depositionSubmission.getPublication().getFirstAuthor());
             testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
@@ -148,6 +149,11 @@ public class SubmissionController {
         if (importInProgress) {
             testSub.setStatus("IMPORT_IN_PROGRESS");
         }
+        if (testSub.getStatus().equalsIgnoreCase("SUBMITTED") &&
+                !testSub.getSubmissionType().equals(Submission.SubmissionType.PRE_PUBLISHED) &&
+                !testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
+            testSub.setImportStatus(Submission.ImportStatus.READY);
+        }
         return testSub;
     }
 
@@ -164,11 +170,11 @@ public class SubmissionController {
 
             boolean importInProgress = submissionImportProgressService.importInProgress(depositionSubmission.getSubmissionId());
             if (importInProgress) {
-                statusMessages = Arrays.asList(new String []{ "Import is already in progress. Please wait."});
+                statusMessages = Arrays.asList(new String[]{"Import is already in progress. Please wait."});
             } else {
                 SubmissionImportProgress submissionImportProgress = submissionImportProgressService.createNewImport(currentUser.getEmail(), depositionSubmission.getSubmissionId());
                 depositionSubmissionImportService.importSubmission(depositionSubmission, currentUser, submissionImportProgress.getId());
-                statusMessages = Arrays.asList(new String []{ "Import task has been submitted. You will receive an email when it's done."});
+                statusMessages = Arrays.asList(new String[]{"Import task has been submitted. You will receive an email when it's done."});
             }
 
             model.addAttribute("submissions", submissionList.values());

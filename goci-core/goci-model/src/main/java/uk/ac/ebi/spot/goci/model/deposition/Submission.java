@@ -1,8 +1,6 @@
 package uk.ac.ebi.spot.goci.model.deposition;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 @Data
@@ -22,6 +20,8 @@ public class Submission {
     private String correspondingAuthor;
 
     private SubmissionType submissionType;
+    private ImportStatus importStatus;
+
     public enum SubmissionType {
         METADATA("Metadata"),
         METADATA_AND_SUM_STATS("Metadata and Summary Stats"),
@@ -31,9 +31,20 @@ public class Submission {
         PRE_PUBLISHED("Pre-Publication"),
         UNKNOWN("Unknown");
         public final String label;
-        private SubmissionType(String label){
+
+        private SubmissionType(String label) {
             this.label = label;
         }
-    };
+    }
 
+    public enum ImportStatus {
+        READY("Ready"),
+        NOT_READY("Not ready");
+
+        public final String label;
+
+        private ImportStatus(String label) {
+            this.label = label;
+        }
+    }
 }

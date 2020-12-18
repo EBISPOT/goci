@@ -67,6 +67,29 @@ public class DepositionSubmissionService {
         return getSubmissions(url);
     }
 
+    public Map<String, Submission> getSubmissionsByStatus(String status) {
+        String url = "/submissions?status=" + status;
+        return getSubmissions(url);
+    }
+
+    public Map<String, Submission> getReadyToImportSubmissions() {
+        String url = "/submissions?status=READY_TO_IMPORT";
+        return getSubmissions(url);
+    }
+
+    public Map<String, Submission> getOtherSubmissions() {
+        String url = "/submissions?status=OTHER";
+        return getSubmissions(url);
+    }
+
+    public Map<String, Submission> getSubmissionsById(List<String> submissionIds) {
+        Map<String, Submission> submissionList = new TreeMap<>();
+        for (String sId : submissionIds) {
+            submissionList.put(sId, buildSubmission(getSubmission(sId)));
+        }
+        return submissionList;
+    }
+
     private Map<String, Submission> getSubmissions(String url) {
 
         Map<String, Submission> submissionList = new TreeMap<>();
@@ -115,6 +138,7 @@ public class DepositionSubmissionService {
         testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
         testSub.setStatus(depositionSubmission.getStatus());
         testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+        testSub.setImportStatus(Submission.ImportStatus.NOT_READY);
         testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
         if (depositionSubmission.getBodyOfWork() != null) {
             BodyOfWorkDto bodyOfWork = depositionSubmission.getBodyOfWork();
@@ -149,6 +173,11 @@ public class DepositionSubmissionService {
         boolean importInProgress = submissionImportProgressService.importInProgress(depositionSubmission.getSubmissionId());
         if (importInProgress) {
             testSub.setStatus("IMPORT_IN_PROGRESS");
+        }
+        if (testSub.getStatus().equalsIgnoreCase("SUBMITTED") &&
+                !testSub.getSubmissionType().equals(Submission.SubmissionType.PRE_PUBLISHED) &&
+                !testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
+            testSub.setImportStatus(Submission.ImportStatus.READY);
         }
         return testSub;
     }
@@ -192,4 +221,5 @@ public class DepositionSubmissionService {
         }
         return null;
     }
+
 }

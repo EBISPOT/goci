@@ -6,5 +6,6 @@ import java.util.Map;
 
 public interface DepositionSubmissionService {
     Map<String, DepositionSubmission> getSubmissions();
-    void updateSubmission(DepositionSubmission depositionSubmission);
-    }
+
+    void updateSubmission(DepositionSubmission depositionSubmission, String submissionStatus);
+}

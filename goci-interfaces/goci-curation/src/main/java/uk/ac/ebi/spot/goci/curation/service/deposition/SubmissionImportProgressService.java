@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.model.deposition.SubmissionImportProgress;
 import uk.ac.ebi.spot.goci.repository.SubmissionImportProgressRepository;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -38,5 +40,14 @@ public class SubmissionImportProgressService {
     public void deleteImport(Long id) {
         log.info("Removing id: {}", id);
         submissionImportProgressRepository.delete(id);
+    }
+
+    public List<String> getSubmissions() {
+        List<SubmissionImportProgress> submissionImportProgresses = submissionImportProgressRepository.findAll();
+        List<String> ids = new ArrayList<>();
+        for (SubmissionImportProgress submissionImportProgress : submissionImportProgresses) {
+            ids.add(submissionImportProgress.getSubmissionId());
+        }
+        return ids;
     }
 }
