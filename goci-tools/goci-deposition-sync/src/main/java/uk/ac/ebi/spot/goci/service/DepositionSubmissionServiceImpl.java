@@ -1,9 +1,6 @@
 package uk.ac.ebi.spot.goci.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -26,10 +23,6 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
     private String depositionBackendUri;
 
     @Autowired
-    @Qualifier("JodaMapper")
-    private ObjectMapper mapper;
-
-    @Autowired
     private RestTemplate template;
 
     @Override
@@ -50,14 +43,16 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
         return submissionList;
     }
 
-    public void updateSubmission(DepositionSubmission depositionSubmission){
+    public void updateSubmission(DepositionSubmission depositionSubmission, String submissionStatus) {
+        depositionSubmission.setStatus(submissionStatus);
+        Map<String, String> params = new HashMap<>();
+        params.put("submissionID", depositionSubmission.getSubmissionId());
+
         try {
-            String message = mapper.writeValueAsString(depositionSubmission);
-            template.put(depositionIngestUri + "/submissions/" + depositionSubmission.getSubmissionId(), depositionSubmission);
-        } catch (JsonProcessingException e) {
+            template.put(depositionIngestUri + "/submissions/{submissionID}", depositionSubmission, params);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
 }

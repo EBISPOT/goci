@@ -337,6 +337,7 @@ public class DepositionSyncService {
                 }
             }
             getLog().info("Publishing summary stats done.");
+            submissionService.updateSubmission(submission, "CURATION_COMPLETE");
         } catch (Exception e) {
             getLog().error("Encountered error: {}", e.getMessage(), e);
             errors.add("Error: " + e.getMessage());
