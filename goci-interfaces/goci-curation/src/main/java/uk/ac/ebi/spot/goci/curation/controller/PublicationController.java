@@ -167,12 +167,14 @@ public class PublicationController {
     public String viewPublication(Model model, @PathVariable Long publicationId) {
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
         Set<String> studiesWithFiles = new HashSet<>();
+        /*
         for (Study study : publication.getStudies()) {
             List<StudyFileSummary> studyFiles = studyFileService.getStudyFiles(study.getId());
             if (studyFiles != null && studyFiles.size() != 0) {
                 studiesWithFiles.add(study.getId().toString());
             }
         }
+        */
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         if (pubmedMap.containsKey(publication.getPubmedId())) {
             publication.setActiveSubmission(true);
