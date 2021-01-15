@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.model;
+package uk.ac.ebi.spot.goci.curation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

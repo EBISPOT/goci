@@ -28,6 +28,8 @@ import java.util.List;
 @RepositoryRestResource
 public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecificationExecutor {
 
+    Page<Study> findByHousekeepingIsPublished(Pageable pageable, Boolean isPublished);
+
     @RestResource(exported = false)
     Page<Study> findByAccessionId(String gcst, Pageable pageable);
 
@@ -79,12 +81,6 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
 
     @RestResource(exported = false)
     Page<Study> findByCnv(Boolean cnv, Pageable pageable);
-
-//    @RestResource(exported = false)
-//    Page<Study> findByTargetedArray(Boolean targetedArray, Pageable pageable);
-//
-//    @RestResource(exported = false)
-//    Page<Study> findByGenomewideArray(Boolean genomewideArray, Pageable pageable);
 
     @RestResource(exported = false)
     Page<Study> findByHousekeepingCheckedMappingErrorOrHousekeepingCurationStatusId(Boolean checkedMappingError,
