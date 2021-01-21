@@ -18,6 +18,11 @@
     <name>GOCI Data Release QC</name>
     <description>Collection of tools to perform QC measures on the various stages of the GWAS Catalog data release process</description>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>uk.ac.ebi.spot.goci.GOCIDataReleaseQCDriver</start-class>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
 
     <build>
         <finalName>goci-data-release-qc</finalName>
@@ -91,10 +96,7 @@
 
     </dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>uk.ac.ebi.spot.goci.GOCIDataReleaseQCDriver</start-class>
-    </properties>
+
 
 
 </project>

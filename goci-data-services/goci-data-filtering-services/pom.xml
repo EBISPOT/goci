@@ -16,6 +16,9 @@
     <name>GOCI Data Filtering Services</name>
     <description>A set of service classes to filter a set of associations for the most significant association in each LD bloack</description>
 
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
 
     <dependencies>
         <dependency>

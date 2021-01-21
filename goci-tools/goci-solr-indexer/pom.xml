@@ -18,6 +18,12 @@
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>uk.ac.ebi.spot.goci.SolrIndexerApplication</start-class>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
@@ -78,10 +84,6 @@
 
     </dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>uk.ac.ebi.spot.goci.SolrIndexerApplication</start-class>
-    </properties>
 
     <build>
         <finalName>gwas-solr-indexer</finalName>

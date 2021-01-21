@@ -22,6 +22,9 @@
     <!--<properties>-->
     <!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->
     <!--</properties>-->
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
 
     <dependencies>
         <dependency>

@@ -16,6 +16,10 @@
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>uk.ac.ebi.spot</groupId>
