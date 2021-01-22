@@ -10,12 +10,20 @@
 
     <packaging>pom</packaging>
     <name>GOCI (root)</name>
-
-    <properties>
-        <!--<sonar.projectKey>uk.ac.ebi.spot:goci</sonar.projectKey>-->
+   <properties>
         <sonar.organization>gwas-ebi</sonar.organization>
     </properties>
-
+    <!--<build>
+    <pluginManagement>
+          <plugins>
+              <plugin>
+                  <groupId>org.sonarsource.scanner.maven</groupId>
+                  <artifactId>sonar-maven-plugin</artifactId>
+                  <version>3.4.0.905</version>
+              </plugin>
+          </plugins>
+      </pluginManagement>
+    </build>-->
 
     <modules>
         <module>goci-dependencies</module>
