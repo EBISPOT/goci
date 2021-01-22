@@ -11,6 +11,9 @@
     <packaging>pom</packaging>
     <name>GOCI (root)</name>
 
+    <properties>
+        <sonar.organization>gwas-ebi</sonar.organization>
+    </properties>
 
 
     <modules>
