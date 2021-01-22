@@ -1,34 +1,55 @@
 package uk.ac.ebi.spot.goci.curation.controller.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.StudyDtoAssembler;
-import uk.ac.ebi.spot.goci.curation.service.StudyOperationService;
+import uk.ac.ebi.spot.goci.curation.dto.StudyPatchRequest;
+import uk.ac.ebi.spot.goci.curation.dto.FileUploadRequest;
+import uk.ac.ebi.spot.goci.curation.exception.FileValidationException;
+import uk.ac.ebi.spot.goci.curation.service.StudyDataService;
+import uk.ac.ebi.spot.goci.curation.util.FileHandler;
 import uk.ac.ebi.spot.goci.model.Study;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/published-studies")
+@RequestMapping(Endpoint.API_V1)
 public class StudyRestController {
 
-    @Autowired
-    private StudyOperationService studyOperationService;
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    private StudyDataService studyDataService;
     private StudyDtoAssembler studyDtoAssembler;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
-    public Object getStudies(PagedResourcesAssembler<Study> assembler,
-                                        @PageableDefault(size = 20) Pageable pageable) {
+    public StudyRestController(StudyDataService studyDataService,
+                               StudyDtoAssembler studyDtoAssembler) {
+        this.studyDataService = studyDataService;
+        this.studyDtoAssembler = studyDtoAssembler;
+    }
 
-        Page<Study> studies = studyOperationService.getStudiesByHousekeepingStatus(pageable,true);
+    public Object getOneStudy(Long id) {
+        return "";
+    }
+
+    @GetMapping(value = Endpoint.PUBLIC_STUDIES, produces = MediaTypes.HAL_JSON_VALUE)
+    public Object getStudies(PagedResourcesAssembler<Study> assembler,
+                             @PageableDefault(size = 20) Pageable pageable) {
+
+        Page<Study> studies = studyDataService.getStudiesByHousekeepingStatus(pageable, true);
         final ControllerLinkBuilder linkBuilder = ControllerLinkBuilder.linkTo(
                 ControllerLinkBuilder
                         .methodOn(StudyRestController.class)
@@ -37,7 +58,19 @@ public class StudyRestController {
         return assembler.toResource(studies, studyDtoAssembler, linkBuilder.withSelfRel());
     }
 
-    public Object getOneStudy(Long id) {
-        return "";
+    @PostMapping(Endpoint.STUDIES)
+    public Object multiUploadFileModel(@Valid FileUploadRequest fileUploadRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new FileValidationException(result);
+        }
+        List<StudyPatchRequest> studyPatchRequests = FileHandler.getStudyPatchRequests(fileUploadRequest);
+        List<Study> updatedStudies = new ArrayList<>();
+        for (StudyPatchRequest request : studyPatchRequests) {
+            log.info("Dataset with GCST {} and Curated Trait {} was loaded from file", request.getGcst(), request.getCuratedReportedTrait());
+            String gcst = request.getGcst().trim();
+            String curatedReportedTrait = request.getCuratedReportedTrait().trim();
+            updatedStudies.add(studyDataService.updateStudyDiseaseTraitByAccessionId(curatedReportedTrait, gcst));
+        }
+        return new ResponseEntity<>(updatedStudies, HttpStatus.OK);
     }
 }

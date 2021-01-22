@@ -15,6 +15,7 @@ import uk.ac.ebi.spot.goci.model.Study;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by emma on 20/11/14.
@@ -32,6 +33,8 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
 
     @RestResource(exported = false)
     Page<Study> findByAccessionId(String gcst, Pageable pageable);
+
+    Optional<Study> findByAccessionId(String gcst);
 
     @RestResource(exported = false)
     Page<Study> findById(Long studyId, Pageable pageable);
