@@ -12,7 +12,7 @@
     <name>GOCI (root)</name>
 
     <properties>
-        <sonar.projectKey>uk.ac.ebi.spot:goci</sonar.projectKey>
+        <!--<sonar.projectKey>uk.ac.ebi.spot:goci</sonar.projectKey>-->
         <sonar.organization>gwas-ebi</sonar.organization>
     </properties>
 
