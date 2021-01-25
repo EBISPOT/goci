@@ -115,6 +115,22 @@ class DiseaseTrait {
         dPagination.appendChild(pageList);
     }
 
+
+    static formEvents(){
+        const CLICK_EVENT = 'click';
+        const CHANGE_EVENT = 'change';
+        document.querySelector('#create-form-button').addEventListener(CLICK_EVENT, DiseaseTrait.save);
+        document.querySelector('#upload-data-button').addEventListener(CLICK_EVENT, DiseaseTrait.uploadButtonAction);
+        document.querySelector('#analysis-data-button').addEventListener(CLICK_EVENT, DiseaseTrait.analysisButtonAction);
+        document.querySelector('#bulk-upload').addEventListener(CHANGE_EVENT,  () => {
+            UI.loadText('output', 'Click on the Upload button', 'red', 'bulk-upload');
+        });
+        document.querySelector('#analysis-uploads').addEventListener(CHANGE_EVENT, () => {
+            UI.loadText('analysis', 'Click on the Upload button', 'red', 'analysis-uploads');
+        });
+        document.querySelector('#edit-form-button').addEventListener(CLICK_EVENT, DiseaseTrait.edit);
+    }
+
     static floatingActionButtonEvents(){
         const CLICK_EVENT = 'click';
         document.querySelector('#activate-analysis-form-view').addEventListener(CLICK_EVENT, () => {

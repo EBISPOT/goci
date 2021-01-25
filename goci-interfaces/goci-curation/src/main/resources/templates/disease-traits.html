@@ -201,7 +201,33 @@
 
 
 
-
+<!-- Navigation Drawer Detailed View -->
+<nav class="ui-nav navigation-drawer card-3" style="width: 38%;">
+    <div class="panel card-1 animated fadeIn">
+        <!-- Edit Form Area -->
+        <div id="edit-form-view" class="animated fadeIn">
+            <h6 style="margin-left: 15px; font-weight: 400;" id="selected-trait"> Manage Reported Disease Trait </h6>
+            <div class='header'
+                 style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                <h4>
+                    <span style="font-weight: normal; margin-left: 15px;">Edit Disease Trait <br/> </span>
+                    <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Disease trait table below: </small>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class='form-group col-md-12'>
+                    <label> Reported Trait: </label>
+                    <input type='text' id='edit-trait' name="trait" placeholder="Edit Trait Data" class='form-control'/>
+                    <input type='hidden' id='id-of-master'/>
+                </div>
+                <button id="edit-form-button" class='btn btn-primary mt-25' style='float:right; margin-right: 10px;'>
+                    <i class='fa fa-plus'></i> Click to edit
+                </button>
+            </div>
+        </div>
+    </div>
+    <a class="ui-menu-close"></a>
+</nav>
 
 
 

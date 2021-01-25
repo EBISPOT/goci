@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.repository;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -9,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+import uk.ac.ebi.spot.goci.model.projection.DiseaseTraitProjection;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +24,13 @@ import java.util.Map;
 @RepositoryRestResource
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
     DiseaseTrait findByTraitIgnoreCase(String trait);
+
+    @Query("Select diseaseTrait.id as id, diseaseTrait.trait as trait, count(studies.id) as studiesCount from DiseaseTrait diseaseTrait " +
+            "LEFT JOIN diseaseTrait.studies studies group by diseaseTrait.id, diseaseTrait.trait " +
+            "ORDER BY studiesCount desc ")
+    List<DiseaseTraitProjection> findAllOrOrderByStudiesLargest(Pageable pageable);
+
+    List<DiseaseTrait> findAllByIdIsIn(List<Long> id);
 
     @RestResource(exported = false)
     List<DiseaseTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
