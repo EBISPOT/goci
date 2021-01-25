@@ -20,11 +20,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
 import uk.ac.ebi.spot.goci.curation.constants.EntityType;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.DiseaseTraitDtoAssembler;
+import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
 import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.dto.FileUploadRequest;
 import uk.ac.ebi.spot.goci.curation.exception.FileValidationException;
 import uk.ac.ebi.spot.goci.curation.exception.ResourceNotFoundException;
 import uk.ac.ebi.spot.goci.curation.service.DiseaseTraitService;
+import uk.ac.ebi.spot.goci.curation.util.FileHandler;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import javax.validation.Valid;
 import java.net.URI;
@@ -106,5 +108,16 @@ public class DiseaseTraitController {
         diseaseTraits = diseaseTraitService.createDiseaseTraits(diseaseTraits);
         log.info("{} {} were created", diseaseTraits.size(), EntityType.DISEASE_TRAIT);
         return new ResponseEntity<>(DiseaseTraitDtoAssembler.assemble(diseaseTraits), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/analysis")
+    public List<AnalysisDTO> similaritySearchAnalysis(@Valid FileUploadRequest fileUploadRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            throw new FileValidationException(result);
+        }
+        List<AnalysisDTO> analysisDTO = FileHandler.serializeDiseaseTraitAnalysisFile(fileUploadRequest);
+        log.info("{} disease traits were ingested for analysis", analysisDTO.size());
+        analysisDTO = diseaseTraitService.similaritySearch(analysisDTO, 50.0);
+        return analysisDTO;
     }
 }

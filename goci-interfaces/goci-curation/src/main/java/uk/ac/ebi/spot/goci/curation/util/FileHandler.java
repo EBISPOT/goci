@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
 import uk.ac.ebi.spot.goci.curation.dto.StudyPatchRequest;
 import uk.ac.ebi.spot.goci.curation.dto.FileUploadRequest;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
@@ -30,6 +31,24 @@ public class FileHandler {
             InputStream inputStream = multipartFile.getInputStream();
             MappingIterator<StudyPatchRequest> iterator =
                     mapper.readerFor(StudyPatchRequest.class).with(schema).readValues(inputStream);
+            studyPatchRequests = iterator.readAll();
+        } catch (IOException e) {
+            throw new FileUploadException("Could not read the file");
+        }
+        return studyPatchRequests;
+    }
+
+    public static List<AnalysisDTO> serializeDiseaseTraitAnalysisFile(FileUploadRequest fileUploadRequest) {
+
+        CsvSchema.Builder builder = CsvSchema.builder();
+        CsvMapper mapper = new CsvMapper();
+        CsvSchema schema = builder.build().withHeader().withColumnSeparator('\t');
+        MultipartFile multipartFile = fileUploadRequest.getMultipartFile();
+        List<AnalysisDTO> studyPatchRequests;
+        try {
+            InputStream inputStream = multipartFile.getInputStream();
+            MappingIterator<AnalysisDTO> iterator =
+                    mapper.readerFor(AnalysisDTO.class).with(schema).readValues(inputStream);
             studyPatchRequests = iterator.readAll();
         } catch (IOException e) {
             throw new FileUploadException("Could not read the file");
