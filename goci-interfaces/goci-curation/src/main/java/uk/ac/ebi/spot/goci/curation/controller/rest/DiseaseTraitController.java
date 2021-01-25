@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
 import uk.ac.ebi.spot.goci.curation.constants.EntityType;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.DiseaseTraitDtoAssembler;
+import uk.ac.ebi.spot.goci.curation.dto.AnalysisCacheDto;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
 import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.dto.FileUploadRequest;
@@ -28,9 +29,14 @@ import uk.ac.ebi.spot.goci.curation.exception.ResourceNotFoundException;
 import uk.ac.ebi.spot.goci.curation.service.DiseaseTraitService;
 import uk.ac.ebi.spot.goci.curation.util.FileHandler;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(Endpoint.API_V1 + Endpoint.DISEASE_TRAITS)
@@ -111,13 +117,35 @@ public class DiseaseTraitController {
     }
 
     @PostMapping("/analysis")
-    public List<AnalysisDTO> similaritySearchAnalysis(@Valid FileUploadRequest fileUploadRequest, BindingResult result) {
+    public String similaritySearchAnalysis(@Valid FileUploadRequest fileUploadRequest, BindingResult result) {
         if (result.hasErrors()) {
             throw new FileValidationException(result);
         }
         List<AnalysisDTO> analysisDTO = FileHandler.serializeDiseaseTraitAnalysisFile(fileUploadRequest);
         log.info("{} disease traits were ingested for analysis", analysisDTO.size());
-        analysisDTO = diseaseTraitService.similaritySearch(analysisDTO, 50.0);
-        return analysisDTO;
+        String analysisId = UUID.randomUUID().toString();
+        diseaseTraitService.similaritySearch(analysisDTO, analysisId,50.0);
+        log.info("Analysis done, retrievable in future with id {}", analysisId);
+        return analysisId;
+    }
+
+    @GetMapping("/analysis/{analysisId}")
+    @ResponseBody
+    public Object similaritySearchAnalysisCsvDownload(HttpServletResponse response,
+                                                      @PathVariable String analysisId) throws IOException {
+        log.info("Retrieving Cached Analysis with ID  : {}", analysisId);
+        List<AnalysisDTO> analysisDTO = new ArrayList<>();
+        double threshold = 50.0;
+        AnalysisCacheDto cache = diseaseTraitService.similaritySearch(analysisDTO, analysisId, threshold);
+        analysisDTO = cache.getAnalysisResult();
+
+        String result = FileHandler.serializePojoToTsv(analysisDTO);
+        log.info(result);
+
+        response.setContentType("text/csv;charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment; filename=analysis.csv");
+        response.getOutputStream().flush();
+
+        return result;
     }
 }
