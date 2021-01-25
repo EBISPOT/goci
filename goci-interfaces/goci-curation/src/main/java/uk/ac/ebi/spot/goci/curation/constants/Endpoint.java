@@ -8,6 +8,8 @@ public class Endpoint {
 
     public static final String STUDIES = "/studies";
 
+    public static final String DISEASE_TRAITS =  "/disease-traits";
+
     private Endpoint() {
         // Hide implicit default constructor
     }

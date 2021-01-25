@@ -74,8 +74,8 @@ public class DiseaseTraitControllerTest {
 
     @Before
     public void setUpMock() {
-        DiseaseTraitController diseaseTraitController =
-                new DiseaseTraitController(diseaseTraitRepository, studyRepository);
+        OldDiseaseTraitController diseaseTraitController =
+                new OldDiseaseTraitController(diseaseTraitRepository, studyRepository);
         mockMvc = MockMvcBuilders.standaloneSetup(diseaseTraitController).build();
     }
 

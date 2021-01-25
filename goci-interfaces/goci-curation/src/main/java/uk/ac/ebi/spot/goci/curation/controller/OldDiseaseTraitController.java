@@ -30,14 +30,14 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/diseasetraits")
-public class DiseaseTraitController {
+public class OldDiseaseTraitController {
 
     // Repositories allowing access to disease traits in database
     private DiseaseTraitRepository diseaseTraitRepository;
     private StudyRepository studyRepository;
 
     @Autowired
-    public DiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository, StudyRepository studyRepository) {
+    public OldDiseaseTraitController(DiseaseTraitRepository diseaseTraitRepository, StudyRepository studyRepository) {
         this.diseaseTraitRepository = diseaseTraitRepository;
         this.studyRepository = studyRepository;
     }
