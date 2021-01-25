@@ -13,6 +13,7 @@ import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
 import uk.ac.ebi.spot.goci.repository.StudyRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -73,6 +74,16 @@ public class DiseaseTraitService {
                     log.error("Unable to find Disease Trait: {}", diseaseTraitId);
                     return response;
                 });
+    }
+
+    public List<DiseaseTrait> createDiseaseTraits(List<DiseaseTrait> diseaseTraits) {
+        log.info("Creating {}: {}", EntityType.DISEASE_TRAIT,
+                 diseaseTraits.stream()
+                         .map(DiseaseTrait::getTrait)
+                         .collect(Collectors.toList()));
+        diseaseTraits = diseaseTraitRepository.save(diseaseTraits);
+        log.info("Bulk {} created", EntityType.DISEASE_TRAIT);
+        return diseaseTraits;
     }
 
 
