@@ -1,11 +1,14 @@
 package uk.ac.ebi.spot.goci.curation.service;
 
+import org.apache.commons.text.similarity.CosineDistance;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.constants.EntityType;
+import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
 import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -84,6 +87,37 @@ public class DiseaseTraitService {
         diseaseTraits = diseaseTraitRepository.save(diseaseTraits);
         log.info("Bulk {} created", EntityType.DISEASE_TRAIT);
         return diseaseTraits;
+    }
+
+
+    public List<AnalysisDTO> similaritySearch(List<AnalysisDTO> diseaseTraitAnalysisDTOS, double threshold) {
+        LevenshteinDistance lv = new LevenshteinDistance();
+        CosineDistance cd = new CosineDistance();
+
+        List<DiseaseTrait> diseaseTraits = diseaseTraitRepository.findAll();
+        List<AnalysisDTO> analysisReport = new ArrayList<>();
+        diseaseTraitAnalysisDTOS
+                .forEach(diseaseTraitAnalysisDTO ->
+                                 diseaseTraits.forEach(diseaseTrait -> {
+                                                           String trait = diseaseTrait.getTrait();
+                                                           String userTerm = diseaseTraitAnalysisDTO.getUserTerm();
+
+                                                           double cosineDistance = cd.apply(userTerm, trait);
+                                                           double levenshteinDistance = ((double) lv.apply(userTerm, trait)) / Math.max(userTerm.length(), trait.length());
+                                                           double cosineSimilarityPercent = Math.round((1 - cosineDistance) * 100);
+                                                           double levenshteinSimilarityPercent = Math.round((1 - levenshteinDistance) * 100);
+                                                           double chosen = Math.max(cosineSimilarityPercent, levenshteinSimilarityPercent);
+                                                           if (chosen >= threshold) {
+                                                               AnalysisDTO report = AnalysisDTO.builder()
+                                                                       .userTerm(userTerm)
+                                                                       .similarTerm(trait)
+                                                                       .degree(chosen).build();
+                                                               analysisReport.add(report);
+                                                           }
+                                                       }
+                                 ));
+
+        return analysisReport;
     }
 
 
