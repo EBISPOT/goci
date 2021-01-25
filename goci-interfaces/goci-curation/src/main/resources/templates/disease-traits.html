@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.css"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>
+
+    <!--http://brianreavis.github.io/selectize.js/-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/css/selectize.min.css"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/css/selectize.bootstrap3.min.css"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/js/standalone/selectize.min.js"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'/>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css'/>
+
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <link rel="stylesheet" th:href="@{/css/master-detail.css}"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
+</head>
+
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+<div class="container-fluid">
+    <div class="row" style="margin-top: -30px;">
+        <div class="col-md-offset-1  col-md-10">
+            <div class="panel card-3 animated fadeIn">
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!-- Floating Action Buttons -->
+<div class="adminActions">
+    <input type="checkbox" name="adminToggle" class="adminToggle"/>
+    <a class="adminButton"><i class="fa fa-cog"></i></a>
+    <div class="adminButtons">
+        <a id="activate-add-form-view" class="tool" data-tip="Add One Trait" tabindex="1"><i
+                class="fa fa-plus"></i></a>
+        <a id="activate-trait-table-view" class="tool" data-tip="Trait table" tabindex="5"><i
+                class="fa fa-tasks"></i></a>
+        <a id="activate-upload-form-view" class="tool" data-tip="Upload Traits" tabindex="2"><i
+                class="fa fa-upload"></i></a>
+        <a id="activate-analysis-form-view" class="tool" data-tip="Analyse Traits" tabindex="3">
+            <i class="fas fa-chart-line"></i></a>
+        <a id="activate-visualization-view" class="tool" data-tip="Top Traits" tabindex="4"><i
+                class="fas fa-desktop"></i></a>
+    </div>
+</div>
+
+
+<!-- Toast Notification -->
+<div id="toast">
+    <div id="img"><i class="far fa-bell-slash"></i></div>
+    <div id="toast-message">A notification message..</div>
+</div>
+
+
+
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script th:src="@{/js/goci-global.js}"></script>
+<script th:src="@{/js/master-detail.js}"></script>
+<script th:src="@{/js/disease-trait-page.js}"></script>
+
+
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/plugins/forceDirected.js"></script>
+
+<script type='text/javascript'
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/3.1.0/jquery.serializejson.min.js"></script>
+
+<script th:src="@{/js/charts/network.js}"></script>
+<script th:src="@{/js/charts/column-chart.js}"></script>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    let netWorkData = [[${mapData}]];
+    loadNetworkMap(netWorkData);
+    let columnChartData = [[${dataList}]];
+    loadColumnChart(columnChartData);
+</script>
+
+<script>
+
+</script>
+
+</body>
+</html>
