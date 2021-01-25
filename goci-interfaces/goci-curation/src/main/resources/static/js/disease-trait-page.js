@@ -142,6 +142,100 @@ class DiseaseTrait {
         UI.unHideRow(`${selectedViewId}`);
     }
 
+    static uploadButtonAction() {
+        //Validate Inputs
+        const componentId = 'output';
+        const VALIDATION_OBJECT = {'bulk-upload': 'Upload File'};
+        const URI = '/api/disease-traits/uploads';
+        if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
+            return;
+        }
+        UI.loadText(componentId,'File upload in Progress ...','green','bulk-upload');
+        // Serialize form values let dataObject = document.querySelector('#uploads').value;
 
+        const formData = new FormData();
+        const fileField = document.querySelector('input[type="file"]');
+        formData.append('multipartFile', fileField.files[0]);
+        // Upload data file to Storage
+        let httpRequest = HttpRequestEngine.fileUploadRequest(URI, formData, 'POST');
+        HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
+            console.log(data);
+            UI.updateFileInput(componentId,'File upload done! Click to Upload another file','black');
+        });
+    }
+
+    static analysisButtonAction() {
+        //Validate Inputs
+        const componentId = 'analysis';
+        const VALIDATION_OBJECT = {'analysis-uploads': 'Analysis File'};
+        const URI = '/api/disease-traits/analysis';
+        if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
+            return;
+        }
+        UI.loadText(componentId,'Analysis File upload in Progress ...','green', 'analysis-uploads');
+
+        const formData = new FormData();
+        const fileField = document.querySelector('#analysis-uploads');
+        formData.append('multipartFile', fileField.files[0]);
+        let httpRequest = HttpRequestEngine.fileUploadRequest(URI, formData, 'POST');
+        HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
+            console.log(data);
+            UI.updateFileInput(componentId,'File upload done! Click to Analyse another file','black');
+        });
+    }
+
+    static save() {
+        //Validate Inputs
+        const VALIDATION_OBJECT = {'trait': 'Reported Trait'};
+        const URI = '/api/disease-traits';
+        if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
+            return;
+        }
+        let dataObject = $('#add-form-view :input').serializeJSON();
+        let httpRequest = HttpRequestEngine.requestWithBody(URI, dataObject, 'POST');
+        HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
+            let columns = ['trait'];
+            DiseaseTrait.updateDataRows(data, data.id, columns, 'data-list');
+            UI.clearFields(columns);
+        });
+    }
+
+    static edit() {
+        const VALIDATION_OBJECT = {'edit-trait': 'Updated Trait'};
+        if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
+            return;
+        }
+        let newTraitValue = document.querySelector('#edit-trait').value;
+        let tableDataId = document.querySelector('#id-of-master').value;
+        document.querySelector(`#${tableDataId}`).innerHTML = newTraitValue;
+        let dataId = tableDataId.split("-")[2];
+
+        let dataObject = $('#edit-form-view :input').serializeJSON();
+        const uri = `/api/disease-traits/${dataId}`;
+        let httpRequest = HttpRequestEngine.requestWithBody(uri, dataObject, 'PUT');
+        console.log(dataObject)
+        HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
+            console.log(data);
+            UI.launchToastNotification('Disease Trait was updated');
+        });
+    }
+
+}
+
+DiseaseTrait.getTraitData(1);
+DiseaseTrait.formEvents();
+DiseaseTrait.floatingActionButtonEvents();
+
+function loadDataInDetailedView(componentId){
+
+    let masterRowDOM = document.querySelector(`#${componentId}`);
+    let detailViewTextDisplay = document.querySelector('#selected-trait');
+    let detailViewTextFieldComponent = document.querySelector('#edit-trait');
+    let detailViewHiddenFieldComponent = document.querySelector('#id-of-master');
+
+    let trait = masterRowDOM.innerHTML;
+    detailViewTextFieldComponent.value = trait;
+    detailViewHiddenFieldComponent.value = componentId; //send td id to Nav Drawer so it can change the content
+    detailViewTextDisplay.innerHTML = trait[0].toUpperCase()+trait.slice(1);
 }
 
