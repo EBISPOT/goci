@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpRequest;
@@ -30,6 +31,7 @@ import java.util.List;
 @SpringBootApplication
 @EnableScheduling
 @EnableAsync
+@EnableCaching
 public class CurationApplication extends SpringBootServletInitializer {
     @Value("${deposition.token}")
     private String depositionToken;

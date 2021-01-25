@@ -4,10 +4,12 @@ import org.apache.commons.text.similarity.CosineDistance;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.constants.EntityType;
+import uk.ac.ebi.spot.goci.curation.dto.AnalysisCacheDto;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
 import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
@@ -90,7 +92,8 @@ public class DiseaseTraitService {
     }
 
 
-    public List<AnalysisDTO> similaritySearch(List<AnalysisDTO> diseaseTraitAnalysisDTOS, double threshold) {
+    @Cacheable(value = "diseaseTraitAnalysis", key="#analysisId")
+    public AnalysisCacheDto similaritySearch(List<AnalysisDTO> diseaseTraitAnalysisDTOS, String analysisId, double threshold) {
         LevenshteinDistance lv = new LevenshteinDistance();
         CosineDistance cd = new CosineDistance();
 
@@ -117,7 +120,9 @@ public class DiseaseTraitService {
                                                        }
                                  ));
 
-        return analysisReport;
+        return AnalysisCacheDto.builder()
+                .uniqueId(analysisId)
+                .analysisResult(analysisReport).build();
     }
 
 
