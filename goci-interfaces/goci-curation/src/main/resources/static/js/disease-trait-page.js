@@ -1,7 +1,9 @@
 class DiseaseTrait {
 
+    static endpoint = `${this.getProxyPath()}api/v1/disease-traits`;
+
     static getTraitData(pageNumber) {
-        const URI = `/api/v1/disease-traits?page=${--pageNumber}`;
+        const URI = `${this.endpoint}?page=${--pageNumber}`;
         let httpRequest = HttpRequestEngine.requestWithoutBody(URI, 'GET');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             // UI.hideRow('loader-row');
@@ -15,6 +17,7 @@ class DiseaseTrait {
     }
 
     static updateDataRows(dataObject, dataId, properties, tableBodyId) {
+        const baseURL = this.endpoint;
         const tableRows = document.querySelector(`#${tableBodyId}`);
         const tr = document.createElement('tr');
         tr.setAttribute('id', `row-${dataId}`);
@@ -34,7 +37,7 @@ class DiseaseTrait {
 
         // Delete Event : Event Listener delete Button in the last column
         document.querySelector(`#deleteBtn-${dataId}`).addEventListener('click', function () {
-            let uri = `/api/v1/disease-traits/${dataId}`;
+            let uri = `${baseURL}/${dataId}`;
             let httpRequest = HttpRequestEngine.requestWithoutBody(uri, 'DELETE');
             HttpRequestEngine.fetchRequest(httpRequest).then((result) => {
                 let row = document.querySelector(`#row-${dataId}`);
@@ -46,7 +49,6 @@ class DiseaseTrait {
     }
 
     static generatePagination(pageData){
-
         let size = pageData.size;
         let totalPages = pageData.totalPages;
         let totalElements = pageData.totalElements;
@@ -118,16 +120,24 @@ class DiseaseTrait {
     static formEvents(){
         const CLICK_EVENT = 'click';
         const CHANGE_EVENT = 'change';
-        document.querySelector('#create-form-button').addEventListener(CLICK_EVENT, DiseaseTrait.save);
-        document.querySelector('#upload-data-button').addEventListener(CLICK_EVENT, DiseaseTrait.uploadButtonAction);
-        document.querySelector('#analysis-data-button').addEventListener(CLICK_EVENT, DiseaseTrait.analysisButtonAction);
+        document.querySelector('#create-form-button').addEventListener(CLICK_EVENT, () => {
+            DiseaseTrait.save()
+        });
+        document.querySelector('#upload-data-button').addEventListener(CLICK_EVENT, () => {
+            DiseaseTrait.uploadButtonAction()
+        });
+        document.querySelector('#analysis-data-button').addEventListener(CLICK_EVENT, () => {
+            DiseaseTrait.analysisButtonAction()
+        });
         document.querySelector('#bulk-upload').addEventListener(CHANGE_EVENT,  () => {
             UI.loadText('output', 'Click on the Upload button', 'red', 'bulk-upload');
         });
         document.querySelector('#analysis-uploads').addEventListener(CHANGE_EVENT, () => {
             UI.loadText('analysis', 'Click on the Upload button', 'red', 'analysis-uploads');
         });
-        document.querySelector('#edit-form-button').addEventListener(CLICK_EVENT, DiseaseTrait.edit);
+        document.querySelector('#edit-form-button').addEventListener(CLICK_EVENT, () => {
+            DiseaseTrait.edit()
+        });
     }
 
     static floatingActionButtonEvents(){
@@ -161,7 +171,7 @@ class DiseaseTrait {
         //Validate Inputs
         const componentId = 'output';
         const VALIDATION_OBJECT = {'bulk-upload': 'Upload File'};
-        const URI = '/api/v1/disease-traits/uploads';
+        const URI = `${this.endpoint}/uploads`;
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
@@ -183,7 +193,7 @@ class DiseaseTrait {
         //Validate Inputs
         const componentId = 'analysis';
         const VALIDATION_OBJECT = {'analysis-uploads': 'Analysis File'};
-        const URI = '/api/v1/disease-traits/analysis';
+        const URI = `${this.endpoint}/analysis`;
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
@@ -196,15 +206,15 @@ class DiseaseTrait {
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             console.log(data);
             UI.updateFileInput(componentId,'File upload done! Click to Analyse another file','black');
-            $("#result-url").attr('href', `/api/v1/disease-traits/analysis/${data.uniqueId}`);
+            $("#result-url").attr('href', `${this.endpoint}/analysis/${data.uniqueId}`);
             UI.unHideRow('result-url');
         });
     }
 
     static save() {
+        const URI = this.endpoint;
         //Validate Inputs
         const VALIDATION_OBJECT = {'trait': 'Reported Trait'};
-        const URI = '/api/v1/disease-traits';
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
@@ -228,7 +238,7 @@ class DiseaseTrait {
         let dataId = tableDataId.split("-")[2];
 
         let dataObject = $('#edit-form-view :input').serializeJSON();
-        const uri = `/api/v1/disease-traits/${dataId}`;
+        const uri = `${this.endpoint}/${dataId}`;
         let httpRequest = HttpRequestEngine.requestWithBody(uri, dataObject, 'PUT');
         console.log(dataObject)
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
@@ -236,6 +246,12 @@ class DiseaseTrait {
             UI.launchToastNotification('Disease Trait was updated');
         });
     }
+
+    static getProxyPath(){
+        let lastIndex=window.location.pathname.lastIndexOf("/");
+        return window.location.pathname.slice(0, lastIndex+1);
+    }
+
 }
 
 DiseaseTrait.getTraitData(1);
