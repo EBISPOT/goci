@@ -187,7 +187,7 @@ class DiseaseTrait {
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
-        UI.loadText(componentId,'Analysis File upload in Progress ...','green', 'analysis-uploads');
+        UI.loadText(componentId,'Algorithm running, file analysis in Progress ...','green', 'analysis-uploads');
 
         const formData = new FormData();
         const fileField = document.querySelector('#analysis-uploads');
@@ -196,6 +196,8 @@ class DiseaseTrait {
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             console.log(data);
             UI.updateFileInput(componentId,'File upload done! Click to Analyse another file','black');
+            $("#result-url").attr('href', `/api/v1/disease-traits/analysis/${data.uniqueId}`);
+            UI.unHideRow('result-url');
         });
     }
 
