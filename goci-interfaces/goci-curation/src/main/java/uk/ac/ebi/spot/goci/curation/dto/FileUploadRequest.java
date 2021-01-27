@@ -1,7 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.dto;
 
 import lombok.Data;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.AssertTrue;
