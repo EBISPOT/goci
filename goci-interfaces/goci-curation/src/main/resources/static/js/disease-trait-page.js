@@ -1,7 +1,7 @@
 class DiseaseTrait {
 
     static getTraitData(pageNumber) {
-        const URI = `/api/disease-traits?page=${--pageNumber}`;
+        const URI = `/api/v1/disease-traits?page=${--pageNumber}`;
         let httpRequest = HttpRequestEngine.requestWithoutBody(URI, 'GET');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             // UI.hideRow('loader-row');
@@ -34,7 +34,7 @@ class DiseaseTrait {
 
         // Delete Event : Event Listener delete Button in the last column
         document.querySelector(`#deleteBtn-${dataId}`).addEventListener('click', function () {
-            let uri = `/api/disease-traits/${dataId}`;
+            let uri = `/api/v1/disease-traits/${dataId}`;
             let httpRequest = HttpRequestEngine.requestWithoutBody(uri, 'DELETE');
             HttpRequestEngine.fetchRequest(httpRequest).then((result) => {
                 let row = document.querySelector(`#row-${dataId}`);
@@ -115,7 +115,6 @@ class DiseaseTrait {
         dPagination.appendChild(pageList);
     }
 
-
     static formEvents(){
         const CLICK_EVENT = 'click';
         const CHANGE_EVENT = 'change';
@@ -162,7 +161,7 @@ class DiseaseTrait {
         //Validate Inputs
         const componentId = 'output';
         const VALIDATION_OBJECT = {'bulk-upload': 'Upload File'};
-        const URI = '/api/disease-traits/uploads';
+        const URI = '/api/v1/disease-traits/uploads';
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
@@ -184,7 +183,7 @@ class DiseaseTrait {
         //Validate Inputs
         const componentId = 'analysis';
         const VALIDATION_OBJECT = {'analysis-uploads': 'Analysis File'};
-        const URI = '/api/disease-traits/analysis';
+        const URI = '/api/v1/disease-traits/analysis';
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
@@ -203,7 +202,7 @@ class DiseaseTrait {
     static save() {
         //Validate Inputs
         const VALIDATION_OBJECT = {'trait': 'Reported Trait'};
-        const URI = '/api/disease-traits';
+        const URI = '/api/v1/disease-traits';
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
@@ -227,7 +226,7 @@ class DiseaseTrait {
         let dataId = tableDataId.split("-")[2];
 
         let dataObject = $('#edit-form-view :input').serializeJSON();
-        const uri = `/api/disease-traits/${dataId}`;
+        const uri = `/api/v1/disease-traits/${dataId}`;
         let httpRequest = HttpRequestEngine.requestWithBody(uri, dataObject, 'PUT');
         console.log(dataObject)
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
@@ -235,7 +234,6 @@ class DiseaseTrait {
             UI.launchToastNotification('Disease Trait was updated');
         });
     }
-
 }
 
 DiseaseTrait.getTraitData(1);
