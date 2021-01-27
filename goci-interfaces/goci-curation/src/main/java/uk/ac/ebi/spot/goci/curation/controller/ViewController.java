@@ -19,6 +19,7 @@ class ViewController {
 
     @Autowired
     private DiseaseTraitRepository diseaseTraitRepository;
+    private static final String VALUE = "value";
 
 
     @GetMapping("/disease-traits")
@@ -51,13 +52,13 @@ class ViewController {
             diseaseTrait.getStudies().forEach(study -> {
                 Map<String, Object> child = new HashMap<>();
                 child.put("name", study.getPublicationId().getPubmedId());
-                child.put("value", 40);
+                child.put(VALUE, 40);
                 children.add(child);
             });
 
             Map<String, Object> parent = new LinkedHashMap<>();
             parent.put("name", trait+" ("+children.size()+")");
-            parent.put("value", 102);
+            parent.put(VALUE, 102);
             parent.put("children", children);
             parents.add(parent);
         });
@@ -67,7 +68,7 @@ class ViewController {
         Map<String, Object> parenta = new LinkedHashMap<>();
 
         parenta.put("name", "core");
-        parenta.put("value", "10");
+        parenta.put(VALUE, "10");
         parenta.put("children", parents);
         parents2.add(parenta);
 

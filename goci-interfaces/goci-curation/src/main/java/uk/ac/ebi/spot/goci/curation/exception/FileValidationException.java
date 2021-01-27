@@ -4,7 +4,7 @@ import org.springframework.validation.BindingResult;
 
 public class FileValidationException extends RuntimeException {
 
-    BindingResult bindingResult;
+    private BindingResult bindingResult;
 
     public FileValidationException(BindingResult bindingResult) {
         super("Validation Errors");

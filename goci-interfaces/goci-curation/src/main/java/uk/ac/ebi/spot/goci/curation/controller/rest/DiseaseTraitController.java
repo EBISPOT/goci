@@ -35,6 +35,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,16 +118,16 @@ public class DiseaseTraitController {
     }
 
     @PostMapping("/analysis")
-    public String similaritySearchAnalysis(@Valid FileUploadRequest fileUploadRequest, BindingResult result) {
+    public AnalysisCacheDto similaritySearchAnalysis(@Valid FileUploadRequest fileUploadRequest, BindingResult result) {
         if (result.hasErrors()) {
             throw new FileValidationException(result);
         }
         List<AnalysisDTO> analysisDTO = FileHandler.serializeDiseaseTraitAnalysisFile(fileUploadRequest);
         log.info("{} disease traits were ingested for analysis", analysisDTO.size());
         String analysisId = UUID.randomUUID().toString();
-        diseaseTraitService.similaritySearch(analysisDTO, analysisId,50.0);
+        AnalysisCacheDto analysisCacheDto = diseaseTraitService.similaritySearch(analysisDTO, analysisId,50.0);
         log.info("Analysis done, retrievable in future with id {}", analysisId);
-        return analysisId;
+        return analysisCacheDto;
     }
 
     @GetMapping("/analysis/{analysisId}")
@@ -138,6 +139,8 @@ public class DiseaseTraitController {
         double threshold = 50.0;
         AnalysisCacheDto cache = diseaseTraitService.similaritySearch(analysisDTO, analysisId, threshold);
         analysisDTO = cache.getAnalysisResult();
+
+        analysisDTO.sort(Comparator.comparingDouble(AnalysisDTO::getDegree).reversed());
 
         String result = FileHandler.serializePojoToTsv(analysisDTO);
         log.info(result);
