@@ -9,6 +9,7 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.UnpublishedStudyDtoAssembler;
 import uk.ac.ebi.spot.goci.curation.exception.ResourceNotFoundException;
 import uk.ac.ebi.spot.goci.curation.dto.UnpublishedStudyDto;
@@ -16,7 +17,7 @@ import uk.ac.ebi.spot.goci.curation.service.UnpublishedStudyService;
 import uk.ac.ebi.spot.goci.model.UnpublishedStudy;
 
 @RestController
-@RequestMapping("/api/v1/unpublished-studies")
+@RequestMapping(Endpoint.API_V1+Endpoint.PUBLIC_UNPUBLISHED_STUDIES)
 public class UnpublishedStudyRestController {
 
     @Autowired

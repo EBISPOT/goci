@@ -29,7 +29,7 @@ public class StudyDtoAssembler implements ResourceAssembler<Study, Resource<Stud
                 ControllerLinkBuilder.methodOn(StudyRestController.class).getOneStudy(study.getId()));
 
         Resource<StudyDto> resource = new Resource<>(studyDto);
-        resource.add(controllerLinkBuilder.withSelfRel());
+        resource.add(controllerLinkBuilder.slash(study.getId()).withSelfRel());
         return resource;
     }
 
