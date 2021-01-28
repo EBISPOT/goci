@@ -96,7 +96,6 @@ class DiseaseTrait {
         }
 
         // Last Pagination Link:
-        //let pageId = 'finalPage';
         let finalPage = document.createElement("li");
         let finalPageLink = document.createElement("a");
         finalPageLink.style.cursor = "pointer";
@@ -112,6 +111,13 @@ class DiseaseTrait {
         finalPageLink.appendChild(finalPageText);
         finalPage.appendChild(finalPageLink);
         pageList.appendChild(finalPage);
+
+        let report = document.createElement("li");
+        let reportLink = document.createElement("a");
+        let reportText = document.createTextNode(this.pageReport(pageData));
+        reportLink.appendChild(reportText);
+        report.appendChild(reportLink);
+        pageList.appendChild(report);
 
         UI.removeChildren('page-area');
         const dPagination = document.querySelector('#page-area');
@@ -136,6 +142,17 @@ class DiseaseTrait {
         let pageSize = (selectedSize == null) ? 10 : selectedSize;
         localStorage.setItem('page_size', pageSize);
         return pageSize;
+    }
+
+    static pageReport(pageData){
+        let page = pageData.number + 1;
+        let size = this.getSelectedPageSize();
+        let from = pageData.number * size + 1;
+        let to = page * size;
+        if (page === pageData.totalPages){
+            to = pageData.totalElements
+        }
+        return `${from} to ${to} of ${pageData.totalElements} rows`
     }
 
     static formEvents(){
@@ -181,8 +198,8 @@ class DiseaseTrait {
     }
 
     static switchFormView(selectedViewId) {
-        let views = ["add-form-view", "upload-form-view", "analysis-form-view", "visualization-view", "trait-table-view"];
-        views.map(view => {
+        ["add-form-view", "upload-form-view", "analysis-form-view", "visualization-view", "trait-table-view"]
+            .map(view => {
             UI.hideRow(`${view}`);
         });
         UI.unHideRow(`${selectedViewId}`);
