@@ -144,11 +144,9 @@ public class DiseaseTraitController {
 
         String result = FileHandler.serializePojoToTsv(analysisDTO);
         log.info(result);
-
         response.setContentType("text/csv;charset=utf-8");
         response.setHeader("Content-Disposition", "attachment; filename=analysis.csv");
         response.getOutputStream().flush();
-
         return result;
     }
 }

@@ -96,6 +96,19 @@ class UI {
         return list;
     }
 
+    static dropDownSelect(options){
+        let selectTag = document.createElement('select');
+        selectTag.setAttribute('class', 'form-control');
+        options.map(option => {
+            let selectOption = document.createElement('option');
+            selectOption.setAttribute('value', option);
+            let text = document.createTextNode(option);
+            selectOption.appendChild(text);
+            selectTag.appendChild(selectOption);
+        });
+        return selectTag;
+    }
+
     static toggleButton() {
         let btn = document.createElement("button");
         btn.setAttribute('type', 'button');
@@ -108,6 +121,20 @@ class UI {
         let span = document.createElement("span");
         span.setAttribute('class', dClass);
         return span;
+    }
+
+
+    static loadingIcon(){
+        let tr = document.createElement("tr")
+        tr.setAttribute("id", "loader-row");
+        tr.setAttribute("style", "background-color: #FFFFFF;");
+        let td = document.createElement("td");
+        td.setAttribute("colspan", "2");
+        let div = document.createElement("div");
+        div.setAttribute("class", "loader");
+        td.appendChild(div);
+        tr.appendChild(td);
+        return tr;
     }
 
     /*** TOAST ***/

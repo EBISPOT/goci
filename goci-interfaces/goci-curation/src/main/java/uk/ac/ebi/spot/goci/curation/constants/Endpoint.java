@@ -6,6 +6,8 @@ public class Endpoint {
 
     public static final String PUBLIC_STUDIES = "/public/studies";
 
+    public static final String PUBLIC_UNPUBLISHED_STUDIES = "/public/unpublished-studies";
+
     public static final String STUDIES = "/studies";
 
     public static final String DISEASE_TRAITS =  "/disease-traits";

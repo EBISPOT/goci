@@ -23,7 +23,7 @@ public class UnpublishedStudyDtoAssembler implements ResourceAssembler<Unpublish
                 ControllerLinkBuilder.methodOn(UnpublishedStudyRestController.class).getOneUnpublishedStudy(unpublishedStudy.getId()));
 
         Resource<UnpublishedStudyDto> resource = new Resource<>(unpublishedStudyDto);
-        resource.add(controllerLinkBuilder.withSelfRel());
+        resource.add(controllerLinkBuilder.slash(unpublishedStudy.getId()).withSelfRel());
         return resource;
     }
 }
