@@ -3,14 +3,15 @@ class DiseaseTrait {
     static endpoint = `${this.getProxyPath()}api/v1/disease-traits`;
 
     static getTraitData(pageNumber) {
-        const URI = `${this.endpoint}?page=${--pageNumber}`;
+        let pageSize = this.getSelectedPageSize();
+        $('#data-list').html(UI.loadingIcon());
+        const URI = `${this.endpoint}?page=${--pageNumber}&size=${pageSize}`;
         let httpRequest = HttpRequestEngine.requestWithoutBody(URI, 'GET');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
-            // UI.hideRow('loader-row');
             UI.removeChildren('data-list');
             let columns = ['trait'];
-            data._embedded.diseaseTraits.map(data => {
-                DiseaseTrait.updateDataRows(data, data.id, columns, 'data-list');
+            data._embedded.diseaseTraits.map(dData => {
+                DiseaseTrait.updateDataRows(dData, dData.id, columns, 'data-list');
             });
             DiseaseTrait.generatePagination(data.page);
         });
@@ -22,7 +23,7 @@ class DiseaseTrait {
         const tr = document.createElement('tr');
         tr.setAttribute('id', `row-${dataId}`);
         //blink
-        properties.forEach((property, index, properties) => {
+        properties.forEach((property, index, prop) => {
             let td = UI.tableData(dataObject[property], `col-${index}-${dataId}`);
             td.setAttribute("class", "ui-menu-open");
             tr.appendChild(td);
@@ -49,7 +50,7 @@ class DiseaseTrait {
     }
 
     static generatePagination(pageData){
-        let size = pageData.size;
+
         let totalPages = pageData.totalPages;
         let totalElements = pageData.totalElements;
         let page = pageData.number + 1;
@@ -115,6 +116,26 @@ class DiseaseTrait {
         UI.removeChildren('page-area');
         const dPagination = document.querySelector('#page-area');
         dPagination.appendChild(pageList);
+    }
+
+    static pageSizeConfig(){
+        let pageSizes = [5, 10, 25, 50, 100, 250, 500];
+        let pageSizeSelect = UI.dropDownSelect(pageSizes)
+        pageSizeSelect.addEventListener("change",  (event)=>{
+            localStorage.setItem('page_size', event.target.value);
+            DiseaseTrait.getTraitData(1);
+        });
+        UI.removeChildren('page-size-area');
+        const pageSizeArea = document.querySelector('#page-size-area');
+        pageSizeArea.appendChild(pageSizeSelect);
+        pageSizeSelect.value = localStorage.getItem('page_size');
+    }
+
+    static getSelectedPageSize(){
+        let selectedSize = localStorage.getItem('page_size');
+        let pageSize = (selectedSize == null) ? 10 : selectedSize;
+        localStorage.setItem('page_size', pageSize);
+        return pageSize;
     }
 
     static formEvents(){
@@ -257,6 +278,7 @@ class DiseaseTrait {
 DiseaseTrait.getTraitData(1);
 DiseaseTrait.formEvents();
 DiseaseTrait.floatingActionButtonEvents();
+DiseaseTrait.pageSizeConfig();
 
 function loadDataInDetailedView(componentId){
 
