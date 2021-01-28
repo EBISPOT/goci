@@ -105,6 +105,19 @@ public class DiseaseTraitController {
         return "Done";
     }
 
+    @GetMapping(value = "/search", produces = MediaTypes.HAL_JSON_VALUE)
+    public Object searchDiseaseTraitsByParam(PagedResourcesAssembler<DiseaseTrait> assembler,
+                                             @RequestParam String query,
+                                             Pageable pageable) {
+        Page<DiseaseTrait> pagedDiseaseTraits = diseaseTraitService.searchByParameter(query, pageable);
+        final ControllerLinkBuilder linkBuilder = ControllerLinkBuilder.linkTo(
+                ControllerLinkBuilder
+                        .methodOn(DiseaseTraitController.class)
+                        .getDiseaseTraits(assembler, pageable)
+        );
+        return assembler.toResource(pagedDiseaseTraits, diseaseTraitDtoAssembler, linkBuilder.withSelfRel());
+    }
+
     @PostMapping("/uploads")
     public Object updloadDiseaseTraits(@Valid FileUploadRequest fileUploadRequest, BindingResult result) {
         if (result.hasErrors()) {

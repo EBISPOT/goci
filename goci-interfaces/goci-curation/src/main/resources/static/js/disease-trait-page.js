@@ -4,9 +4,21 @@ class DiseaseTrait {
 
     static getTraitData(pageNumber) {
         let pageSize = this.getSelectedPageSize();
-        $('#data-list').html(UI.loadingIcon());
         const URI = `${this.endpoint}?page=${--pageNumber}&size=${pageSize}`;
-        let httpRequest = HttpRequestEngine.requestWithoutBody(URI, 'GET');
+        $('#data-list').html(UI.loadingIcon());
+        this.getData(URI);
+    }
+
+    static searchTraitData(query, pageNumber){
+        let pageSize = this.getSelectedPageSize();
+        const URI = `${this.endpoint}/search?query=${query}&page=${--pageNumber}&size=${pageSize}`;
+        if (query.length > 3 || query.length === 0){
+            this.getData(URI);
+        }
+    }
+
+    static getData(url){
+        let httpRequest = HttpRequestEngine.requestWithoutBody(url, 'GET');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             UI.removeChildren('data-list');
             let columns = ['trait'];
@@ -176,6 +188,9 @@ class DiseaseTrait {
         document.querySelector('#edit-form-button').addEventListener(CLICK_EVENT, () => {
             DiseaseTrait.edit()
         });
+        document.querySelector('#table-search').addEventListener('keyup', (event) => {
+            DiseaseTrait.searchTraitData(event.target.value, 1)
+        });
     }
 
     static floatingActionButtonEvents(){
@@ -206,7 +221,6 @@ class DiseaseTrait {
     }
 
     static uploadButtonAction() {
-        //Validate Inputs
         const componentId = 'output';
         const VALIDATION_OBJECT = {'bulk-upload': 'Upload File'};
         const URI = `${this.endpoint}/uploads`;
@@ -214,12 +228,9 @@ class DiseaseTrait {
             return;
         }
         UI.loadText(componentId,'File upload in Progress ...','green','bulk-upload');
-        // Serialize form values let dataObject = document.querySelector('#uploads').value;
-
         const formData = new FormData();
         const fileField = document.querySelector('input[type="file"]');
         formData.append('multipartFile', fileField.files[0]);
-        // Upload data file to Storage
         let httpRequest = HttpRequestEngine.fileUploadRequest(URI, formData, 'POST');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             console.log(data);
@@ -228,7 +239,6 @@ class DiseaseTrait {
     }
 
     static analysisButtonAction() {
-        //Validate Inputs
         const componentId = 'analysis';
         const VALIDATION_OBJECT = {'analysis-uploads': 'Analysis File'};
         const URI = `${this.endpoint}/analysis`;
@@ -236,7 +246,6 @@ class DiseaseTrait {
             return;
         }
         UI.loadText(componentId,'Algorithm running, file analysis in Progress ...','green', 'analysis-uploads');
-
         const formData = new FormData();
         const fileField = document.querySelector('#analysis-uploads');
         formData.append('multipartFile', fileField.files[0]);
@@ -251,7 +260,6 @@ class DiseaseTrait {
 
     static save() {
         const URI = this.endpoint;
-        //Validate Inputs
         const VALIDATION_OBJECT = {'trait': 'Reported Trait'};
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;

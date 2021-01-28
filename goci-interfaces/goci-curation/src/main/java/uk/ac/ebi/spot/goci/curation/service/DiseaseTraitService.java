@@ -47,6 +47,10 @@ public class DiseaseTraitService {
         return diseaseTrait;
     }
 
+    public Page<DiseaseTrait> searchByParameter(String search, Pageable pageable) {
+        return diseaseTraitRepository.findBySearchParameter(search, pageable);
+    }
+
     public Optional<DiseaseTrait> updateDiseaseTrait(DiseaseTraitDto diseaseTraitDTO, Long traitId) {
         return this.getDiseaseTrait(traitId)
                 .map(diseaseTrait -> {
