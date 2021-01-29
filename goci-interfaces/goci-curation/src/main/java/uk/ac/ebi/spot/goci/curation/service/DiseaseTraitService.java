@@ -12,6 +12,7 @@ import uk.ac.ebi.spot.goci.curation.constants.EntityType;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisCacheDto;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
 import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
+import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.repository.DiseaseTraitRepository;
@@ -43,6 +44,10 @@ public class DiseaseTraitService {
     }
 
     public DiseaseTrait createDiseaseTrait(DiseaseTrait diseaseTrait) {
+        diseaseTraitRepository.findByTrait(diseaseTrait.getTrait())
+                .ifPresent(trait -> {
+                    throw new DataIntegrityException(String.format("Trait %s already exist", trait.getTrait()));
+                });
         diseaseTrait = diseaseTraitRepository.save(diseaseTrait);
         return diseaseTrait;
     }
@@ -96,7 +101,7 @@ public class DiseaseTraitService {
     }
 
 
-    @Cacheable(value = "diseaseTraitAnalysis", key="#analysisId")
+    @Cacheable(value = "diseaseTraitAnalysis", key = "#analysisId")
     public AnalysisCacheDto similaritySearch(List<AnalysisDTO> diseaseTraitAnalysisDTOS, String analysisId, double threshold) {
         LevenshteinDistance lv = new LevenshteinDistance();
         CosineDistance cd = new CosineDistance();
@@ -128,8 +133,6 @@ public class DiseaseTraitService {
                 .uniqueId(analysisId)
                 .analysisResult(analysisReport).build();
     }
-
-
 
 
 }
