@@ -6,18 +6,20 @@ class DiseaseTrait {
         let pageSize = this.getSelectedPageSize();
         const URI = `${this.endpoint}?page=${--pageNumber}&size=${pageSize}`;
         $('#data-list').html(UI.loadingIcon());
-        this.getData(URI);
+
+        let query = $('#table-search').val();
+        (query.length > 3) ? this.searchTraitData(query, pageNumber) : this.getData(URI);
     }
 
-    static searchTraitData(query, pageNumber){
+    static searchTraitData(query, pageNumber) {
         let pageSize = this.getSelectedPageSize();
         const URI = `${this.endpoint}/search?query=${query}&page=${--pageNumber}&size=${pageSize}`;
-        if (query.length > 3 || query.length === 0){
+        if (query.length > 3 || query.length === 0) {
             this.getData(URI);
         }
     }
 
-    static getData(url){
+    static getData(url) {
         let httpRequest = HttpRequestEngine.requestWithoutBody(url, 'GET');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             UI.removeChildren('data-list');
@@ -41,7 +43,7 @@ class DiseaseTrait {
             tr.appendChild(td);
             if (Object.is(properties.length - 1, index)) {
                 td = document.createElement("td");
-                let deleteButton = UI.buttonElement('Delete',`deleteBtn-${dataId}`, 'fa-trash-alt');
+                let deleteButton = UI.buttonElement('Delete', `deleteBtn-${dataId}`, 'fa-trash-alt');
                 td.appendChild(deleteButton);
                 tr.appendChild(td);
             }
@@ -61,7 +63,7 @@ class DiseaseTrait {
         NavDrawer.init();
     }
 
-    static generatePagination(pageData){
+    static generatePagination(pageData) {
 
         let totalPages = pageData.totalPages;
         let totalElements = pageData.totalElements;
@@ -77,11 +79,11 @@ class DiseaseTrait {
         let firstPage = document.createElement("li");
         let firstLink = document.createElement("a");
         let firstText = document.createTextNode('First «');
-        if (currentIndex === 1){
+        if (currentIndex === 1) {
             firstPage.setAttribute('class', 'disabled');
-        }else {
+        } else {
             firstLink.style.cursor = "pointer";
-            firstLink.addEventListener("click",  ()=>{
+            firstLink.addEventListener("click", () => {
                 DiseaseTrait.getTraitData(1);
             });
         }
@@ -90,15 +92,15 @@ class DiseaseTrait {
         pageList.appendChild(firstPage);
 
         // Next Pagination Links:
-        for (let i=beginIndex; i<endIndex; i++ ){
+        for (let i = beginIndex; i < endIndex; i++) {
             let nextPage = document.createElement("li");
             let nextLink = document.createElement("a");
             let nextPageText = document.createTextNode(i);
-            if (i === page){
+            if (i === page) {
                 nextPage.setAttribute('class', 'active');
-            }else {
+            } else {
                 nextLink.style.cursor = "pointer";
-                nextLink.addEventListener("click",  ()=>{
+                nextLink.addEventListener("click", () => {
                     DiseaseTrait.getTraitData(i);
                 });
             }
@@ -113,10 +115,10 @@ class DiseaseTrait {
         finalPageLink.style.cursor = "pointer";
         //finalPageLink.setAttribute('id', pageId);
         let finalPageText = document.createTextNode('Last «');
-        if (page === totalPages){
+        if (page === totalPages) {
             finalPage.setAttribute('class', 'disabled');
-        }else {
-            finalPageLink.addEventListener("click",  ()=>{
+        } else {
+            finalPageLink.addEventListener("click", () => {
                 DiseaseTrait.getTraitData(totalPages);
             });
         }
@@ -136,10 +138,10 @@ class DiseaseTrait {
         dPagination.appendChild(pageList);
     }
 
-    static pageSizeConfig(){
+    static pageSizeConfig() {
         let pageSizes = [5, 10, 25, 50, 100, 250, 500];
         let pageSizeSelect = UI.dropDownSelect(pageSizes)
-        pageSizeSelect.addEventListener("change",  (event)=>{
+        pageSizeSelect.addEventListener("change", (event) => {
             localStorage.setItem('page_size', event.target.value);
             DiseaseTrait.getTraitData(1);
         });
@@ -149,25 +151,25 @@ class DiseaseTrait {
         pageSizeSelect.value = localStorage.getItem('page_size');
     }
 
-    static getSelectedPageSize(){
+    static getSelectedPageSize() {
         let selectedSize = localStorage.getItem('page_size');
         let pageSize = (selectedSize == null) ? 10 : selectedSize;
         localStorage.setItem('page_size', pageSize);
         return pageSize;
     }
 
-    static pageReport(pageData){
+    static pageReport(pageData) {
         let page = pageData.number + 1;
         let size = this.getSelectedPageSize();
         let from = pageData.number * size + 1;
         let to = page * size;
-        if (page === pageData.totalPages){
+        if (page === pageData.totalPages) {
             to = pageData.totalElements
         }
         return `${from} to ${to} of ${pageData.totalElements} rows`
     }
 
-    static formEvents(){
+    static formEvents() {
         const CLICK_EVENT = 'click';
         const CHANGE_EVENT = 'change';
         document.querySelector('#create-form-button').addEventListener(CLICK_EVENT, () => {
@@ -179,7 +181,7 @@ class DiseaseTrait {
         document.querySelector('#analysis-data-button').addEventListener(CLICK_EVENT, () => {
             DiseaseTrait.analysisButtonAction()
         });
-        document.querySelector('#bulk-upload').addEventListener(CHANGE_EVENT,  () => {
+        document.querySelector('#bulk-upload').addEventListener(CHANGE_EVENT, () => {
             UI.loadText('output', 'Click on the Upload button', 'red', 'bulk-upload');
         });
         document.querySelector('#analysis-uploads').addEventListener(CHANGE_EVENT, () => {
@@ -193,7 +195,7 @@ class DiseaseTrait {
         });
     }
 
-    static floatingActionButtonEvents(){
+    static floatingActionButtonEvents() {
         const CLICK_EVENT = 'click';
         document.querySelector('#activate-analysis-form-view').addEventListener(CLICK_EVENT, () => {
             DiseaseTrait.switchFormView('analysis-form-view');
@@ -215,8 +217,8 @@ class DiseaseTrait {
     static switchFormView(selectedViewId) {
         ["add-form-view", "upload-form-view", "analysis-form-view", "visualization-view", "trait-table-view"]
             .map(view => {
-            UI.hideRow(`${view}`);
-        });
+                UI.hideRow(`${view}`);
+            });
         UI.unHideRow(`${selectedViewId}`);
     }
 
@@ -227,14 +229,14 @@ class DiseaseTrait {
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
-        UI.loadText(componentId,'File upload in Progress ...','green','bulk-upload');
+        UI.loadText(componentId, 'File upload in Progress ...', 'green', 'bulk-upload');
         const formData = new FormData();
         const fileField = document.querySelector('input[type="file"]');
         formData.append('multipartFile', fileField.files[0]);
         let httpRequest = HttpRequestEngine.fileUploadRequest(URI, formData, 'POST');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             console.log(data);
-            UI.updateFileInput(componentId,'File upload done! Click to Upload another file','black');
+            UI.updateFileInput(componentId, 'File upload done! Click to Upload another file', 'black');
         });
     }
 
@@ -245,14 +247,14 @@ class DiseaseTrait {
         if (Validation.validateInputs(VALIDATION_OBJECT) === "invalid") {
             return;
         }
-        UI.loadText(componentId,'Algorithm running, file analysis in Progress ...','green', 'analysis-uploads');
+        UI.loadText(componentId, 'Algorithm running, file analysis in Progress ...', 'green', 'analysis-uploads');
         const formData = new FormData();
         const fileField = document.querySelector('#analysis-uploads');
         formData.append('multipartFile', fileField.files[0]);
         let httpRequest = HttpRequestEngine.fileUploadRequest(URI, formData, 'POST');
         HttpRequestEngine.fetchRequest(httpRequest).then((data) => {
             console.log(data);
-            UI.updateFileInput(componentId,'File upload done! Click to Analyse another file','black');
+            UI.updateFileInput(componentId, 'File upload done! Click to Analyse another file', 'black');
             $("#result-url").attr('href', `${this.endpoint}/analysis/${data.uniqueId}`);
             UI.unHideRow('result-url');
         });
@@ -293,9 +295,9 @@ class DiseaseTrait {
         });
     }
 
-    static getProxyPath(){
-        let lastIndex=window.location.pathname.lastIndexOf("/");
-        return window.location.pathname.slice(0, lastIndex+1);
+    static getProxyPath() {
+        let lastIndex = window.location.pathname.lastIndexOf("/");
+        return window.location.pathname.slice(0, lastIndex + 1);
     }
 
 }
@@ -305,7 +307,7 @@ DiseaseTrait.formEvents();
 DiseaseTrait.floatingActionButtonEvents();
 DiseaseTrait.pageSizeConfig();
 
-function loadDataInDetailedView(componentId){
+function loadDataInDetailedView(componentId) {
 
     let masterRowDOM = document.querySelector(`#${componentId}`);
     let detailViewTextDisplay = document.querySelector('#selected-trait');
@@ -315,6 +317,6 @@ function loadDataInDetailedView(componentId){
     let trait = masterRowDOM.innerHTML;
     detailViewTextFieldComponent.value = trait;
     detailViewHiddenFieldComponent.value = componentId; //send td id to Nav Drawer so it can change the content
-    detailViewTextDisplay.innerHTML = trait[0].toUpperCase()+trait.slice(1);
+    detailViewTextDisplay.innerHTML = trait[0].toUpperCase() + trait.slice(1);
 }
 
