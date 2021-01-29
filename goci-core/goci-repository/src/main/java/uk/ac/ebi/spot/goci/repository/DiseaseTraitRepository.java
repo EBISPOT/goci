@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
@@ -12,6 +13,7 @@ import uk.ac.ebi.spot.goci.model.projection.DiseaseTraitProjection;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by emma on 01/12/14.
@@ -29,6 +31,12 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
             "LEFT JOIN diseaseTrait.studies studies group by diseaseTrait.id, diseaseTrait.trait " +
             "ORDER BY studiesCount desc ")
     List<DiseaseTraitProjection> findAllOrOrderByStudiesLargest(Pageable pageable);
+
+    @Query(value = "Select dt from DiseaseTrait dt " +
+            "WHERE lower( dt.trait ) LIKE lower(CONCAT('%',:search,'%')) ")
+    Page<DiseaseTrait> findBySearchParameter(@Param("search") String search, Pageable pageable);
+
+    Optional<DiseaseTrait> findByTrait(String trait);
 
     List<DiseaseTrait> findAllByIdIsIn(List<Long> id);
 

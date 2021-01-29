@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.ac.ebi.spot.goci.curation.dto.ErrorResponse;
+import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.curation.exception.FileValidationException;
 import uk.ac.ebi.spot.goci.curation.exception.ResourceNotFoundException;
 
@@ -23,6 +24,13 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest req) {
         ErrorResponse error = ErrorResponse.basicResponse(HttpStatus.NOT_FOUND, ex, req, dateFormat);
+        log.error(error.toString());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataIntegrityException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityException(DataIntegrityException ex, HttpServletRequest req) {
+        ErrorResponse error = ErrorResponse.basicResponse(HttpStatus.CONFLICT, ex, req, dateFormat);
         log.error(error.toString());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }

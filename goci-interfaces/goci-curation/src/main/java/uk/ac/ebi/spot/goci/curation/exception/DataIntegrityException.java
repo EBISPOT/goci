@@ -1,8 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.exception;
 
-/**
- * Created by emma on 29/01/15.
- */
 public class DataIntegrityException extends RuntimeException {
 
     public DataIntegrityException() {
