@@ -71,20 +71,28 @@
                         <li><a th:href="@{/studies}">Curation Home</a></li>
                         <li><a th:href="@{/studies/new}">Add Study</a></li>
                         <li><a th:href="@{/submissions}">View Submissions</a></li>
-                        <li><a th:href="@{/diseasetraits}">Update Disease / Traits</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                               role="button" aria-haspopup="true" aria-expanded="false"> Disease Traits <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a th:href="@{/diseasetraits}">Old Disease Traits</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li class="dropdown-header">Latest Update</li>
+                                <li><a th:href="@{/disease-traits}">New Disease Traits Page</a></li>
+                            </ul>
+                        </li>
                         <li><a th:href="@{/efotraits}">Update EFO Traits</a></li>
                         <li><a th:href="@{/reports/monthly}">Reports</a></li>
-                        <li>
-                            <div class="btn-group">
-                                <button type="button"
-                                        data-toggle="dropdown"
-                                        class="btn btn-default dropdown-toggle navbar-btn">
-                                    Download files<span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a th:href="@{/sampledescriptions}">Studies with ancestry information</a></li>
-                                    <li><a th:href="@{/mappingerrorreport}">Mapping errors comparison</a></li>
-                                </ul>
-                            </div>
+
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
+                               role="button" aria-haspopup="true" aria-expanded="false"> Download files <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a th:href="@{/sampledescriptions}">Studies with ancestry information</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li class="dropdown-header">Other Files</li>
+                                <li><a th:href="@{/mappingerrorreport}">Mapping errors comparison</a></li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
