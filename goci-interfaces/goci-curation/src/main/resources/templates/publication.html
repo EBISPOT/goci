@@ -40,6 +40,8 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
 
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'/>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css'/>
 
     <link rel="stylesheet" th:href="@{/css/general.css}"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
@@ -51,36 +53,48 @@
 
 
 <div class="container-fluid">
-    <div class="row" style="margin-top: -30px;">
+    <div class="row" style="margin-top: -30px;" id="publication-summary-view">
         <div class="col-md-offset-1  col-md-10">
             <div class="panel card-3 animated fadeIn">
 
                 <div id="extra-form-view" class="animated fadeIn">
-                    <h6 style="margin-left: 15px; font-weight: 300;"> Manage Publication & Studies </h6>
+                    <h6 style="margin-left: 15px; font-weight: 300;">
+                        <a th:href="@{/home}">GWAS</a> >> Publication >>
+                        <em class="active" th:text="${publication.pubmedId}"></em>
+                    </h6>
                     <div class='header'
                          style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
                         <h4>
                             <span style="font-weight: normal; margin-left: 15px;"> Publication Information <br/> </span>
-                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Publication SUmmary below: </small>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;">
+                                Manage Publication and Studies
+                            </small>
                         </h4>
                     </div>
                     <div class="table-responsive">
                         <table class="table row-border display compact" style="border-top: 1px solid #ccc;">
                             <tbody>
                             <tr>
-                                <th class="col-md-3"> PubMed ID</th>
-                                <td class="col-md-3" id="publicationPubmedId" th:text="${publication.pubmedId}"> ...
-                                </td>
-                                <th class="col-md-6">
+                                <th class="col-md-2"> PubMed ID</th>
+                                <td class="col-md-3" id="publicationPubmedId" th:text="${publication.pubmedId}"> ...</td>
+
+                                <th class="col-md-2"> Journal </th>
+                                <td class="col-md-3" id="publication-journal" th:text="${publication.publication}"> ...</td>
+
+                                <td class="col-md-2">
                                         <span id="pubmedid_button" style="cursor: pointer;">View in PubMed
                                             <span class="glyphicon glyphicon-new-window external-link"></span>
                                         </span>
-                                </th>
+                                </td>
                             </tr>
                             <tr>
-                                <th class="col-md-3"> First author</th>
+                                <th class="col-md-2"> First author</th>
                                 <td class="col-md-3" id="publication-author" th:text="${publication.firstAuthor.fullname}"> ...</td>
-                                <th class="col-md-6">
+
+                                <th class="col-md-2"> Publication date</th>
+                                <td class="col-md-3" id="publication-datepublication" th:text="${#calendars.format(publication.publicationDate,'YYYY-MM-dd')}"> ...</td>
+
+                                <th class="col-md-2">
                                     <span id="europepmc_button" style="cursor: pointer;">View in Europe PMC
                                         <span class="glyphicon glyphicon-new-window external-link"></span>
                                     </span>
@@ -88,7 +102,7 @@
                             </tr>
                             <tr>
                                 <th style="white-space:nowrap;"> Corresponding Authors</th>
-                                <td colspan="2" >
+                                <td colspan="4">
                                     <span th:each="author: ${publication.correspondingAuthors}">
                                             <span th:text="${author.fullname}"/>
                                     </span>
@@ -96,30 +110,19 @@
                             </tr>
                             <tr>
                                 <th style="white-space:nowrap;"> Corresponding Author Emails</th>
-                                <td colspan="2" >
+                                <td colspan="4">
                                     <span th:each="author: ${publication.correspondingAuthors}">
                                             <span th:text="${author.correspondingAuthorEmail}"/>
                                     </span>
                                 </td>
                             </tr>
                             <tr>
-                                <th> Journal</th>
-                                <td colspan="2" id="publication-journal" th:text="${publication.publication}"> ...</td>
-                            </tr>
-                            <tr>
-                                <th> Publication date</th>
-                                <td colspan="2" id="publication-datepublication"
-                                    th:text="${#calendars.format(publication.publicationDate,'YYYY-MM-dd')}"> ...
-                                </td>
-                            </tr>
-                            <tr>
                                 <th> Title</th>
-                                <td colspan="2" id="publication-title"
-                                    th:text="${publication.title}"></td>
+                                <td colspan="4" id="publication-title" th:text="${publication.title}"></td>
                             </tr>
                             <tr>
                                 <th> Authors</th>
-                                <td colspan="2" >
+                                <td colspan="4">
                                     <span th:each="author: ${publication.authors}">
                                         <span th:text="${author.fullname}"/>
                                     </span>
@@ -133,393 +136,308 @@
             </div>
         </div>
     </div>
-</div>
 
 
-<div class="container-fluid" style="padding-top: 30px">
 
-    <ol class="breadcrumb background-color-complementary-accent">
-        <li><a th:href="@{/home}">GWAS</a></li>
-        <li>Publication</li>
-        <li class="active" th:text="${publication.pubmedId}"></li>
-    </ol>
+    <div class="row hidden" style="margin-top: -30px;" id="upload-form-view">
+        <div class="col-md-offset-1  col-md-10">
+            <div class="panel card-3 animated fadeIn">
+
+                <!-- Disease Trait Upload Form Area -->
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Bulk Upload Reported Disease Trait
+                        <a id="trait-download-file" href="#" style="float: right; margin-right: 30px; color: #f44336">
+                            <i class='fa fa-download'></i> Download Disease Trait Template File
+                        </a>
+                    </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Upload Reported Disease Trait file for Studies<br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Ensure you upload CSV File of the required type only </small>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='form-group col-md-12'>
+                            <label style='width:100%; cursor:pointer; margin-top: 7px;'>
+                                <div id='replace'>
+                                    <div id='output' class='styleFile'> Click to upload csv or tsv Trait File</div>
+                                </div>
+                                <input type='file' id='bulk-upload' style='display:none;'
+                                       accept='.csv,.xls,.tsv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
+                            </label>
+                        </div>
+                        <button id="upload-data-button" class='btn btn-primary mt-25' style='float:right;'>
+                            <i class='fa fa-upload'></i> Upload Reported Traits
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
 
 
-    <div class="container-fluid" id="lower_container">
-        <div class="row">
-            <div id="loadingResults" class="col-md-offset-4">
-                <button class="btn btn-lg">
+    <div class="row hidden" style="margin-top: -30px;" id="form-operation-view">
+        <div class="col-md-12">
+
+            <div class="row">
+                <div id="loadingResults" class="col-md-offset-4">
+                    <button class="btn btn-lg">
                                     <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"
                                           style="margin-right: 1em;"></span>
-                </button>
-            </div>
-        </div>
-        <!-- Summary panel -->
-        <div class="row" style="margin-top:10px">
-            <div id="summary-info" class="panel panel-default" style="padding-left:0px">
-                <div class="panel-heading background-color-primary-accent">
-                    <h3 class="panel-title">Publication information</h3>
+                    </button>
                 </div>
-                <div class="clearfix" id="summary-panel-loading">
-                    <div class="panel-body col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                        <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
-                                <span class="item-left-bold"><a th:if="${publication.activeSubmission}"
-                                                                th:href="@{/submissions/{submissionId}(submissionId=${publication.submissionId})}"
-                                                                title="Note: This Publication has an active submission">
-                <span class="glyphicon glyphicon-warning-sign text-danger" style="font-size: 15px"></span>
-            </a>
-                                    PubMed ID</span>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publicationPubmedId"
-                                 th:text="${publication.pubmedId}">
-                            </div>
-                        </div>
-                        <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
-                                <span class="item-left-bold">First author</span>
-                            </div>
-                            <div class="col-lg-8 col-md-7 col-sm-7 col-xs-7" id="publication-author"
-                                 th:text="${publication.firstAuthor.fullname}"></div>
+            </div>
 
-                        </div>
-                        <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
-                                <span class="item-left-bold">Corresponding authors</span>
+            <div class="panel card-3 animated fadeIn">
+
+
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Manage Publication Data </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Top 5 Disease Trait by Studies Graph <br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Disease trait table below: </small>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="form-inline col-sm-6" style="margin-bottom: 0.3em">
+                                <label for="openTargets" class="col-form-label col-md-3">Open Targets:</label>
+                                <div class="select2-select col-md-4" id="open-targets" th:text="${publication.openTargets}" style="width: 300px">-</div>
+                                <a role="button" type="submit" id="changeOpenTargets" class="btn btn-primary item-right btn-sm">Change Status</a>
                             </div>
-                            <span th:each="author: ${publication.correspondingAuthors}">
-                                    <span th:text="${author.fullname}"/>
-                            </span>
-                        </div>
-                        <div class="clearfix">
-                            <div class="col-lg-4 col-md-5 col-sm-5 col-xs-5 item-left">
-                                <span class="item-left-bold">Corresponding author emails</span>
+                            <div class="form-inline col-sm-6">
+                                <label for="openTargets" class="col-form-label col-md-3">User requested:</label>
+                                <div class="item-left col-md-4" id="user-requested"
+                                     th:text="${publication.userRequested}" style="width: 300px">-
+                                </div>
+
+                                <a role="button" type="submit" id="changeUserRequested"
+                                   class="btn btn-primary btn-sm">Change Status
+                                </a>
                             </div>
-                            <span th:each="author: ${publication.correspondingAuthors}">
-                                    <span th:text="${author.correspondingAuthorEmail}"/>
-                            </span>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="form-inline col-sm-6">
+                                <label for="curationStatus" class="col-form-label col-md-3">Curator Status:</label>
+                                <select name="curationStatus" class="form-control select2-select col-md-4"
+                                        style="width: 300px"
+                                        id="curationStatus">
+                                    <!--Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="curationStatus : ${curationstatuses}"
+                                            th:value="${curationStatus.id}"
+                                            th:text="${curationStatus.status}"
+                                            th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
+                                    </option>
+                                </select>
+                                <a role="button" type="submit" id="assignStatus"
+                                   class="btn btn-primary btn-sm">Save Status
+                                </a>
+                            </div>
+                            <div class="form-inline col-sm-6">
+                                <label for="curator" class="col-form-label col-md-3">Curator:</label>
+                                <select name="curator" class="form-control select2-select col-md-4"
+                                        style="width: 300px"
+                                        id="curator">
+                                    <!--Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="curator : ${curators}"
+                                            th:value="${curator.id}"
+                                            th:text="${curator.lastName}"></option>
+                                </select>
+                                <a role="button" type="submit" id="assignCurator"
+                                   class="btn btn-primary btn-sm">Save Curator
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-inline col-sm-6">
+                                <label for="diseaseTrait" class="control-label col-md-3">Reported trait</label>
+
+                                <select name="diseaseTrait" id="diseaseTrait"
+                                        style="width: 300px"
+                                        class="form-control select2-select col-md-4">
+                                    <!-- Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="diseaseTrait : ${diseaseTraits}"
+                                            th:value="${diseaseTrait.id}"
+                                            th:text="${diseaseTrait.trait}"></option>
+                                </select>
+                                <a role="button" type="submit" id="saveDiseaseTrait"
+                                   class="btn btn-primary btn-sm">Save Disease Trait
+                                </a>
+                            </div>
+                            <div class="form-inline col-sm-6">
+                                <label for="EFOTrait" class="control-label col-md-3">Main EFO trait</label>
+
+                                <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select col-md-4"
+                                        style="width: 300px"
+                                        multiple="multiple" id="EFOTrait">
+                                    <option th:each="efoTrait : ${efoTraits}"
+                                            th:value="${efoTrait.id}"
+                                            th:text="${efoTrait.trait}"></option>
+                                </select>
+                                <a role="button" type="submit" id="saveEfoTrait"
+                                   class="btn btn-primary btn-sm">Save EFO Trait
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-inline col-sm-6">
+                                <label for="backgroundTrait" class="control-label col-md-3">Background trait (author
+                                    submitted)</label>
+
+                                <select name="backgroundTrait" id="backgroundTrait"
+                                        style="width: 300px"
+                                        class="form-control select2-select col-md-4">
+                                    <!-- Empty value for first entry-->
+                                    <option value=""></option>
+                                    <option th:each="diseaseTrait : ${diseaseTraits}"
+                                            th:value="${diseaseTrait.id}"
+                                            th:text="${diseaseTrait.trait}"></option>
+                                </select>
+                                <a role="button" type="submit" id="saveBackgroundTrait"
+                                   class="btn btn-primary btn-sm">Save Background Trait
+                                </a>
+                            </div>
+                            <div class="form-inline col-sm-6">
+                                <label for="mappedBackgroundTraits" class="control-label col-md-3">Background EFO
+                                    Trait</label>
+
+                                <select name="mappedBackgroundTraits"
+                                        class="form-control select2-select col-md-4"
+                                        style="width: 300px"
+                                        multiple="multiple" id="mappedBackgroundTraits">
+                                    <option th:each="efoTrait : ${efoTraits}"
+                                            th:value="${efoTrait.id}"
+                                            th:text="${efoTrait.trait}"></option>
+                                </select>
+                                <a role="button" type="submit" id="saveBackgroundEfos"
+                                   class="btn btn-primary btn-sm">Save Background EFOs
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px; margin-left: 20px;">
+                            <a role="button" type="submit" id="deleteStudies"
+                               class="btn btn-primary btn-sm">Delete Selected Studies
+                            </a>
+                            <a role="button" type="submit" id="addSumStats"
+                               class="btn btn-primary btn-sm">Add Summary Stats
+                            </a>
+                            <a role="button" type="submit" id="approveAssociations"
+                               class="btn btn-primary btn-sm">Approve associations
+                            </a>
                         </div>
 
                     </div>
-                    <!--  data -->
-                    <div class="panel-body col-lg-5 col-md-4 col-sm-4 col-xs-4">
-                        <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
-                                <span class="item-left-bold">Journal</span>
-                            </div>
-                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="publication-journal"
-                                 th:text="${publication.publication}">-
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row" style="margin-top: -30px;">
+        <div class="col-md-12">
+            <div class="panel card-3 animated fadeIn">
+                <div id="publication-table-view">
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="submissionDataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="select_all" class="checkbox"/></th>
+                                        <th style="width:10%">Study Id</th>
+                                        <th style="width:10%">Study Accession</th>
+                                        <th style="width:10%">Has SumStats</th>
+                                        <th style="width:10%">Has Study Files</th>
+                                        <th style="width:20%">Disease Trait</th>
+                                        <th style="width:20%">EFO Traits</th>
+                                        <th style="width:20%">Background Trait</th>
+                                        <th style="width:20%">Background EFO Traits</th>
+                                        <th style="width:10%">Association Count</th>
+                                        <th style="width:10%">Curation Status</th>
+                                        <th style="width:10%">Curator</th>
+                                        <th style="width:10%">Study Tag</th>
+                                        <th style="width:10%">Duplicate</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="study,iter : ${publication.studies}">
+                                        <td><input type="checkbox" class="table-checkbox checkbox" th:id="${study.id}"/></td>
+                                        <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}" th:text="${study.id}"></a></td>
+                                        <td><a th:href="@{https://www.ebi.ac.uk/gwas/studies/{accessionId}(accessionId=${study.accessionId})}" th:text="${study.accessionId}"></a></td>
+                                        <td><span th:text="${study.fullPvalueSet}"></span></td>
+                                        <td><span th:if="${studyFiles.contains(study.id.toString())}"><a th:href="@{/studies/{studyId}/studyfiles(studyId=${study.id})}" th:text="${study.id}"></a></span></td>
+                                        <td><span th:text="${study.diseaseTrait} ? ${study.diseaseTrait.trait}: ''"></span></td>
+                                        <td><span th:each="efo: ${study.efoTraits}"><a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}" th:text="${efo.trait}"></a><br/></span></td>
+                                        <td><span th:text="${study.backgroundTrait} ? ${study.backgroundTrait.trait}: ''"></span></td>
+                                        <td><span th:each="efo: ${study.mappedBackgroundTraits}"><a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}" th:text="${efo.trait}"></a><br/></span></td>
+                                        <td><span th:text="${study.getAssociations().size()}"></span></td>
+                                        <td><span th:text="${study.housekeeping.curationStatus.status}"></span></td>
+                                        <td><span th:text="(${study.housekeeping.curator.firstName} ? ${study.housekeeping.curator.firstName} + ' ' : '') + ${study.housekeeping.curator.lastName}"></span></td>
+                                        <td><span th:text="${study.studyTag}"></span></td>
+                                        <td><span th:text="${study.tagDuplicatedNote}"></span></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <div class="clearfix">
-                            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-4 item-left">
-                                <span>Publication date</span>
-                                <span class="glyphicon glyphicon-question-sign" data-toggle="tooltip"
-                                      title="Journal publication date YYYY-MM-DD"></span>
-                            </div>
-                            <div class="col-lg-9 col-md-8 col-sm-8 col-xs-8" id="publication-datepublication"
-                                 th:text="${#calendars.format(publication.publicationDate,'YYYY-MM-dd')}">-
-                            </div>
-                        </div>
+
                     </div>
-
-                    <div id="panel-links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3">
-
-                    </div>
                 </div>
-
-                <div class="clearfix" id="authorsList-panel-loading">
-                    <div class="panel-body col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="clearfix">
-                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 item-left">
-                                <span class="item-left-bold">Title</span>
-                            </div>
-                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" id="publication-title"
-                                 th:text="${publication.title}">-
-                            </div>
-                        </div>
-                        <div class="clearfix">
-                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1 item-left">
-                                <span class="item-left-bold">Authors</span>
-                            </div>
-                            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11" id="publication-authors-list">
-                                <span th:each="author: ${publication.authors}">
-                                    <span th:text="${author.fullname}"/>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="form-inline col-sm-6" style="margin-bottom: 0.3em">
-                <label for="openTargets" class="col-form-label col-sm-2">Open Targets:</label>
-                <div class="select2-select col-sm-2" id="open-targets"
-                     th:text="${publication.openTargets}" style="width: 300px">-
-                </div>
-                <a role="button" type="submit" id="changeOpenTargets"
-                   class="btn btn-primary item-right btn-sm">Change Status
-                </a>
 
-            </div>
-            <div class="form-inline col-sm-6">
-                <label for="openTargets" class="col-form-label col-sm-2">User requested:</label>
-                <div class="item-left col-sm-2" id="user-requested"
-                     th:text="${publication.userRequested}" style="width: 300px">-
-                </div>
 
-                <a role="button" type="submit" id="changeUserRequested"
-                   class="btn btn-primary btn-sm">Change Status
-                </a>
-            </div>
+    <!-- Floating Action Buttons -->
+    <div class="adminActions">
+        <input type="checkbox" name="adminToggle" class="adminToggle"/>
+        <a class="adminButton"><i class="fa fa-cog"></i></a>
+        <div class="adminButtons">
+            <a id="activate-publication-summary-view" class="tool" data-tip="Summary" tabindex="5"><i
+                    class="fa fa-book"></i></a>
+            <a id="activate-upload-form-view" class="tool" data-tip="Bulk Upload" tabindex="2"><i
+                    class="fa fa-upload"></i></a>
+            <a id="activate-form-operation-view" class="tool" data-tip="Manage Studies" tabindex="3">
+                <i class="fas fa-chart-line"></i></a>
+
         </div>
+    </div>
 
-        <div class="row">
-
-            <div class="form-inline col-sm-6">
-                <label for="curationStatus" class="col-form-label col-sm-2">Curator Status:</label>
-                <select name="curationStatus" class="form-control select2-select col-sm-2"
-                        style="width: 300px"
-                        id="curationStatus">
-                    <!--Empty value for first entry-->
-                    <option value=""></option>
-                    <option th:each="curationStatus : ${curationstatuses}"
-                            th:value="${curationStatus.id}"
-                            th:text="${curationStatus.status}"
-                            th:unless="${curationStatus.status} == 'Unpublished from catalog' ">
-                    </option>
-                </select>
-                <a role="button" type="submit" id="assignStatus"
-                   class="btn btn-primary btn-sm">Save Status
-                </a>
-            </div>
-            <div class="form-inline col-sm-6">
-                <label for="curator" class="col-form-label col-sm-2">Curator:</label>
-                <select name="curator" class="form-control select2-select col-sm-2"
-                        style="width: 300px"
-                        id="curator">
-                    <!--Empty value for first entry-->
-                    <option value=""></option>
-                    <option th:each="curator : ${curators}"
-                            th:value="${curator.id}"
-                            th:text="${curator.lastName}"></option>
-                </select>
-                <a role="button" type="submit" id="assignCurator"
-                   class="btn btn-primary btn-sm">Save Curator
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-inline col-sm-6">
-                <label for="diseaseTrait" class="control-label col-sm-2">Reported trait</label>
-
-                <select name="diseaseTrait" id="diseaseTrait"
-                        style="width: 300px"
-                        class="form-control select2-select col-sm-2">
-                    <!-- Empty value for first entry-->
-                    <option value=""></option>
-                    <option th:each="diseaseTrait : ${diseaseTraits}"
-                            th:value="${diseaseTrait.id}"
-                            th:text="${diseaseTrait.trait}"></option>
-                </select>
-                <a role="button" type="submit" id="saveDiseaseTrait"
-                   class="btn btn-primary btn-sm">Save Disease Trait
-                </a>
-            </div>
-            <div class="form-inline col-sm-6">
-                <label for="EFOTrait" class="control-label col-sm-2">Main EFO trait</label>
-
-                <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select col-sm-2"
-                        style="width: 300px"
-                        multiple="multiple" id="EFOTrait">
-                    <option th:each="efoTrait : ${efoTraits}"
-                            th:value="${efoTrait.id}"
-                            th:text="${efoTrait.trait}"></option>
-                </select>
-                <a role="button" type="submit" id="saveEfoTrait"
-                   class="btn btn-primary btn-sm">Save EFO Trait
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="form-inline col-sm-6">
-                <label for="backgroundTrait" class="control-label col-sm-2">Background trait (author submitted)</label>
-
-                <select name="backgroundTrait" id="backgroundTrait"
-                        style="width: 300px"
-                        class="form-control select2-select col-sm-2">
-                    <!-- Empty value for first entry-->
-                    <option value=""></option>
-                    <option th:each="diseaseTrait : ${diseaseTraits}"
-                            th:value="${diseaseTrait.id}"
-                            th:text="${diseaseTrait.trait}"></option>
-                </select>
-                <a role="button" type="submit" id="saveBackgroundTrait"
-                   class="btn btn-primary btn-sm">Save Background Trait
-                </a>
-            </div>
-            <div class="form-inline col-sm-6">
-                <label for="mappedBackgroundTraits" class="control-label col-sm-2">Background EFO Trait</label>
-
-                <select name="mappedBackgroundTraits"
-                        class="form-control select2-select col-sm-2"
-                        style="width: 300px"
-                        multiple="multiple" id="mappedBackgroundTraits">
-                    <option th:each="efoTrait : ${efoTraits}"
-                            th:value="${efoTrait.id}"
-                            th:text="${efoTrait.trait}"></option>
-                </select>
-                <a role="button" type="submit" id="saveBackgroundEfos"
-                   class="btn btn-primary btn-sm">Save Background EFOs
-                </a>
-            </div>
-        </div>
-        <div class="row">
-            <a role="button" type="submit" id="deleteStudies"
-               class="btn btn-primary btn-sm">Delete Selected Studies
-            </a>
-            <a role="button" type="submit" id="addSumStats"
-               class="btn btn-primary btn-sm">Add Summary Stats
-            </a>
-            <a role="button" type="submit" id="approveAssociations"
-               class="btn btn-primary btn-sm">Approve associations
-            </a>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table id="submissionDataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select_all" class="checkbox"/></th>
-                        <th style="width:10%">Study Id</th>
-                        <th style="width:10%">Study Accession</th>
-                        <th style="width:10%">Has SumStats</th>
-                        <th style="width:10%">Has Study Files</th>
-                        <th style="width:20%">Disease Trait</th>
-                        <th style="width:20%">EFO Traits</th>
-                        <th style="width:20%">Background Trait</th>
-                        <th style="width:20%">Background EFO Traits</th>
-                        <th style="width:10%">Association Count</th>
-                        <th style="width:10%">Curation Status</th>
-                        <th style="width:10%">Curator</th>
-                        <th style="width:10%">Study Tag</th>
-                        <th style="width:10%">Duplicate</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="study,iter : ${publication.studies}">
-                        <td>
-                            <input type="checkbox" class="table-checkbox checkbox" th:id="${study.id}"/>
-                        </td>
-                        <td>
-                            <p>
-                                <a th:href="@{/studies/{studyId}(studyId=${study.id})}" th:text="${study.id}"></a>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <a
-                                        th:href="@{https://www.ebi.ac.uk/gwas/studies/{accessionId}(accessionId=${study.accessionId})}"
-                                        th:text="${study.accessionId}"></a>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:text="${study.fullPvalueSet}"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:if="${studyFiles.contains(study.id.toString())}">
-                                    <a
-                                            th:href="@{/studies/{studyId}/studyfiles(studyId=${study.id})}"
-                                            th:text="${study.id}"></a>
-                                </span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:text="${study.diseaseTrait} ? ${study.diseaseTrait.trait}: ''"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:each="efo: ${study.efoTraits}">
-                                    <a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}"
-                                       th:text="${efo.trait}"></a><br/>
-                                </span>
-
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:text="${study.backgroundTrait} ? ${study.backgroundTrait.trait}: ''"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:each="efo: ${study.mappedBackgroundTraits}">
-                                    <a th:href="@{//www.ebi.ac.uk/gwas/efotraits/{trait}(trait=${efo.shortForm})}"
-                                       th:text="${efo.trait}"></a><br/>
-                                </span>
-
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:text="${study.getAssociations().size()}"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:text="${study.housekeeping.curationStatus.status}"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span
-                                        th:text="(${study.housekeeping.curator.firstName} ? ${study.housekeeping.curator.firstName} + ' ' : '') + ${study.housekeeping.curator.lastName}"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:text="${study.studyTag}"></span>
-                            </p>
-                        </td>
-                        <td>
-                            <p>
-                                <span th:text="${study.tagDuplicatedNote}"></span>
-                            </p>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-
+    <!-- Toast Notification -->
+    <div id="toast">
+        <div id="img"><i class="far fa-bell-slash"></i></div>
+        <div id="toast-message">A notification message..</div>
     </div>
 
 
     <!--Include footer-->
     <div th:include="fragments/footer :: page_footer"></div>
-    <script th:src="@{/js/goci-publication-page.js}"></script>
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        $(document).ready(function () {
-
-            $("#pubmedid_button").attr('onclick', "window.open('https://www.ncbi.nlm.nih.gov/pubmed/?term=" +
-                [[${publication.pubmedId}]] +
-                "',    '_blank')");
-            $("#europepmc_button").attr('onclick', "window.open('https://europepmc.org/article/MED/" +
-                [[${publication.pubmedId}]] +
-                "',    '_blank')");
-        })
-        /*]]>*/
-    </script>
 </div>
+
+<script th:src="@{/js/goci-global.js}"></script>
+<script th:src="@{/js/publication-page.js}"></script>
+<script th:src="@{/js/goci-publication-page.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function () {
+        $("#pubmedid_button").attr('onclick', "window.open('https://www.ncbi.nlm.nih.gov/pubmed/?term=" +
+            [[${publication.pubmedId}]] +
+            "',    '_blank')");
+        $("#europepmc_button").attr('onclick', "window.open('https://europepmc.org/article/MED/" +
+            [[${publication.pubmedId}]] +
+            "',    '_blank')");
+    })
+    /*]]>*/
+</script>
+
 </body>
 </html>

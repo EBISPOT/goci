@@ -1,5 +1,8 @@
 html, body {
     background-color: #F7F7F7;
+    font-size: 13px;
+    line-height: 1.846153846;
+    color: #0c0c0c;
 }
 
 .card-3 {
@@ -701,4 +704,7 @@ fieldset[disabled] .form-control ~ .form-control-line:after {
     box-shadow: none;
 }
 
+.nowrap{
+    white-space:nowrap;
+}
 
