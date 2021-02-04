@@ -301,12 +301,17 @@ class DiseaseTrait {
         return window.location.pathname.slice(0, lastIndex + 1);
     }
 
-}
+    static init(){
+        DiseaseTrait.getTraitData(1);
+        DiseaseTrait.formEvents();
+        DiseaseTrait.floatingActionButtonEvents();
+        DiseaseTrait.pageSizeConfig();
+        $("#trait-download-file").attr('href', `${this.endpoint}/templates?file=disease-trait`);
+        $("#analysis-download-file").attr('href', `${this.endpoint}/templates?file=similarity-analysis`);
+    }
 
-DiseaseTrait.getTraitData(1);
-DiseaseTrait.formEvents();
-DiseaseTrait.floatingActionButtonEvents();
-DiseaseTrait.pageSizeConfig();
+}
+DiseaseTrait.init();
 
 function loadDataInDetailedView(componentId) {
 

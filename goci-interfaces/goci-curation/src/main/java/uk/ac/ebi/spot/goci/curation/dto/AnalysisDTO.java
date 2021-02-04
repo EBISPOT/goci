@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
         "user_term",
         "similar_term"
 })
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AnalysisDTO {
 
     @JsonProperty("user_term")

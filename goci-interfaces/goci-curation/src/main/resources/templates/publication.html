@@ -39,6 +39,10 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.css"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2-bootstrap.min.css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.0/select2.min.js"></script>
+
+
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
 </head>
 <body>
 
@@ -46,11 +50,96 @@
 <div th:include="fragments/header :: navbar"></div>
 
 
+<div class="container-fluid">
+    <div class="row" style="margin-top: -30px;">
+        <div class="col-md-offset-1  col-md-10">
+            <div class="panel card-3 animated fadeIn">
+
+                <div id="extra-form-view" class="animated fadeIn">
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Manage Publication & Studies </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Publication Information <br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Publication SUmmary below: </small>
+                        </h4>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table row-border display compact" style="border-top: 1px solid #ccc;">
+                            <tbody>
+                            <tr>
+                                <th class="col-md-3"> PubMed ID</th>
+                                <td class="col-md-3" id="publicationPubmedId" th:text="${publication.pubmedId}"> ...
+                                </td>
+                                <th class="col-md-6">
+                                        <span id="pubmedid_button" style="cursor: pointer;">View in PubMed
+                                            <span class="glyphicon glyphicon-new-window external-link"></span>
+                                        </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th class="col-md-3"> First author</th>
+                                <td class="col-md-3" id="publication-author" th:text="${publication.firstAuthor.fullname}"> ...</td>
+                                <th class="col-md-6">
+                                    <span id="europepmc_button" style="cursor: pointer;">View in Europe PMC
+                                        <span class="glyphicon glyphicon-new-window external-link"></span>
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th style="white-space:nowrap;"> Corresponding Authors</th>
+                                <td colspan="2" >
+                                    <span th:each="author: ${publication.correspondingAuthors}">
+                                            <span th:text="${author.fullname}"/>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th style="white-space:nowrap;"> Corresponding Author Emails</th>
+                                <td colspan="2" >
+                                    <span th:each="author: ${publication.correspondingAuthors}">
+                                            <span th:text="${author.correspondingAuthorEmail}"/>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Journal</th>
+                                <td colspan="2" id="publication-journal" th:text="${publication.publication}"> ...</td>
+                            </tr>
+                            <tr>
+                                <th> Publication date</th>
+                                <td colspan="2" id="publication-datepublication"
+                                    th:text="${#calendars.format(publication.publicationDate,'YYYY-MM-dd')}"> ...
+                                </td>
+                            </tr>
+                            <tr>
+                                <th> Title</th>
+                                <td colspan="2" id="publication-title"
+                                    th:text="${publication.title}"></td>
+                            </tr>
+                            <tr>
+                                <th> Authors</th>
+                                <td colspan="2" >
+                                    <span th:each="author: ${publication.authors}">
+                                        <span th:text="${author.fullname}"/>
+                                    </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="container-fluid" style="padding-top: 30px">
 
     <ol class="breadcrumb background-color-complementary-accent">
         <li><a th:href="@{/home}">GWAS</a></li>
-        <!--li><a href="studies.html" th:href="@{/studies}">Studies</a></-li-->
         <li>Publication</li>
         <li class="active" th:text="${publication.pubmedId}"></li>
     </ol>
@@ -135,14 +224,7 @@
                     </div>
 
                     <div id="panel-links" class="panel-body col-lg-2 col-md-3 col-sm-3 col-xs-3">
-                        <div style="margin-bottom: 0.6em">
-                            <button type="button" class="btn btn-default btn-sm" id="pubmedid_button">View in <b>
-                                PubMed</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
-                        </div>
-                        <div style="margin-bottom: 0.6em">
-                            <button type="button" class="btn btn-default btn-sm" id="europepmc_button">View in <b>Europe
-                                PMC</b><span class="glyphicon glyphicon-new-window external-link"></span></button>
-                        </div>
+
                     </div>
                 </div>
 
@@ -432,7 +514,7 @@
             $("#pubmedid_button").attr('onclick', "window.open('https://www.ncbi.nlm.nih.gov/pubmed/?term=" +
                 [[${publication.pubmedId}]] +
                 "',    '_blank')");
-            $("#europepmc_button").attr('onclick', "window.open('https://http://europepmc.org/article/MED/" +
+            $("#europepmc_button").attr('onclick', "window.open('https://europepmc.org/article/MED/" +
                 [[${publication.pubmedId}]] +
                 "',    '_blank')");
         })
