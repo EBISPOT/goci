@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.controller.rest.DiseaseTraitController;
 import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
+import uk.ac.ebi.spot.goci.curation.util.FileHandler;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 
 import java.io.IOException;
@@ -54,10 +55,8 @@ public class DiseaseTraitDtoAssembler implements ResourceAssembler<DiseaseTrait,
     }
 
     public static List<DiseaseTrait> disassemble(MultipartFile multipartFile)  {
-
-        CsvSchema.Builder builder = CsvSchema.builder();
         CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = builder.build().withHeader();
+        CsvSchema schema = FileHandler.getSchemaFromMultiPartFile(multipartFile);
         List<DiseaseTraitDto> diseaseTraitDtos;
         try {
             InputStream inputStream = multipartFile.getInputStream();
