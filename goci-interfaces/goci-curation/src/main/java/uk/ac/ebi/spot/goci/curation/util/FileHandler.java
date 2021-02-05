@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.springframework.web.multipart.MultipartFile;
+import uk.ac.ebi.spot.goci.curation.constants.FileUploadType;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
+import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.dto.StudyPatchRequest;
 import uk.ac.ebi.spot.goci.curation.dto.FileUploadRequest;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
@@ -59,13 +61,12 @@ public class FileHandler {
         return studyPatchRequests;
     }
 
-    public static String serializePojoToTsv(List<?> pojoList) throws IOException {
+    public static String serializePojoToTsv(List<?> pojoList) {
         CsvMapper csvMapper = new CsvMapper();
         List<Map<String, Object>> dataList = csvMapper.convertValue(pojoList, new TypeReference<Object>() {
         });
         List<List<String>> csvData = new ArrayList<>();
         List<String> csvHead = new ArrayList<>();
-
         AtomicInteger counter = new AtomicInteger();
         dataList.forEach(row -> {
             List<String> rowData = new ArrayList<>();
@@ -78,10 +79,32 @@ public class FileHandler {
             csvData.add(rowData);
             counter.getAndIncrement();
         });
-
         CsvSchema.Builder builder = CsvSchema.builder();
         csvHead.forEach(builder::addColumn);
         CsvSchema schema = builder.build().withHeader().withLineSeparator("\n").withColumnSeparator('\t');
-        return csvMapper.writer(schema).writeValueAsString(csvData);
+        String result = "";
+        try {
+            result = csvMapper.writer(schema).writeValueAsString(csvData);
+        } catch (IOException e) {
+            throw new FileUploadException("Could not read the file");
+        }
+        return result;
+    }
+
+    public static String getTemplate(String fileUploadType) {
+        if (fileUploadType.equals(FileUploadType.SIMILARITY_ANALYSIS_FILE)) {
+
+            List<AnalysisDTO> analysisDTO = new ArrayList<>();
+            analysisDTO.add(AnalysisDTO.builder().userTerm("Yeast Infection").build());
+            analysisDTO.add(AnalysisDTO.builder().userTerm("mean interproximal clinical attachment level").build());
+            return serializePojoToTsv(analysisDTO);
+        } else {
+
+            List<DiseaseTraitDto> diseaseTraitDtos = new ArrayList<>();
+            diseaseTraitDtos.add(DiseaseTraitDto.builder().trait("Uterine Carcinoma").build());
+            diseaseTraitDtos.add(DiseaseTraitDto.builder().trait("Malaria Parasite").build());
+            return serializePojoToTsv(diseaseTraitDtos);
+
+        }
     }
 }

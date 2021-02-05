@@ -10,7 +10,7 @@ function loadColumnChart(columnChartData) {
 
     // Create axes
     let categoryAxis = chart2.xAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "country";
+    categoryAxis.dataFields.category = "trait";
     categoryAxis.renderer.labels.template.rotation = 270;
     categoryAxis.renderer.labels.template.hideOversized = false;
     categoryAxis.renderer.minGridDistance = 20;
@@ -32,14 +32,14 @@ function loadColumnChart(columnChartData) {
     labelTemplate.inside = false; // this is done to avoid settings which are not suitable when label is rotated
 
     let valueAxis = chart2.yAxes.push(new am4charts.ValueAxis());
-    valueAxis.title.text = "Countries";
+    valueAxis.title.text = "Studies";
     valueAxis.title.fontWeight = "bold";
     valueAxis.renderer.labels.template.fontSize = 10;
 
     // Create series
     var series = chart2.series.push(new am4charts.ColumnSeries3D());
-    series.dataFields.valueY = "visits";
-    series.dataFields.categoryX = "country";
+    series.dataFields.valueY = "studies";
+    series.dataFields.categoryX = "trait";
     series.name = "Visits";
     series.tooltipText = "{categoryX}: [bold]{valueY}[/]";
     series.columns.template.fillOpacity = .8;

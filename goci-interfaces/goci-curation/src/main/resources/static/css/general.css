@@ -1,5 +1,8 @@
 html, body {
     background-color: #F7F7F7;
+    font-size: 13px;
+    line-height: 1.846153846;
+    color: #0c0c0c;
 }
 
 .card-3 {
@@ -171,6 +174,8 @@ fieldset[disabled] .form-control ~ .form-control-line:after {
     position: fixed;
     top: 150px;
     left: 35px;
+    margin-top: -80px;
+    z-index: 99999 !important;
 }
 
 .adminButton {
@@ -701,4 +706,13 @@ fieldset[disabled] .form-control ~ .form-control-line:after {
     box-shadow: none;
 }
 
+td, th{
+    white-space:nowrap;
+}
 
+.truncate {
+    width: 950px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

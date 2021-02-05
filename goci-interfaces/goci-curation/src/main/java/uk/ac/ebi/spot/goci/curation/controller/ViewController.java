@@ -31,8 +31,8 @@ class ViewController {
 
         projections.forEach(x->{
             Map<String, Object> result = new HashMap<>();
-            result.put("country", x.getTrait());
-            result.put("visits", x.getStudiesCount());
+            result.put("trait", x.getTrait());
+            result.put("studies", x.getStudiesCount());
             dataList.add(result);
         });
 
@@ -44,6 +44,7 @@ class ViewController {
                 count.getAndIncrement();
             }
         });
+
         List<DiseaseTrait> diseaseTraits = diseaseTraitRepository.findAllByIdIsIn(ids);
         List<Object> parents = new ArrayList<>();
         diseaseTraits.forEach(diseaseTrait -> {
