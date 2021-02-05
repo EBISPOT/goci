@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.constants.FileUploadType;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
@@ -26,14 +27,11 @@ public class FileHandler {
     }
 
     public static List<StudyPatchRequest> getStudyPatchRequests(FileUploadRequest fileUploadRequest) {
-
-        CsvSchema.Builder builder = CsvSchema.builder();
         CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = builder.build().withHeader().withColumnSeparator('\t');
-        MultipartFile multipartFile = fileUploadRequest.getMultipartFile();
+        CsvSchema schema = getSchemaFromMultiPartFile(fileUploadRequest.getMultipartFile());
         List<StudyPatchRequest> studyPatchRequests;
         try {
-            InputStream inputStream = multipartFile.getInputStream();
+            InputStream inputStream = fileUploadRequest.getMultipartFile().getInputStream();
             MappingIterator<StudyPatchRequest> iterator =
                     mapper.readerFor(StudyPatchRequest.class).with(schema).readValues(inputStream);
             studyPatchRequests = iterator.readAll();
@@ -44,21 +42,18 @@ public class FileHandler {
     }
 
     public static List<AnalysisDTO> serializeDiseaseTraitAnalysisFile(FileUploadRequest fileUploadRequest) {
-
-        CsvSchema.Builder builder = CsvSchema.builder();
         CsvMapper mapper = new CsvMapper();
-        CsvSchema schema = builder.build().withHeader().withColumnSeparator('\t');
-        MultipartFile multipartFile = fileUploadRequest.getMultipartFile();
-        List<AnalysisDTO> studyPatchRequests;
+        CsvSchema schema = getSchemaFromMultiPartFile(fileUploadRequest.getMultipartFile());
+        List<AnalysisDTO> analysisDTOS;
         try {
-            InputStream inputStream = multipartFile.getInputStream();
+            InputStream inputStream = fileUploadRequest.getMultipartFile().getInputStream();
             MappingIterator<AnalysisDTO> iterator =
                     mapper.readerFor(AnalysisDTO.class).with(schema).readValues(inputStream);
-            studyPatchRequests = iterator.readAll();
+            analysisDTOS = iterator.readAll();
         } catch (IOException e) {
             throw new FileUploadException("Could not read the file");
         }
-        return studyPatchRequests;
+        return analysisDTOS;
     }
 
     public static String serializePojoToTsv(List<?> pojoList) {
@@ -104,7 +99,16 @@ public class FileHandler {
             diseaseTraitDtos.add(DiseaseTraitDto.builder().trait("Uterine Carcinoma").build());
             diseaseTraitDtos.add(DiseaseTraitDto.builder().trait("Malaria Parasite").build());
             return serializePojoToTsv(diseaseTraitDtos);
-
         }
+    }
+
+
+    public static CsvSchema getSchemaFromMultiPartFile(MultipartFile multipartFile){
+        CsvSchema.Builder builder = CsvSchema.builder();
+        CsvSchema schema = builder.build().withHeader();
+        if (FilenameUtils.getExtension(multipartFile.getOriginalFilename()).equals("tsv")) {
+            schema = schema.withColumnSeparator('\t');
+        }
+        return schema;
     }
 }
