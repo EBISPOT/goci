@@ -4,6 +4,8 @@ jdk:
 - openjdk8
 - openjdk11
 
+dist: trusty
+
 env:
   global:
   - JAVA_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmn48M -Xmx512M"
