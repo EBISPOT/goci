@@ -137,7 +137,7 @@ public class DepositionSubmissionService {
         testSub.setId(depositionSubmission.getSubmissionId());
         testSub.setCurator(depositionSubmission.getCreated().getUser().getName());
         testSub.setStatus(depositionSubmission.getStatus());
-        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+        testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.forPattern("yyyy-MM-dd")));
         testSub.setImportStatus(Submission.ImportStatus.NOT_READY);
         testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
         if (depositionSubmission.getBodyOfWork() != null) {

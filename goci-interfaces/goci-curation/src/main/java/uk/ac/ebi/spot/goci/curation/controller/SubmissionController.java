@@ -102,7 +102,7 @@ public class SubmissionController {
             testSub.setStatus(depositionSubmission.getStatus());
             testSub.setTitle(depositionSubmission.getPublication().getTitle());
             testSub.setJournal(depositionSubmission.getPublication().getJournal());
-            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.forPattern("yyyy-MM-dd")));
             testSub.setPublicationStatus(depositionSubmission.getPublication().getStatus());
             testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
             testSub.setPublicationDate(depositionSubmission.getPublication().getPublicationDate());
@@ -137,7 +137,7 @@ public class SubmissionController {
             testSub.setStatus(depositionSubmission.getStatus());
             testSub.setTitle(depositionSubmission.getBodyOfWork().getTitle());
             testSub.setJournal(depositionSubmission.getBodyOfWork().getJournal());
-            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.shortDateTime()));
+            testSub.setCreated(depositionSubmission.getCreated().getTimestamp().toString(DateTimeFormat.forPattern("yyyy-MM-dd")));
             testSub.setPublicationStatus(depositionSubmission.getBodyOfWork().getStatus());
             testSub.setSubmissionType(DepositionUtil.getSubmissionType(depositionSubmission));
             if (testSub.getSubmissionType().equals(Submission.SubmissionType.UNKNOWN)) {
