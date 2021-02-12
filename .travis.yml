@@ -1,7 +1,10 @@
 matrix:
   include:
     - language: node_js
-      node_js: 12
+      node_js: 10
+
+      script:
+        - sonar-scanner -Dsonar.organization=gwas-ebi -Dsonar.projectKey=goci-ui -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=0566d66d0cfe16cd2cb8ba02db7fcd0b6d1e7ee6 -Dsonar.exclusions=**/*.java,**/target/**
 
     - language: java
       sudo: false
@@ -23,5 +26,4 @@ matrix:
         - mvn clean verify -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true
         - export JAVA_HOME=$HOME/openjdk11
         - mvn sonar:sonar -Dsonar.login=0566d66d0cfe16cd2cb8ba02db7fcd0b6d1e7ee6
-        - sonar-scanner -Dsonar.organization=gwas-ebi -Dsonar.projectKey=goci-ui -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=0566d66d0cfe16cd2cb8ba02db7fcd0b6d1e7ee6 -Dsonar.exclusions=**/*.java,**/target/**
 
