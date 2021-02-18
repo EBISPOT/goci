@@ -158,7 +158,9 @@ public class SubmissionController {
         List<String> statusMessages = new ArrayList<>();
         List<String> errorMessages = new ArrayList<>();
         try {
+            // gets all submissions with studies, notes, associations..?
             Map<String, Submission> submissionList = submissionService.getSubmissions();
+            // gets the submission without studies, notes, associations...
             DepositionSubmission depositionSubmission = submissionService.getSubmissionForImport(submissionID);
             SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
 

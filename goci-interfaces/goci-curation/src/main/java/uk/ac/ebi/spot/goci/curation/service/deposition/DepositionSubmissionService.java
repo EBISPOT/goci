@@ -76,6 +76,7 @@ public class DepositionSubmissionService {
         try {
             int i = 0;
             Map<String, Integer> params = new HashMap<>();
+            // i always 0
             params.put("page", i);
             DepositionSubmission[] submissions =
                     template.getForObject(depositionIngestURL + url, DepositionSubmission[].class, params);
