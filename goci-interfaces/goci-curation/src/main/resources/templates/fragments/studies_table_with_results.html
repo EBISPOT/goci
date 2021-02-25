@@ -104,7 +104,7 @@
                 <ul class="dropdown-menu">
                     <li th:if="*{#bools.isTrue(study.housekeeping.isPublished)}"><a th:href="@{/studies/{studyId}(studyId=${study.id})}">View</a></li>
                     <li th:if="*{#bools.isFalse(study.housekeeping.isPublished)}"><a th:href="@{/studies/{studyId}(studyId=${study.id})}">Edit</a></li>
-                    <li th:if="${study.accessionId} == null"><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}">Delete</a>
+                    <li th:if="${study.accessionId} == null AND ${study.publicationId?.activeSubmission} != true"><a th:href="@{/studies/{studyId}/delete(studyId=${study.id})}">Delete</a>
                     </li>
                     <li>
                         <a th:href="@{/studies/{studyId}/duplicate(studyId=${study.id})}">Duplicate</a>
