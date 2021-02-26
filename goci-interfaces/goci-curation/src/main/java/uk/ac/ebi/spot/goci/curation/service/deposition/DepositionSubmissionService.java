@@ -222,4 +222,22 @@ public class DepositionSubmissionService {
         return null;
     }
 
+    public Map<String, Submission> getSubmissionsForPMID(String pmid) {
+        Map<String, Submission> submissionList = new TreeMap<>();
+        try {
+            Map<String, String> params = new HashMap<>();
+            params.put("pmid", pmid);
+            DepositionSubmission[] submissions =
+                    template.getForObject(depositionIngestURL + "/submissions?pmid={pmid}", DepositionSubmission[].class, params);
+            Arrays.stream(submissions).forEach(s -> {
+                Submission testSub = buildSubmission(s);
+                submissionList.put(testSub.getId(), testSub);
+            });
+
+            return submissionList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return submissionList;
+    }
 }
