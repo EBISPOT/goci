@@ -59,4 +59,7 @@ public class DepositionSubmission {
 
     @JsonProperty("created")
     private DepositionProvenance created;
+
+    @JsonProperty("agreedToCc0")
+    private Boolean agreedToCc0;
 }

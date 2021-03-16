@@ -94,6 +94,9 @@ public class UnpublishedStudy {
     @JsonProperty("cohort_id")
     private String cohortId;
 
+    @JsonProperty("agreedToCc0")
+    private Boolean agreedToCc0;
+
     private Date createdDate;
 
     @ManyToMany
@@ -110,6 +113,6 @@ public class UnpublishedStudy {
         study.setSubmissionId(submissionDto.getSubmissionId());
         study.setGlobusFolder(submissionDto.getGlobusFolder());
         study.setCreatedDate(submissionDto.getCreated().getTimestamp().toDate());
-         return study;
+        return study;
     }
 }

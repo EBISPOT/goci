@@ -136,6 +136,8 @@ public class Study implements Trackable {
 
     private String studyTag;
 
+    private Boolean agreedToCc0;
+
 
 
     /**REST API fix: reversal of control of study-SNP relationship from study to SNP to fix deletion issues with respect to
@@ -499,5 +501,13 @@ public class Study implements Trackable {
 
     public void setStudyTag(String studyTag){
         this.studyTag = studyTag;
+    }
+
+    public Boolean isAgreedToCc0() {
+        return agreedToCc0;
+    }
+
+    public void setAgreedToCc0(Boolean agreedToCc0) {
+        this.agreedToCc0 = agreedToCc0;
     }
 }
