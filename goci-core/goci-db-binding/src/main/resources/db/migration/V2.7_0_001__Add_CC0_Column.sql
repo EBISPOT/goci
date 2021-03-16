@@ -5,8 +5,8 @@
 Migration script to add AGREED_TO_CC0 to STUDY and UNPUBLISHED_STUDY tables
 
 author: Ala Abid
-date:    9 Mar 2021
-version: 2.6.1.001
+date:    16 Mar 2021
+version: 2.7.0.001
 ################################################################################
 */
 
