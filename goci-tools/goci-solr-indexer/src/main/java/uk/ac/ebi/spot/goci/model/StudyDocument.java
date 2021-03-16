@@ -46,6 +46,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private Collection<String> ancestryLinks;
     @Field private Collection<String> genotypingTechnologies;
     @Field private String studyDesignComment;
+    @Field private Boolean agreedToCc0;
 
     @Field @NonEmbeddableField private int associationCount;
 
@@ -86,6 +87,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.publication = study.getPublicationId().getPublication();
         this.accessionId = study.getAccessionId();
         this.fullPvalueSet = study.getFullPvalueSet();
+        this.agreedToCc0 = study.isAgreedToCc0();
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
@@ -486,4 +488,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public String getStudyDesignComment() { return studyDesignComment; }
 
+    public Boolean getAgreedToCc0() {
+        return agreedToCc0;
+    }
 }

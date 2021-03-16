@@ -70,11 +70,16 @@ public class DepositionStudyDto {
 
     @JsonProperty("cohort_id")
     private String cohortId;
+
+    @JsonProperty("agreedToCc0")
+    private Boolean agreedToCc0;
+
     public Study buildStudy(){
         Study study = new Study();
         study.setStudyTag(studyTag);
         study.setAccessionId(accession);
         study.setImputed(imputation);
+        study.setAgreedToCc0(agreedToCc0);
         return study;
     }
 }
