@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>GWAS Curation Tool</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+    <!-- CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap-theme.min.css}"/>
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sticky-footer-navbar.css}" rel="stylesheet"/>
+
+    <!-- Additional styling on top of bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/goci-curation.css}"/>
+    <link rel="stylesheet" th:href="@{/css/icons/flaticon.css}"/>
+    <link rel="stylesheet" th:href="@{/css/goci-color-palette-1.css}"/>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!--Bootstrap table: http://bootstrap-table.wenzhixin.net.cn/-->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.css"/>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.5.0/bootstrap-table.min.js"></script>
+
+    <!--http://brianreavis.github.io/selectize.js/-->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/css/selectize.min.css"/>
+    <link rel="stylesheet"
+          href="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/css/selectize.bootstrap3.min.css"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.0/js/standalone/selectize.min.js"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700' rel='stylesheet' type='text/css'/>
+    <link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.5.0/css/all.css'/>
+
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
+    <link rel="stylesheet" th:href="@{/css/master-detail.css}"/>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
+</head>
+
+<body>
+
+<!--Include header-->
+<div th:include="fragments/header :: navbar"></div>
+<div class="container-fluid">
+    <div class="row" style="margin-top: -30px;">
+        <div class="col-md-offset-1  col-md-10">
+            <div class="panel card-3 animated fadeIn">
+
+                <!-- Create Form Area -->
+                <div id="add-form-view" class="hidden animated fadeIn">
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Manage Reported Disease Trait </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Create New Disease Trait <br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Disease trait table
+                                below: </small>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='form-group col-md-12'>
+                            <label> Reported Trait: </label>
+                            <input type='text' id='trait' name="trait" placeholder="New Trait Data"
+                                   class='form-control'/>
+                        </div>
+                        <button id="create-form-button" class='btn btn-primary mt-25'
+                                style='float:right; margin-right: 10px;'>
+                            <i class='fa fa-plus'></i> Click to save
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- Chart Visualization Area -->
+                <div id="visualization-view" class="hidden animated fadeIn">
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Manage Reported Disease Trait </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Top 5 Disease Trait by Studies Graph <br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Disease trait table
+                                below: </small>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div id="chartdiv"></div>
+                    </div>
+                </div>
+
+                <!-- Disease Trait Upload Form Area -->
+                <div id="upload-form-view" class="hidden animated fadeIn">
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Manage Reported Disease Trait
+                        <a id="trait-download-file" href="#" style="float: right; margin-right: 30px; color: #f44336">
+                            <i class='fa fa-download'></i> Download Disease Trait Template File
+                        </a>
+                    </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Upload Reported Disease Trait file <br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Ensure you upload CSV File of the required type only </small>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='form-group col-md-12'>
+                            <label style='width:100%; cursor:pointer; margin-top: 7px;'>
+                                <div id='replace'>
+                                    <div id='output' class='styleFile'> Click to upload csv or tsv Result File</div>
+                                </div>
+                                <input type='file' id='bulk-upload' style='display:none;'
+                                       accept='.csv,.xls,.tsv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
+                            </label>
+                        </div>
+                        <button id="upload-data-button" class='btn btn-primary mt-25' style='float:right;'>
+                            <i class='fa fa-upload'></i> Upload Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Disease Trait Analysis Form Area -->
+                <div id="analysis-form-view" class="hidden animated fadeIn">
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Similarity Analysis Disease Trait
+                        <a id="analysis-download-file" href="#" style="float: right; margin-right: 30px; color: #f44336">
+                            <i class='fa fa-download'></i> Download Similarity Analysis Template File
+                        </a>
+                    </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Analyse Disease traits data <br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Upload csv or tsv File of the required type only ... </small>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div class='form-group col-md-12'>
+                            <label style='width:100%; cursor:pointer; margin-top: 7px;'>
+                                <div id='replace-x'>
+                                    <div id='analysis' class='styleFile'> Click to upload csv or tsv File for Analysis</div>
+                                </div>
+                                <input type='file' id='analysis-uploads' style='display:none;'
+                                       accept='.csv,.xls,.tsv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'/>
+                            </label>
+                        </div>
+                        <div class='col-md-12' style='float:left;'>
+                            <a href="#" target="_blank" id="result-url" class="hidden">
+                                <em style="color: #00CC00">Click here to download your analysis result</em>
+                            </a>
+                        </div>
+                        <button id="analysis-data-button" class='btn btn-primary mt-50' style='float:right;'>
+                            <i class='fa fa-upload'></i> Upload for analysis
+                        </button>
+                    </div>
+                </div>
+
+
+                <!-- Chart Visualization Area 2 -->
+                <div id="trait-table-view" class="animated fadeIn">
+                    <h6 style="margin-left: 15px; font-weight: 300;"> Manage Reported Disease Trait </h6>
+                    <div class='header'
+                         style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                        <h4>
+                            <span style="font-weight: normal; margin-left: 15px;"> Disease Traits / Studies Chart <br/> </span>
+                            <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Disease trait table
+                                below: </small>
+                        </h4>
+                    </div>
+                    <div class="panel-body">
+                        <div id="chartdiv2"> chart area</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Tabular Data Area -->
+            <div class="panel card-3 animated fadeIn">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <input type="text" id="table-search" placeholder="Search for reported traits ..." title="Type in a name"/>
+                        <table id='clickable-table' class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th class="text-left"> Reported Disease Traits</th>
+                                <th style="width:150px;"> Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody id="data-list">
+                            <tr id="loader-row" class="" style="background-color: #FFFFFF;">
+                                <td colspan="2">
+                                    <div class='loader'></div>
+                                </td>
+                            </tr>
+                            <!-- TABLE IS INJECTED HERE VIA DOM -->
+                            </tbody>
+                        </table>
+                        <nav aria-label="Page navigation" style="margin-top: -20px;" id="page-area">
+                            <!-- Pagination is updated here -->
+                        </nav>
+                        <nav style="width: 50px; margin-right: 15px; margin-top: -60px; float: right"
+                             id="page-size-area">
+                            <!-- Page Size is updated here -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Navigation Drawer Detailed View -->
+<nav class="ui-nav navigation-drawer card-3" style="width: 38%;">
+    <div class="panel card-1 animated fadeIn">
+        <!-- Edit Form Area -->
+        <div id="edit-form-view" class="animated fadeIn">
+            <h6 style="margin-left: 15px; font-weight: 400;" id="selected-trait"> Manage Reported Disease Trait </h6>
+            <div class='header'
+                 style="border-bottom: 1px solid #c0c0c0; padding-top: 7px; padding-bottom: 7px; background: #EDF8F9;">
+                <h4>
+                    <span style="font-weight: normal; margin-left: 15px;">Edit Disease Trait <br/> </span>
+                    <small style="font-weight: 300; font-size: 0.6em; margin-left: 15px;"> Disease trait table
+                        below: </small>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div class='form-group col-md-12'>
+                    <label> Reported Trait: </label>
+                    <input type='text' id='edit-trait' name="trait" placeholder="Edit Trait Data" class='form-control'/>
+                    <input type='hidden' id='id-of-master'/>
+                </div>
+                <button id="edit-form-button" class='btn btn-primary mt-25' style='float:right; margin-right: 10px;'>
+                    <i class='fa fa-plus'></i> Click to edit
+                </button>
+            </div>
+        </div>
+    </div>
+    <a class="ui-menu-close"></a>
+</nav>
+
+
+<!-- Floating Action Buttons -->
+<div class="adminActions">
+    <input type="checkbox" name="adminToggle" class="adminToggle"/>
+    <a class="adminButton"><i class="fa fa-cog"></i></a>
+    <div class="adminButtons">
+        <a id="activate-add-form-view" class="tool" data-tip="Add One Trait" tabindex="1"><i
+                class="fa fa-plus"></i></a>
+        <a id="activate-trait-table-view" class="tool" data-tip="Trait Chart" tabindex="5"><i
+                class="fa fa-tasks"></i></a>
+        <a id="activate-upload-form-view" class="tool" data-tip="Upload Traits" tabindex="2"><i
+                class="fa fa-upload"></i></a>
+        <a id="activate-analysis-form-view" class="tool" data-tip="Analyse Traits" tabindex="3">
+            <i class="fas fa-chart-line"></i></a>
+        <a id="activate-visualization-view" class="tool" data-tip="Network Viz" tabindex="4"><i
+                class="fas fa-desktop"></i></a>
+    </div>
+</div>
+
+
+<!-- Toast Notification -->
+<div id="toast">
+    <div id="img"><i class="far fa-bell-slash"></i></div>
+    <div id="toast-message">A notification message..</div>
+</div>
+
+
+<div th:include="fragments/footer :: page_footer"></div>
+
+<script th:src="@{/js/goci-global.js}"></script>
+<script th:src="@{/js/master-detail.js}"></script>
+<script th:src="@{/js/disease-trait-page.js}"></script>
+
+
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/plugins/forceDirected.js"></script>
+
+<script type='text/javascript'
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/3.1.0/jquery.serializejson.min.js"></script>
+
+<script th:src="@{/js/charts/network.js}"></script>
+<script th:src="@{/js/charts/column-chart.js}"></script>
+<script type="text/javascript" language="javascript" th:inline="javascript">
+    let netWorkData = [[${mapData}]];
+    loadNetworkMap(netWorkData);
+    let columnChartData = [[${dataList}]];
+    loadColumnChart(columnChartData);
+</script>
+
+<script>
+
+</script>
+
+</body>
+</html>

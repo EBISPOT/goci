@@ -5,7 +5,7 @@ import uk.ac.ebi.spot.goci.model.GenericEmail;
 public class DepositionSyncReportEmail extends GenericEmail {
 
     public void createBody(String reportBody) {
-        this.setSubject("Deposition sync report");
+        this.setSubject("Deposition sync: Publications report");
         this.setBody(reportBody);
     }
 

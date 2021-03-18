@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.ac.ebi.spot.goci.builder.*;
+import uk.ac.ebi.spot.goci.curation.model.StudyToDelete;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyDeletionService;
@@ -29,8 +30,10 @@ import uk.ac.ebi.spot.goci.service.DefaultPubMedSearchService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 
 import static org.hamcrest.Matchers.isA;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -118,6 +121,9 @@ public class StudyControllerTest {
 
     @Mock
     private DepositionSubmissionService depositionSubmissionService;
+
+    @Mock
+    private DepositionSubmissionService submissionService;
 
     private MockMvc mockMvc;
 
@@ -208,12 +214,13 @@ public class StudyControllerTest {
         when(housekeepingRepository.findOne(HOUSEKEEPING_PUBLISHED.getId())).thenReturn(HOUSEKEEPING_PUBLISHED);
         when(associationRepository.findByStudyId(PUBLISHED_STUDY.getId())).thenReturn(Collections.singleton(
                 ASSOCIATION_01));
+        when(submissionService.getSubmissionsForPMID(any())).thenReturn(new HashMap<>());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/studies/1234/delete").accept(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("delete_published_study_warning"))
                 .andExpect(model().attributeExists("studyToDelete"))
-                .andExpect(model().attribute("studyToDelete", isA(Study.class)));
+                .andExpect(model().attribute("studyToDelete", isA(StudyToDelete.class)));
 
         verify(studyRepository, times(1)).findOne(PUBLISHED_STUDY.getId());
         verify(housekeepingRepository, times(1)).findOne(HOUSEKEEPING_PUBLISHED.getId());
@@ -226,12 +233,13 @@ public class StudyControllerTest {
         when(studyRepository.findOne(UNPUBLISHED_STUDY_NO_ASS.getId())).thenReturn(UNPUBLISHED_STUDY_NO_ASS);
         when(housekeepingRepository.findOne(HOUSEKEEPING_NO_ASS.getId())).thenReturn(HOUSEKEEPING_NO_ASS);
         when(associationRepository.findByStudyId(UNPUBLISHED_STUDY_NO_ASS.getId())).thenReturn(Collections.EMPTY_LIST);
+        when(submissionService.getSubmissionsForPMID(any())).thenReturn(new HashMap<>());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/studies/2236/delete").accept(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("delete_study"))
                 .andExpect(model().attributeExists("studyToDelete"))
-                .andExpect(model().attribute("studyToDelete", isA(Study.class)));
+                .andExpect(model().attribute("studyToDelete", isA(StudyToDelete.class)));
 
         verify(studyRepository, times(1)).findOne(UNPUBLISHED_STUDY_NO_ASS.getId());
         verify(housekeepingRepository, times(1)).findOne(HOUSEKEEPING_NO_ASS.getId());
@@ -246,12 +254,13 @@ public class StudyControllerTest {
         when(housekeepingRepository.findOne(HOUSEKEEPING_UNPUBLISHED.getId())).thenReturn(HOUSEKEEPING_UNPUBLISHED);
         when(associationRepository.findByStudyId(UNPUBLISHED_STUDY.getId())).thenReturn(Collections.singleton(
                 ASSOCIATION_02));
+        when(submissionService.getSubmissionsForPMID(any())).thenReturn(new HashMap<>());
 
         mockMvc.perform(MockMvcRequestBuilders.get("/studies/1235/delete").accept(MediaType.TEXT_HTML_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(view().name("delete_study_with_associations_warning"))
                 .andExpect(model().attributeExists("studyToDelete"))
-                .andExpect(model().attribute("studyToDelete", isA(Study.class)));
+                .andExpect(model().attribute("studyToDelete", isA(StudyToDelete.class)));
 
         verify(studyRepository, times(1)).findOne(UNPUBLISHED_STUDY.getId());
         verify(housekeepingRepository, times(1)).findOne(HOUSEKEEPING_UNPUBLISHED.getId());
@@ -262,7 +271,7 @@ public class StudyControllerTest {
     public void testDeleteStudy() throws Exception {
 
         when(studyRepository.findOne(UNPUBLISHED_STUDY.getId())).thenReturn(UNPUBLISHED_STUDY);
-        when(currentUserDetailsService.getUserFromRequest(Matchers.any(HttpServletRequest.class))).thenReturn(
+        when(currentUserDetailsService.getUserFromRequest(any(HttpServletRequest.class))).thenReturn(
                 SECURE_USER);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/studies/1235/delete").accept(MediaType.TEXT_HTML_VALUE))

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-solr-indexer</artifactId>
-    <version>2.6.1</version>
+    <version>2.7.0</version>
     <packaging>jar</packaging>
 
     <name>GOCI Solr Indexer</name>
@@ -14,9 +14,14 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>2.6.1</version>
+        <version>2.7.0</version>
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>uk.ac.ebi.spot.goci.SolrIndexerApplication</start-class>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -78,10 +83,6 @@
 
     </dependencies>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <start-class>uk.ac.ebi.spot.goci.SolrIndexerApplication</start-class>
-    </properties>
 
     <build>
         <finalName>gwas-solr-indexer</finalName>
@@ -89,6 +90,30 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.7.201606060606</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

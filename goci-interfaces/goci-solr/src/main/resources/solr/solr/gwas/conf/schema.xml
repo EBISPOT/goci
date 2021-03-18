@@ -153,6 +153,7 @@
     <field name="studyDesignComment" type="text_general" indexed="false" stored="true" multiValued="false" />
     <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="fullPvalueSet" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <field name="agreedToCc0" type="boolean" indexed="true" stored="true" multiValued="false" />
 
     <!-- embedded study -->
     <field name="study_author" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -379,6 +380,7 @@
     <copyField source="genotypingTechnologies" dest="text" />
     <copyField source="study_genotypingTechnologies" dest="text" />
     <copyField source="fullPvalueSet" dest="text" />
+    <copyField source="agreedToCc0" dest="text" />
     <copyField source="study_author" dest="text" />
     <copyField source="study_orcid" dest="text" />
     <copyField source="study_authorAscii" dest="text" />
@@ -849,7 +851,7 @@
 
     <!-- This point type indexes the coordinates as separate fields (subFields)
       If subFieldType is defined, it references a type, and a dynamic field
-      definition is created matching *___<typename>.  Alternately, if 
+      definition is created matching *___<typename>.  Alternately, if
       subFieldSuffix is defined, that is used to create the subFields.
       Example: if subFieldType="double", then the coordinates would be
         indexed in fields myloc_0___double,myloc_1___double.

@@ -21,7 +21,7 @@ import static uk.ac.ebi.spot.goci.pussycat.lang.Filtering.template;
  * @author Tony Burdett
  * @date 03/06/14
  */
-public class TestFiltering {
+public class FilteringTest {
 
 
     @Test

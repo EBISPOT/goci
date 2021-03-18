@@ -14,7 +14,9 @@ import uk.ac.ebi.spot.goci.repository.UnpublishedStudyRepository;
 import uk.ac.ebi.spot.goci.service.DepositionPublicationService;
 import uk.ac.ebi.spot.goci.service.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.service.PublicationService;
+import uk.ac.ebi.spot.goci.service.StudyService;
 import uk.ac.ebi.spot.goci.service.email.DepositionSyncEmailService;
+import uk.ac.ebi.spot.goci.util.DepositionUtil;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -41,12 +43,14 @@ public class DepositionSyncService {
     private final BodyOfWorkRepository bodyOfWorkRepository;
     private final UnpublishedStudyRepository unpublishedRepository;
     private final UnpublishedAncestryRepository unpublishedAncestryRepo;
-    private PublicationService publicationService;
+    private final PublicationService publicationService;
 
-    private DepositionPublicationService depositionPublicationService;
-    private DepositionSyncEmailService depositionSyncEmailService;
+    private final StudyService studyService;
+    private final DepositionPublicationService depositionPublicationService;
+    private final DepositionSyncEmailService depositionSyncEmailService;
 
     public DepositionSyncService(@Autowired PublicationService publicationService,
+                                 @Autowired StudyService studyService,
                                  @Autowired DepositionPublicationService depositionPublicationService,
                                  @Autowired DepositionSubmissionService submissionService,
                                  @Autowired DepositionSyncEmailService depositionSyncEmailService,
@@ -55,6 +59,7 @@ public class DepositionSyncService {
                                  @Autowired UnpublishedAncestryRepository unpublishedAncestryRepo) {
         this.depositionPublicationService = depositionPublicationService;
         this.publicationService = publicationService;
+        this.studyService = studyService;
         this.submissionService = submissionService;
         this.depositionSyncEmailService = depositionSyncEmailService;
         this.bodyOfWorkRepository = bodyOfWorkRepository;
@@ -192,7 +197,7 @@ public class DepositionSyncService {
             pw.close();
         }
 
-        depositionSyncEmailService.sendSubmissionImportNotification(syncLog.getLog());
+        depositionSyncEmailService.sendSyncNotification(syncLog.getLog());
     }
 
     private boolean isValid(Publication publication) {
@@ -224,6 +229,7 @@ public class DepositionSyncService {
      * searched and displayed.
      */
     public void syncUnpublishedStudies() {
+        ImportLog importLog = new ImportLog();
         List<String> newPubs = new ArrayList<>();
         List<String> updatePubs = new ArrayList<>();
         Map<String, DepositionSubmission> submissions = submissionService.getSubmissions();
@@ -233,6 +239,11 @@ public class DepositionSyncService {
         //else if accession exists, check publication for change, update
         //curation import will need to prune unpublished_studies, ancestry and body_of_work
         submissions.forEach((s, submission) -> {
+            Submission.SubmissionType submissionType = DepositionUtil.getSubmissionType(submission);
+            if (submission.getStatus().equals("SUBMITTED") && submissionType == Submission.SubmissionType.SUM_STATS) {
+                autoImportSumStatsSubmission(submission, importLog);
+            }
+
             if (submission.getStatus().equals("SUBMITTED") && submission.getProvenanceType().equals("BODY_OF_WORK")) {
                 getLog().info("Found new SUBMITTED & BODY_OF_WORK submission: {} | {}", submission.getSubmissionId(), submission.getBodyOfWork().getBodyOfWorkId());
                 BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
@@ -293,7 +304,45 @@ public class DepositionSyncService {
         System.out.println(Arrays.toString(newPubs.toArray()));
         System.out.println("updated " + updatePubs.size());
         System.out.println(Arrays.toString(updatePubs.toArray()));
+        depositionSyncEmailService.sendImportNotification(importLog.getLog());
+    }
 
+    private void autoImportSumStatsSubmission(DepositionSubmission submission, ImportLog importLog) {
+        getLog().info("Publishing summary stats: {} | {}", submission.getSubmissionId(), submission.getPublication().getPmid());
+        List<String> errors = new ArrayList<>();
+        getLog().info("[{}] Looking for studies in the local DB ...", submission.getSubmissionId());
+        Collection<Study> dbStudies = studyService.findByPublication(submission.getPublication().getPmid());
+        List<Long> studyIds = new ArrayList<>();
+        for (Study study : dbStudies) {
+            studyIds.add(study.getId());
+        }
+
+        try {
+            for (DepositionStudyDto studyDto : submission.getStudies()) {
+                String tag = studyDto.getStudyTag();
+                boolean match = false;
+                for (Long studyId : studyIds) {
+                    Study study = studyService.findOne(studyId);
+                    if (study.getAccessionId().equals(studyDto.getAccession())) {
+                        study.setFullPvalueSet(true);
+                        study.setStudyTag(tag);
+                        studyService.save(study);
+                        match = true;
+                        continue;
+                    }
+                }
+                if (!match) {
+                    getLog().error("Study [{}] has no matching GCST in the DB.", studyDto.getAccession());
+                    errors.add("Study [" + studyDto.getAccession() + "] has no matching GCST in the DB.");
+                }
+            }
+            getLog().info("Publishing summary stats done.");
+            submissionService.updateSubmission(submission, "CURATION_COMPLETE");
+        } catch (Exception e) {
+            getLog().error("Encountered error: {}", e.getMessage(), e);
+            errors.add("Error: " + e.getMessage());
+        }
+        importLog.addEntry(submission.getSubmissionId(), submission.getPublication().getPmid(), errors);
     }
 
     private List<DepositionSampleDto> getSamples(DepositionSubmission submission, String studyTag) {

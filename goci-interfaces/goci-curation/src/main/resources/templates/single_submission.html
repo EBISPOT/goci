@@ -60,7 +60,7 @@
               th:object="${submission}">
             <button id="importButton" type="submit" class="btn btn-sm col-sm-1"
                     th:classappend="${submission.submissionType.toString().equals('UNKNOWN')} ? 'btn-warning'  : 'btn-primary'"
-                    th:disabled="${!submission.status.equals('SUBMITTED')}"
+                    th:disabled="${!submission.importStatus.toString().equals('READY')}"
                     th:text="${submission.submissionType.toString().equals('IMPORT_IN_PROGRESS')} ? Processing : Import"></button>
         </form>
         <button class="btn btn-sm btn-primary col-sm-1" id="toggleSubmission">Show/Hide Submission</button>
@@ -90,7 +90,7 @@
                         <span class="item-left-bold">Created Date</span>
                     </div>
                     <div class="col-sm-4" id="submission-created"
-                         th:text="${#dates.format(submission.created,'yyyy-MM-dd')}">created
+                         th:text="${submission.created}">created
                         date</div>
 
                     <div class="col-sm-2">

@@ -20,10 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
-import uk.ac.ebi.spot.goci.curation.model.Assignee;
-import uk.ac.ebi.spot.goci.curation.model.PubmedIdForImport;
-import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
-import uk.ac.ebi.spot.goci.curation.model.StudySearchFilter;
+import uk.ac.ebi.spot.goci.curation.model.*;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
 import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
@@ -711,8 +708,9 @@ public class StudyController {
 
         Long housekeepingId = studyToDelete.getHousekeeping().getId();
         Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
-
-        model.addAttribute("studyToDelete", studyToDelete);
+        Map<String, Submission> submissions = studyToDelete.getPublicationId() != null ? submissionService.getSubmissionsForPMID(studyToDelete.getPublicationId().getPubmedId()) :
+                new HashMap<>();
+        model.addAttribute("studyToDelete", new StudyToDelete(studyToDelete, Integer.toString(submissions.size())));
 
         if (housekeepingAttachedToStudy.getCatalogPublishDate() != null) {
             return "delete_published_study_warning";

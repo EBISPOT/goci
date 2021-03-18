@@ -49,7 +49,7 @@
                     <label for="author" class="control-label col-md-2">Author</label>
 
                     <div class="col-md-10">
-                        <input type="text" th:field="*{publicationId.firstAuthor.fullname}" class="form-control" id="author" readonly="readonly" />
+                        <input type="text" th:field="*{study.publicationId.firstAuthor.fullname}" class="form-control" id="author" readonly="readonly" />
                     </div>
                 </div>
 
@@ -57,7 +57,7 @@
                     <label for="title" class="control-label col-md-2">Title</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="title" th:field="*{publicationId.title}" readonly="readonly" />
+                        <input type="text" class="form-control" id="title" th:field="*{study.publicationId.title}" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -65,27 +65,34 @@
 
                     <div class="col-md-10">
                         <input type="text" class="form-control" id="publication"
-                               th:field="*{publicationId.publication}" readonly="readonly" />
+                               th:field="*{study.publicationId.publication}" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="pubmed" class="control-label col-md-2">Pubmed</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="pubmed" th:field="*{publicationId.pubmedId}" readonly="readonly" />
+                        <input type="text" class="form-control" id="pubmed" th:field="*{study.publicationId.pubmedId}" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="publicationDate" class="control-label col-md-2">Publication Date</label>
 
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="publicationDate" th:field="*{publicationId.publicationDate}" readonly="readonly" />
+                        <input type="text" class="form-control" id="publicationDate" th:field="*{study.publicationId.publicationDate}" readonly="readonly" />
+                    </div>
+                </div>
+                <div class="form-group has-error">
+                    <label for="noSubmissions" class="control-label col-md-2">Number of submissions in the Deposition App</label>
+
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="noSubmissions" th:field="*{numberOfSubmissions}" readonly="readonly" />
                     </div>
                 </div>
 
                 <div class="form-group inline">
                     <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger" th:disabled="${!studyToDelete.numberOfSubmissions.equals('0')}">Delete</button>
                     </div>
                 </div>
 

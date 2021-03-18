@@ -41,6 +41,14 @@
 <div th:include="fragments/header :: navbar"></div>
 
 <div class="container-fluid">
+    <div style="float: right"><h4><a th:href="@{{baseURL}/submissions(baseURL=${@environment.getProperty('deposition.ui.uri')})}" target="_blank">View Submissions in the Deposition App</a></h4>
+    </div>
+</div>
+
+<!--Include study navigation tabs-->
+<div th:include="fragments/submission_navigation_tabs :: tabs"></div>
+
+<div class="container-fluid">
     <div class="container-fluid" th:if="${!#strings.isEmpty(result)}">
         <div class="row">
             <div class="col-md-8">
@@ -51,10 +59,11 @@
             </div>
         </div>
     </div>
+<!--
     <div><h4>
-        <a th:href="@{{baseURL}/submissions(baseURL=${@environment.getProperty('deposition.ui.uri')})}" target="_blank">View
-            All Submissions</a></h4>
+        <a th:href="@{{baseURL}/submissions(baseURL=${@environment.getProperty('deposition.ui.uri')})}" target="_blank">View Submissions in the Deposition App</a></h4>
     </div>
+-->
     <div class="row">
         <div class="col-md-12">
           <table id="submissionDataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">

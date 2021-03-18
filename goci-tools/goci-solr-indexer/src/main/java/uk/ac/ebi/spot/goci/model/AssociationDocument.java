@@ -21,30 +21,57 @@ import java.util.regex.Pattern;
  */
 public class AssociationDocument extends OntologyEnabledDocument<Association> {
     // basic Association information
-    @Field @NonEmbeddableField private String riskFrequency;
-    @Field private String qualifier;
+    @Field
+    @NonEmbeddableField
+    private String riskFrequency;
+    @Field
+    private String qualifier;
 
-    @Field @NonEmbeddableField private Integer pValueMantissa;
-    @Field @NonEmbeddableField private Integer pValueExponent;
-    @Field @NonEmbeddableField private Float orPerCopyNum;
-    @Field @NonEmbeddableField private Float betaNum;
-    @Field @NonEmbeddableField private String betaUnit;
-    @Field @NonEmbeddableField private String betaDirection;
-    @Field("orDescription") @NonEmbeddableField private String description;
-    @Field @NonEmbeddableField private String range;
+    @Field
+    @NonEmbeddableField
+    private Integer pValueMantissa;
+    @Field
+    @NonEmbeddableField
+    private Integer pValueExponent;
+    @Field
+    @NonEmbeddableField
+    private Float orPerCopyNum;
+    @Field
+    @NonEmbeddableField
+    private Float betaNum;
+    @Field
+    @NonEmbeddableField
+    private String betaUnit;
+    @Field
+    @NonEmbeddableField
+    private String betaDirection;
+    @Field("orDescription")
+    @NonEmbeddableField
+    private String description;
+    @Field
+    @NonEmbeddableField
+    private String range;
     //    @Field @NonEmbeddableField private String orType;
-    @Field @NonEmbeddableField private Boolean snpInteraction = false;
-    @Field @NonEmbeddableField private Boolean multiSnpHaplotype = false;
+    @Field
+    @NonEmbeddableField
+    private Boolean snpInteraction = false;
+    @Field
+    @NonEmbeddableField
+    private Boolean multiSnpHaplotype = false;
 
     // additional included genetic data...
     // capture loci/risk alleles for association;
     // if many, collapse risk allele and snp into a single field and use
     // 'x' or ',' to separate SNP x SNP and haplotype associations respectively
-    @Field private String rsId;
-    @Field private String strongestAllele;
-    @Field private String context;
+    @Field
+    private String rsId;
+    @Field
+    private String strongestAllele;
+    @Field
+    private String context;
     //    @Field private String region;
-    @Field("region") private Set<String> region;
+    @Field("region")
+    private Set<String> region;
 
     // mapped genes and reported genes must be per snp -
     // if multiple, separate mapped genes with a hyphen (downstream-upstream) and reported genes with a slash,
@@ -52,58 +79,100 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 //    @Field("entrezMappedGenes") private Collection<String> entrezMappedGenes;
 //    @Field("entrezMappedGeneLinks") private Collection<String> entrezMappedGeneLinks;
 
-    @Field("ensemblMappedGenes") private Collection<String> ensemblMappedGenes;
-    @Field("ensemblMappedGeneLinks") private Collection<String> ensemblMappedGeneLinks;
+    @Field("ensemblMappedGenes")
+    private Collection<String> ensemblMappedGenes;
+    @Field("ensemblMappedGeneLinks")
+    private Collection<String> ensemblMappedGeneLinks;
 
-    @Field("reportedGene") private Collection<String> reportedGenes;
-    @Field("reportedGeneLinks") private Collection<String> reportedGeneLinks;
-    @Field @NonEmbeddableField private Long merged;
-    @Field @NonEmbeddableField private String currentSnp;
+    @Field("reportedGene")
+    private Collection<String> reportedGenes;
+    @Field("reportedGeneLinks")
+    private Collection<String> reportedGeneLinks;
+    @Field
+    @NonEmbeddableField
+    private Long merged;
+    @Field
+    @NonEmbeddableField
+    private String currentSnp;
 
-    @Field("studyId") @NonEmbeddableField private Collection<String> studyIds;
+    @Field("studyId")
+    @NonEmbeddableField
+    private Collection<String> studyIds;
 
     // pluralise all other information, but retain order
-    @Field("chromosomeName") private Set<String> chromosomeNames;
-    @Field("chromosomePosition") private Set<Integer> chromosomePositions;
-    @Field("chromLocation") @NonEmbeddableField  private Set<String> chromLocations;
-    @Field("positionLinks") private Collection<String> positionLinks;
+    @Field("chromosomeName")
+    private Set<String> chromosomeNames;
+    @Field("chromosomePosition")
+    private Set<Integer> chromosomePositions;
+    @Field("chromLocation")
+    @NonEmbeddableField
+    private Set<String> chromLocations;
+    @Field("positionLinks")
+    private Collection<String> positionLinks;
 
-    @Field("locusDescription") @NonEmbeddableField private String locusDescription;
+    @Field("locusDescription")
+    @NonEmbeddableField
+    private String locusDescription;
 
     // embedded study info
-    @Field private String pubmedId;
-    @Field private String title;
-    @Field private String author;
-    @Field private String orcid;
-    @Field private String authorAscii;
-    @Field private Collection<String> authorsList;
-    @Field private String publication;
-    @Field private String publicationDate;
-    @Field private String catalogPublishDate;
-    @Field private String publicationLink;
+    @Field
+    private String pubmedId;
+    @Field
+    private String title;
+    @Field
+    private String author;
+    @Field
+    private String orcid;
+    @Field
+    private String authorAscii;
+    @Field
+    private Collection<String> authorsList;
+    @Field
+    private String publication;
+    @Field
+    private String publicationDate;
+    @Field
+    private String catalogPublishDate;
+    @Field
+    private String publicationLink;
 
-    @Field private String platform;
-    @Field private String accessionId;
+    @Field
+    private String platform;
+    @Field
+    private String accessionId;
 
-    @Field private String initialSampleDescription;
-    @Field private String replicateSampleDescription;
+    @Field
+    private String initialSampleDescription;
+    @Field
+    private String replicateSampleDescription;
 
-    @Field private Collection<String> ancestralGroups;
-    @Field private Collection<String> countriesOfOrigin;
-    @Field private Collection<String> countriesOfRecruitment;
-    @Field private Collection<Integer> numberOfIndividuals;
-    @Field private Collection<String> additionalAncestryDescription;
-    @Field private Collection<String> ancestryLinks;
-    @Field private Collection<String> genotypingTechnologies;
-    @Field private String studyDesignComment;
+    @Field
+    private Collection<String> ancestralGroups;
+    @Field
+    private Collection<String> countriesOfOrigin;
+    @Field
+    private Collection<String> countriesOfRecruitment;
+    @Field
+    private Collection<Integer> numberOfIndividuals;
+    @Field
+    private Collection<String> additionalAncestryDescription;
+    @Field
+    private Collection<String> ancestryLinks;
+    @Field
+    private Collection<String> genotypingTechnologies;
+    @Field
+    private String studyDesignComment;
 
 
     // embedded DiseaseTrait info
-    @Field("traitName") private Collection<String> traitNames;
+    @Field("traitName")
+    private Collection<String> traitNames;
 
     // embedded EfoTrait info
-    @Field("mappedLabel") private Collection<String> mappedLabels;
-    @Field("mappedUri") private Collection<String> mappedUris;
+    @Field("mappedLabel")
+    private Collection<String> mappedLabels;
+    @Field("mappedUri")
+    private Collection<String> mappedUris;
 
     public AssociationDocument(Association association) {
         super(association);
@@ -209,7 +278,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return pValueMantissa;
     }
 
-    public int getpValueExponent() { return pValueExponent; }
+    public int getpValueExponent() {
+        return pValueExponent;
+    }
 
     public Collection<String> getReportedGenes() {
         return reportedGenes;
@@ -223,7 +294,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         return rsId;
     }
 
-    public Long getMerged() { return merged; }
+    public Long getMerged() {
+        return merged;
+    }
 
     public Set<String> getChromosomeNames() {
         return chromosomeNames;
@@ -253,13 +326,21 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.title = title;
     }
 
-    public void addAuthor(String author) { this.author = author; }
+    public void addAuthor(String author) {
+        this.author = author;
+    }
 
-    public void addOrcid(String orcid) { this.orcid = orcid; }
+    public void addOrcid(String orcid) {
+        this.orcid = orcid;
+    }
 
-    public void addAuthorAscii(String authorAscii) { this.authorAscii = authorAscii; }
+    public void addAuthorAscii(String authorAscii) {
+        this.authorAscii = authorAscii;
+    }
 
-    public void addAuthorsList(Collection<String> authorsList) {this.authorsList = authorsList;}
+    public void addAuthorsList(Collection<String> authorsList) {
+        this.authorsList = authorsList;
+    }
 
     public void addPublication(String publication) {
         this.publication = publication;
@@ -305,7 +386,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.numberOfIndividuals.addAll(numberOfIndividuals);
     }
 
-    public void addAdditionalAncestryDescription(Collection<String> additionalAncestryDescription){
+    public void addAdditionalAncestryDescription(Collection<String> additionalAncestryDescription) {
         this.additionalAncestryDescription.addAll(additionalAncestryDescription);
     }
 
@@ -321,7 +402,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         this.genotypingTechnologies.addAll(genotypingTechnologies);
     }
 
-    public void addStudyDesignComment(String studyDesignComment) { this.studyDesignComment = studyDesignComment;}
+    public void addStudyDesignComment(String studyDesignComment) {
+        this.studyDesignComment = studyDesignComment;
+    }
 
     public void addCountryOfOrigin(String countryOfOrigin) {
         this.countriesOfOrigin.add(countryOfOrigin);
@@ -368,11 +451,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             String primary_delimiter;
             String secondary_delimiter;
 
-            if(association.getSnpInteraction()){
+            if (association.getSnpInteraction()) {
                 primary_delimiter = " x ";
                 secondary_delimiter = " x ";
-            }
-            else {
+            } else {
                 primary_delimiter = "; ";
                 secondary_delimiter = ", ";
             }
@@ -393,10 +475,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     merged = snp.getMerged();
 
                                     String current;
-                                    if(snp.getCurrentSnp() != null){
+                                    if (snp.getCurrentSnp() != null) {
                                         current = snp.getCurrentSnp().getRsId();
-                                    }
-                                    else{
+                                    } else {
                                         current = snp.getRsId();
                                     }
                                     currentSnp = setOrAppend(currentSnp, current, primary_delimiter);
@@ -419,10 +500,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                     ensemblMappedGeneLinks.addAll(createMappedGeneLinks(snp, "Ensembl"));
 
-                                    contextString[0]= setOrAppend(contextString[0], snp.getFunctionalClass(), primary_delimiter);
+                                    contextString[0] = setOrAppend(contextString[0], snp.getFunctionalClass(), primary_delimiter);
                                     Collection<Location> snpLocations = snp.getLocations();
                                     for (Location snpLocation : snpLocations) {
-                                        String chromName= snpLocation.getChromosomeName();
+                                        String chromName = snpLocation.getChromosomeName();
 
                                         chromosomeNames.add(chromName);
 
@@ -465,11 +546,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
             chromLocations.add(positionString[0]);
             context = contextString[0];
 
-        }
-        else if (association.getMultiSnpHaplotype()){
+        } else if (association.getMultiSnpHaplotype()) {
 
-        }
-        else {
+        } else {
             // this is a single study
             association.getLoci().forEach(
                     locus -> {
@@ -484,10 +563,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     merged = snp.getMerged();
 
                                     String current;
-                                    if(snp.getCurrentSnp() != null){
+                                    if (snp.getCurrentSnp() != null) {
                                         current = snp.getCurrentSnp().getRsId();
-                                    }
-                                    else{
+                                    } else {
                                         current = snp.getRsId();
                                     }
                                     currentSnp = setOrAppend(currentSnp, current, ", ");
@@ -499,11 +577,10 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                                 }
                                             });
 
-                                    if(association.getMultiSnpHaplotype()){
+                                    if (association.getMultiSnpHaplotype()) {
 //                                        entrezMappedGenes.add(getMappedGeneString(association, snp, "NCBI"));
                                         ensemblMappedGenes.add(getMappedGeneString(association, snp, "Ensembl"));
-                                    }
-                                    else{
+                                    } else {
 //                                        entrezMappedGenes.addAll(getMappedGenes(association, snp, "NCBI"));
                                         ensemblMappedGenes.addAll(getMappedGenes(association, snp, "Ensembl"));
 
@@ -516,7 +593,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                     context = snp.getFunctionalClass();
                                     Collection<Location> snpLocations = snp.getLocations();
                                     for (Location snpLocation : snpLocations) {
-                                        String chromName= snpLocation.getChromosomeName();
+                                        String chromName = snpLocation.getChromosomeName();
 
                                         chromosomeNames.add(chromName);
 
@@ -612,8 +689,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         if (!mappedGeneList.isEmpty()) {
             mappedGenes.addAll(mappedGeneList);
-        }
-        else if (!closestUpstreamDownstreamGenes.isEmpty()) {
+        } else if (!closestUpstreamDownstreamGenes.isEmpty()) {
             mappedGenes.addAll(closestUpstreamDownstreamGenes);
         }
         //        else {
@@ -630,20 +706,17 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (snpLocation.getChromosomeName() != null) {
 
             positionLink = snpLocation.getChromosomeName();
-        }
-        else {
+        } else {
             positionLink = "NA";
         }
         if (snpLocation.getChromosomePosition() != null) {
             positionLink = positionLink.concat("|").concat(snpLocation.getChromosomePosition().toString());
-        }
-        else {
+        } else {
             positionLink = positionLink.concat("|NA");
         }
         if (snpLocation.getRegion().getName() != null) {
             positionLink = positionLink.concat("|").concat(snpLocation.getRegion().getName());
-        }
-        else {
+        } else {
             positionLink = positionLink.concat("|NA");
         }
         return positionLink;
@@ -688,8 +761,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (!ensemblLinks.isEmpty()) {
             geneLink = geneLink.concat("|").concat(ensemblLinks);
 
-        }
-        else {
+        } else {
             geneLink = null;
         }
 
@@ -709,8 +781,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                 if (context.getDistance() != null) {
                     if (context.getDistance() == 0 || context.getIsUpstream()) {
                         distance = String.valueOf(context.getDistance());
-                    }
-                    else {
+                    } else {
                         distance = "-".concat(String.valueOf(context.getDistance()));
                     }
                 }
@@ -720,8 +791,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                     if (context.getLocation().getChromosomeName() != null) {
                         location = context.getLocation().getChromosomeName();
                     }
-                }
-                else {
+                } else {
                     getLog().warn("SNP: " + snp.getRsId() + " has no location for genomic context: " + context.getId());
                 }
 
@@ -762,14 +832,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                             .concat(ensemblGene.getEnsemblGeneId());
                             if (!distance.equals("")) {
                                 geneLink = geneLink.concat("|").concat(distance);
-                            }
-                            else {
+                            } else {
                                 geneLink = geneLink.concat("|N/A");
                             }
                             if (!location.equals("")) {
                                 geneLink = geneLink.concat("|".concat(location));
-                            }
-                            else {
+                            } else {
                                 geneLink = geneLink.concat("|N/A");
                             }
                             mappedGeneLinks.add(geneLink);
@@ -790,10 +858,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         List<String> allMappedGenes = new ArrayList<String>();
 
-        if(snp.getGenomicContexts().isEmpty()){
+        if (snp.getGenomicContexts().isEmpty()) {
             allMappedGenes.add("No mapped genes");
-        }
-        else {
+        } else {
             snp.getGenomicContexts().forEach(
                     context -> {
                         if (context.getGene() != null && context.getGene().getGeneName() != null &&
@@ -821,9 +888,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                         if (mappedGenesToLocation.containsKey(locationId)) {
                                             mappedGenesToLocation.get(locationId).add(geneName);
-                                        }
-
-                                        else {
+                                        } else {
                                             Set<String> mappedGenes = new HashSet<>();
                                             mappedGenes.add(geneName);
                                             mappedGenesToLocation.put(locationId, mappedGenes);
@@ -841,24 +906,17 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                                                 if (context.getIsUpstream()) {
                                                     closestUpstreamDownstreamGenesToLocation.get(locationId)
                                                             .put("up", geneName);
-                                                }
-
-                                                else if (context.getIsDownstream()) {
+                                                } else if (context.getIsDownstream()) {
                                                     closestUpstreamDownstreamGenesToLocation.get(locationId).put("down",
-                                                            geneName);
+                                                                                                                 geneName);
                                                 }
-                                            }
-
-                                            else {
+                                            } else {
                                                 Map<String, String> closestUpstreamDownstreamGenes = new HashMap<>();
                                                 if (context.getIsUpstream()) {
                                                     closestUpstreamDownstreamGenes.put("up", geneName);
-                                                }
-
-                                                else if (context.getIsDownstream()) {
+                                                } else if (context.getIsDownstream()) {
                                                     closestUpstreamDownstreamGenes.put("down", geneName);
-                                                }
-                                                else {
+                                                } else {
                                                     getLog().warn(
                                                             "No closest upstream and downstream gene for association: " +
                                                                     association.getId() + ", snp: " + snp.getRsId() +
@@ -867,7 +925,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
                                                 if (!closestUpstreamDownstreamGenes.isEmpty()) {
                                                     closestUpstreamDownstreamGenesToLocation.put(locationId,
-                                                            closestUpstreamDownstreamGenes);
+                                                                                                 closestUpstreamDownstreamGenes);
                                                 }
                                             }
                                         }
@@ -900,17 +958,15 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
                 Map<String, String> closestUpstreamDownstreamGenes = closestUpstreamDownstreamGenesToLocation.get(locationId);
                 String upstreamDownstreamGeneString = "";
 
-                if(closestUpstreamDownstreamGenes.get("up") != null){
+                if (closestUpstreamDownstreamGenes.get("up") != null) {
                     upstreamDownstreamGeneString = upstreamDownstreamGeneString.concat(closestUpstreamDownstreamGenes.get("up"));
-                }
-                else{
+                } else {
                     upstreamDownstreamGeneString = upstreamDownstreamGeneString.concat("N/A");
                 }
 
-                if(closestUpstreamDownstreamGenes.get("down") != null){
+                if (closestUpstreamDownstreamGenes.get("down") != null) {
                     upstreamDownstreamGeneString = upstreamDownstreamGeneString.concat(" - ").concat(closestUpstreamDownstreamGenes.get("down"));
-                }
-                else{
+                } else {
                     upstreamDownstreamGeneString = upstreamDownstreamGeneString.concat(" - N/A");
 
                 }
@@ -923,20 +979,16 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         String geneString = "";
 
         if (!allMappedGenes.isEmpty()) {
-            if(association.getMultiSnpHaplotype()){
+            if (association.getMultiSnpHaplotype()) {
                 geneString = String.join("; ", allMappedGenes);
 
-            }
-            else{
+            } else {
                 geneString = String.join(", ", allMappedGenes);
             }
-        }
-
-        else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
-            if(association.getMultiSnpHaplotype()){
+        } else if (!allUpstreamAndDownstreamGenes.isEmpty()) {
+            if (association.getMultiSnpHaplotype()) {
                 geneString = String.join("; ", allUpstreamAndDownstreamGenes);
-            }
-            else{
+            } else {
                 geneString = String.join(", ", allUpstreamAndDownstreamGenes);
             }
         }
@@ -948,8 +1000,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (toAppend != null && !toAppend.isEmpty()) {
             if (current == null || current.isEmpty()) {
                 current = toAppend;
-            }
-            else {
+            } else {
                 current = current.concat(delim).concat(toAppend);
             }
         }
@@ -960,8 +1011,7 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
         if (toAppend != null && !toAppend.isEmpty()) {
             if (current.length() == 0) {
                 current.append(toAppend);
-            }
-            else {
+            } else {
                 current.append(delim).append(toAppend);
             }
         }

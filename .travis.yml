@@ -1,0 +1,33 @@
+matrix:
+  include:
+    - language: node_js
+      node_js: 10
+
+      addons:
+        sonarcloud:
+          organization: "gwas-ebi"
+
+      script:
+        - sonar-scanner -Dsonar.organization=gwas-ebi -Dsonar.projectKey=goci-ui -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=0566d66d0cfe16cd2cb8ba02db7fcd0b6d1e7ee6 -Dsonar.exclusions=**/*.java,**/target/**
+
+    - language: java
+      sudo: false
+      jdk: openjdk11
+
+      dist: trusty
+
+      env:
+        global:
+        - JAVA_OPTS="-XX:+TieredCompilation -XX:TieredStopAtLevel=1 -Xmn48M -Xmx512M"
+      addons:
+        sonarcloud:
+          organization: "gwas-ebi"
+          #token:
+            #secure: "LBTAViqGyi7anEYYLzuTyTF1L3Xnq7prupvyzW2mIUWJY6uh9Y3s0TItA+8CSUcbeCUf6MGrj8ydNi4PRLr/DpOCTIrt4FMs5mljaBE4BDfJMgts/hSzLSwSLOa2gKdOJg64ZNpeW+am/hH5/Wbuje6cegeNoNq1yRH4SMBLhnu3/JdmzDLc3pLNuhvNjy6/qX2YPyHLoJ9FE0SfkbULsbzHy7+EDLcxPUVby7aemOD0KUYDxw7Ee4jc5mH9HDrm9sqTFHw+4TWNMA5gsZX4NB3keSElMg9giwVTQT3zLG2sFNbhmhoD2rxs7JxTE+yVeg7ahLSW23LP7mkg4jdc4gR4h1VxB6wwxHIsx+1QZP8MSBOcwYPzLQIp3VyGK37sCVDJHGrpQXZG9SHWZfedmqo6EjabZK8lFCGG8fOTIj5A5FiltfaaHvEfgwbMki12zTm8GftodPJNUT336FNvTHOUlG/RNP3exArWpLXXZXw1gynn57tEVdd5qxdxxpc+QztJiKn2dByWehg5NYh7KwkGcQiNAerYYzMDpIjaVKO1hHeCSouuYFXxp++gBPW0z68Eojp7bVORA/I82nZdY6lkEnFFryHo3RTgU8q6ggDI233r10R/Unsl4bySisQ6z1McPZERQMIton1XMqbAkh3Eb337L+GEGzRSlLehNGM="
+      #- mvn clean verify sonar:sonar -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true -Dsonar.login=0566d66d0cfe16cd2cb8ba02db7fcd0b6d1e7ee6
+      script:
+        - jdk_switcher use openjdk8
+        - mvn clean verify -Dmaven.test.failure.ignore=true -Dmaven.test.error.ignore=true
+        - export JAVA_HOME=$HOME/openjdk11
+        - mvn sonar:sonar -Dsonar.login=0566d66d0cfe16cd2cb8ba02db7fcd0b6d1e7ee6
+

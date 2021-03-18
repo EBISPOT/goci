@@ -24,7 +24,7 @@
                             this
                             study instead.</p>
             <a th:href="@{/studies}" class="btn btn-primary">Back to studies</a>
-            <a th:object="${studyToDelete}" th:href="@{/studies/{studyId}(studyId=*{id})}"
+            <a th:object="${studyToDelete.study}" th:href="@{/studies/{studyId}(studyId=*{id})}"
                class="btn btn-primary">Go to study</a>
         </div>
     </div>

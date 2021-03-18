@@ -51,13 +51,18 @@ public class BulkOperationsService {
         boolean newUserRequested = !existingUserRequested;
 
         getLog().info("[{}] Changing 'User Requested' flag for {} studies", publication.getPubmedId(), publication.getStudies().size());
+        List<Long> ids = new ArrayList<>();
         for (Study study : publication.getStudies()) {
-            Study existingStudy = studyRepository.findOne(study.getId());
+            ids.add(study.getId());
+        }
+
+        for (Long studyId : ids) {
+            Study existingStudy = studyRepository.findOne(studyId);
             existingStudy.setUserRequested(newUserRequested);
             String updateDescription = "Changed 'User Requested' flag to: " + Boolean.toString(newUserRequested);
             trackingOperationService.update(existingStudy, user, "STUDY_UPDATE", updateDescription);
             studyRepository.save(existingStudy);
-            getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
+            getLog().info("Study ".concat(String.valueOf(studyId)).concat(" updated"));
         }
     }
 
@@ -67,13 +72,17 @@ public class BulkOperationsService {
         boolean newOpenTargets = !existingOpenTargets;
 
         getLog().info("[{}] Changing 'Open Targets' flag for {} studies", publication.getPubmedId(), publication.getStudies().size());
+        List<Long> ids = new ArrayList<>();
         for (Study study : publication.getStudies()) {
-            Study existingStudy = studyRepository.findOne(study.getId());
+            ids.add(study.getId());
+        }
+        for (Long studyId : ids) {
+            Study existingStudy = studyRepository.findOne(studyId);
             existingStudy.setOpenTargets(newOpenTargets);
             String updateDescription = "Changed 'Open Targets' flag to: " + Boolean.toString(newOpenTargets);
             trackingOperationService.update(existingStudy, user, "STUDY_UPDATE", updateDescription);
             studyRepository.save(existingStudy);
-            getLog().info("Study ".concat(String.valueOf(study.getId())).concat(" updated"));
+            getLog().info("Study ".concat(String.valueOf(studyId)).concat(" updated"));
         }
     }
 
