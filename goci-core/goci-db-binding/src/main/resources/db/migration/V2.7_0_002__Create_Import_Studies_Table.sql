@@ -6,7 +6,7 @@ Creating Studies Import table
 
 author: Tudor Groza
 date:    9 October 2020
-version: 2.6.0.006
+version: 2.7.0.002
 
 ################################################################################
 */

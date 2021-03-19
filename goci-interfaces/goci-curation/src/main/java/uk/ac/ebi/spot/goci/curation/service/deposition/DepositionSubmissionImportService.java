@@ -71,6 +71,7 @@ public class DepositionSubmissionImportService {
     private DepositionStudiesImportService depositionStudiesImportService;
 
     @Async
+    @Transactional
     public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser, Long submissionImportId) {
         ImportLog importLog = new ImportLog();
         getLog().info("Evaluating submission type for: {}", depositionSubmission.getSubmissionId());
@@ -212,8 +213,8 @@ public class DepositionSubmissionImportService {
             }
         }
 
-        mailService.sendSubmissionImportNotification(outcome, depositionSubmission.getPublication().getPmid(),
-                submissionID, importLog, currentUser.getEmail());
+        /*mailService.sendSubmissionImportNotification(outcome, depositionSubmission.getPublication().getPmid(),
+                submissionID, importLog, currentUser.getEmail());*/
 
         getLog().info("Import process finalized: {}", depositionSubmission.getSubmissionId());
         getLog().info(importLog.pretty(false));
