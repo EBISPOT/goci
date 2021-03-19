@@ -51,7 +51,6 @@ public class DepositionStudiesImportService {
         while (!done) {
             List<DepositionStudyDto> depositionStudyDtos = new ArrayList<>();
             try {
-                // 100 entries per page
                 depositionStudyDtos = depositionSubmissionService.getStudiesForSubmission(submissionId, page);
             } catch (Exception e) {
                 errors.add(e.getMessage());

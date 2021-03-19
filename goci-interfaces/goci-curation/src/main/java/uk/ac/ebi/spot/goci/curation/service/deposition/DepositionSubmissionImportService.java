@@ -89,9 +89,9 @@ public class DepositionSubmissionImportService {
         Collection<Study> dbStudies = studyService.findByPublication(depositionSubmission.getPublication().getPmid());
         List<Long> dbStudyIds = dbStudies.stream().map(Study::getId).collect(Collectors.toList());
         getLog().info("[{}] Found {} studies: {}", submissionID, dbStudies.size(), dbStudyIds);
+
         boolean outcome = true;
         ImportLogStep initialImportStep = importLog.addStep(new ImportLogStep("Retrieving studies", submissionID));
-        // retrieve studies in a paginated fashion (100 per page), dump them in temp table
         List<String> importErrors = depositionStudiesImportService.retrieveStudies(submissionID);
         if (!importErrors.isEmpty()) {
             importLog.updateStatus(initialImportStep.getId(), ImportLog.FAIL);
@@ -105,8 +105,6 @@ public class DepositionSubmissionImportService {
             getLog().info(importLog.pretty(false));
 
             submissionImportProgressService.deleteImport(submissionImportId);
-            // so if there's an error, studies stay in temp table, but the process stops,
-            // if we restart the process if these entries exist so we dont do the work again
             return;
         }
 
@@ -134,7 +132,6 @@ public class DepositionSubmissionImportService {
             importLog.updateStatus(studiesStep.getId(), ImportLog.SUCCESS);
             getLog().info("[{}] Validating associations ...", submissionID);
             ImportLogStep importStep = importLog.addStep(new ImportLogStep("Validating associations", submissionID));
-            // previously we put this {association in params} in  a for loop on all associations
             List<String> errors = associationValidationService.validateAssociations(submissionID);
             importLog.addWarnings(errors, "Validating associations");
             getLog().info("[{}] Associations validated. Found {} errors and {} warnings.", submissionID, importLog.getErrorList().size(),
