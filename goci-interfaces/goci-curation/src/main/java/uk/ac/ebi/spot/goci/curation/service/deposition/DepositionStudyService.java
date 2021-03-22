@@ -117,8 +117,9 @@ public class DepositionStudyService {
     }
 
     @Transactional
-    public String deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
+    public String deleteStudies(String pmid, Curator curator, SecureUser currentUser) {
         try {
+            Collection<Study> dbStudies = studyService.findByPublication(pmid);
             if (dbStudies != null) {
                 for (int i = 0; i < dbStudies.size(); i++) {
                     addStudyNote(dbStudies.toArray(new Study[0])[i], null,
