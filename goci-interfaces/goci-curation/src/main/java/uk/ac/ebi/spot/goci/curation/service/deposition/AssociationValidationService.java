@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.service.AssociationOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
@@ -50,6 +51,7 @@ public class AssociationValidationService {
     @Autowired
     private DepositionStudiesImportService depositionStudiesImportService;
 
+    @Transactional
     public List<String> validateAssociations(String submissionId) {
         List<String> errorList = new ArrayList<>();
         Stream<SubmissionImportStudy> submissionImportStudyStream = depositionStudiesImportService.streamBySubmissionId(submissionId);
