@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.service.StudyNoteOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
@@ -65,9 +64,7 @@ public class StudiesProcessingService {
     @Autowired
     private EnsemblRestTemplateService ensemblRestTemplateService;
 
-    @Transactional
-    public boolean processStudies(String submissionId, SecureUser currentUser, String pmid, Curator curator, ImportLog importLog) {
-        Publication publication = publicationService.findByPumedId(pmid);
+    public boolean processStudies(String submissionId, SecureUser currentUser, Publication publication, Curator curator, ImportLog importLog) {
         Stream<SubmissionImportStudy> submissionImportStudyStream = depositionStudiesImportService.streamBySubmissionId(submissionId);
         submissionImportStudyStream.forEach(submissionImportStudy -> process(submissionId, submissionImportStudy, currentUser, publication, curator, importLog));
         submissionImportStudyStream.close();

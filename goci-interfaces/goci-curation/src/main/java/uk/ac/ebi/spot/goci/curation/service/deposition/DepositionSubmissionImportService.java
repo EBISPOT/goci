@@ -71,6 +71,7 @@ public class DepositionSubmissionImportService {
     private DepositionStudiesImportService depositionStudiesImportService;
 
     @Async
+    @Transactional
     public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser, Long submissionImportId) {
         ImportLog importLog = new ImportLog();
         getLog().info("Evaluating submission type for: {}", depositionSubmission.getSubmissionId());
@@ -142,7 +143,7 @@ public class DepositionSubmissionImportService {
                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                 getLog().info("[{}] Deleting proxy studies created when the publication was initially imported.", submissionID);
                 importStep = importLog.addStep(new ImportLogStep("Deleting proxy studies", submissionID));
-                String result = depositionStudyService.deleteStudies(depositionSubmission.getPublication().getPmid(), curator, currentUser);
+                String result = depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
                 if (result != null) {
                     importLog.addError(result, "Deleting proxy studies");
                     importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
@@ -152,7 +153,7 @@ public class DepositionSubmissionImportService {
                 }
 
                 if (outcome) {
-                    outcome = studiesProcessingService.processStudies(submissionID, currentUser, depositionSubmission.getPublication().getPmid(), curator, importLog);
+                    outcome = studiesProcessingService.processStudies(submissionID, currentUser, publication, curator, importLog);
 
                     if (outcome) {
                         getLog().info("[{}] Deleting unpublished studies and body of works.", submissionID);

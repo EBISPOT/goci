@@ -129,7 +129,7 @@ public class Study implements Trackable {
     @OneToMany(mappedBy = "study")
     private Collection<WeeklyTracking> weeklyTrackings;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JsonManagedReference("publicationInfo")
     @JoinColumn(name = "publication_id")
     private Publication publicationId;
