@@ -46,7 +46,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private Collection<String> ancestryLinks;
     @Field private Collection<String> genotypingTechnologies;
     @Field private String studyDesignComment;
-    @Field private Boolean agreedToCc0;
+    @Field @NonEmbeddableField private Boolean agreedToCc0;
 
     @Field @NonEmbeddableField private int associationCount;
 
