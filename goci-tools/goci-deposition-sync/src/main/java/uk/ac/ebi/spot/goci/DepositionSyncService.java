@@ -32,12 +32,11 @@ public class DepositionSyncService {
         return log;
     }
 
-    private static List<String> INELIGIBLE_STATUSES = Arrays.asList(new String[]{
+    private static final List<String> INELIGIBLE_STATUSES = Arrays.asList(
             "curation abandoned",
             "cnv paper",
-            "scientific pilot",
             "permanently unpublished from catalog"
-    });
+    );
 
     private final DepositionSubmissionService submissionService;
     private final BodyOfWorkRepository bodyOfWorkRepository;
