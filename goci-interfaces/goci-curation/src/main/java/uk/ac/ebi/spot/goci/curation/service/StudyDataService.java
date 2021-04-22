@@ -115,7 +115,7 @@ public class StudyDataService {
         studyDataList.forEach(study -> {
             studyDtos.add(StudyDto.builder()
                                   .id(study.getStudyId())
-                                  .accession(study.getAccessionId())
+                                  .accession((Optional.ofNullable(study.getAccessionId()).isPresent()) ? study.getAccessionId() : "NA")
                                   .author(study.getAuthor())
                                   .title(study.getTitle())
                                   .publicationDate(study.getDate())
@@ -123,7 +123,7 @@ public class StudyDataService {
                                   .publication(study.getPublication())
                                   .curator(study.getCuratorLastName())
                                   .curationStatus(study.getCurationStatus())
-                                  .diseaseTrait((Optional.ofNullable(study.getDiseaseTrait()).isPresent()) ? study.getDiseaseTrait() : "")
+                                  .diseaseTrait((Optional.ofNullable(study.getDiseaseTrait()).isPresent()) ? study.getDiseaseTrait() : "NA")
 
                                   .efoTrait(efoTraitsDataList.stream()
                                                     .filter(efoData -> efoData.getStudyId().equals(study.getStudyId()))

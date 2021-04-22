@@ -56,10 +56,10 @@ public class StudyDto {
     private String publication;
 
     @JsonProperty("Disease/Trait")
-    private String diseaseTrait = "NA";
+    private String diseaseTrait;
 
     @JsonProperty("EFO Trait")
-    private String efoTrait = "NA";
+    private String efoTrait;
 
     @JsonProperty("Curator")
     private String curator;
