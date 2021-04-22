@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
+import uk.ac.ebi.spot.goci.curation.dto.StudyViewDto;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
@@ -166,259 +169,35 @@ public class StudyController {
 
         // This is passed back to model and determines if pagination is applied
         Boolean pagination = true;
-
-
-        // Return all studies ordered by date if no page number given
         if (page == null) {
-            // Find all studies ordered by study date and only display first page
             return "redirect:/studies?page=1";
         }
 
-        // This will be returned to view and store what curator has searched for
-        StudySearchFilter studySearchFilter = new StudySearchFilter();
+        StudyViewDto studyViewDto =
+                studyOperationsService.getStudies(page, studyType, sortType, pubmed, author, pagination, efoTraitId,
+                                                  diseaseTraitId, notesQuery, status, curator, month, year, gcstId, studyId);
+        String filters = studyViewDto.getFilters();
+        String sortString = studyViewDto.getSortString();
+        List<Study> studies = studyViewDto.getStudies();
+        Page<Study> studyPage = studyViewDto.getStudyPage();
+        StudySearchFilter studySearchFilter = studyViewDto.getStudySearchFilter();
 
-        // Store filters which will be need for pagination bar and to build URI passed back to view
-        String filters = "";
-
-        // Set sort object and sort string for URI
-        Sort sort = findSort(sortType);
-        String sortString = "";
-        if (sortType != null && !sortType.isEmpty()) {
-            sortString = "&sorttype=" + sortType;
-        }
-
-        // This is the default study page will all studies
-        Page<Study> studyPage = studyRepository.findAll(constructPageSpecification(page - 1, sort));
-
-        // For multi-snp and snp interaction studies pagination is not applied as the query leads to duplicates
-        List<Study> studies = null;
-
-        // THOR
-        // Search by pubmed ID option available from landing page
-        if (pubmed != null && !pubmed.isEmpty()) {
-            studyPage =
-                    studyRepository.findByPublicationIdPubmedId(pubmed, constructPageSpecification(page - 1, sort));
-            filters = filters + "&pubmed=" + pubmed;
-            studySearchFilter.setPubmedId(pubmed);
-        }
-
-        // Search by author option available from landing page
-        // THOR
-        if (author != null && !author.isEmpty()) {
-            studyPage = studyRepository.findByPublicationIdFirstAuthorFullnameStandardContainingIgnoreCase(author,
-                            constructPageSpecification(page - 1, sort));
-            filters = filters + "&author=" + author;
-            studySearchFilter.setAuthor(author);
-        }
-
-        // Search by study type
-        if (studyType != null && !studyType.isEmpty()) {
-
-            if (studyType.equals("GXE")) {
-                studyPage = studyRepository.findByGxe(true, constructPageSpecification(page - 1,
-                                                                                       sort));
-            }
-            if (studyType.equals("GXG")) {
-                studyPage = studyRepository.findByGxg(true, constructPageSpecification(page - 1,
-                                                                                       sort));
-            }
-
-            if (studyType.equals("CNV")) {
-                studyPage = studyRepository.findByCnv(true, constructPageSpecification(page - 1,
-                                                                                       sort));
-            }
-
-            if (studyType.equals("Genome-wide genotyping array studies")) {
-//                studyPage = studyRepository.findByGenomewideArray(true, constructPageSpecification(page - 1,
-//                                                                                                   sort));
-                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Genome-wide genotyping array", constructPageSpecification(page - 1,
-                                                                                                   sort));
-            }
-
-            if (studyType.equals("Targeted genotyping array studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Targeted genotyping array", constructPageSpecification(page - 1,
-                                                                                                 sort));
-            }
-
-            if (studyType.equals("Exome genotyping array studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Exome genotyping array", constructPageSpecification(page - 1,
-                                                                                                                                 sort));
-            }
-
-            if (studyType.equals("Exome-wide sequencing studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Exome-wide sequencing", constructPageSpecification(page - 1,
-                                                                                                                                 sort));
-            }
-
-            if (studyType.equals("Genome-wide sequencing studies")) {
-                studyPage = studyRepository.findByGenotypingTechnologiesGenotypingTechnology("Genome-wide sequencing", constructPageSpecification(page - 1,
-                                                                                                                                 sort));
-            }
-
-            if (studyType.equals("Studies in curation queue")) {
-                CurationStatus errorStatus = curationStatusRepository.findByStatus("Publish study");
-                Long errorStatusId = errorStatus.getId();
-                studyPage = studyRepository.findByHousekeepingCurationStatusIdNot(errorStatusId,
-                                                                                  constructPageSpecification(
-                                                                                          page -
-                                                                                                  1,
-                                                                                          sort));
-            }
-
-
-            if (studyType.equals("p-Value Set")) {
-                studyPage = studyRepository.findByFullPvalueSet(true,constructPageSpecification(page - 1,
-                        sort));
-            }
-
-            if (studyType.equals("User Requested")) {
-                studyPage = studyRepository.findByUserRequested(true,constructPageSpecification(page - 1,
-                        sort));
-            }
-
-            if (studyType.equals("Open Targets")) {
-                studyPage = studyRepository.findByOpenTargets(true,constructPageSpecification(page - 1,
-                        sort));
-            }
-
-            if (studyType.equals("Multi-SNP haplotype studies")) {
-                studies = studyRepository.findStudyDistinctByAssociationsMultiSnpHaplotypeTrue(sort);
-                pagination = false;
-            }
-
-            if (studyType.equals("SNP Interaction studies")) {
-                studies = studyRepository.findStudyDistinctByAssociationsSnpInteractionTrue(sort);
-                pagination = false;
-            }
-
-            studySearchFilter.setStudyType(studyType);
-            filters = filters + "&studytype=" + studyType;
-        }
-
-        // Search by efo trait id
-        if (efoTraitId != null) {
-            studyPage = studyRepository.findByEfoTraitsId(efoTraitId, constructPageSpecification(page - 1,
-                                                                                                 sort));
-            studySearchFilter.setEfoTraitSearchFilterId(efoTraitId);
-            filters = filters + "&efotraitid=" + efoTraitId;
-        }
-
-        // Search by disease trait id
-        if (diseaseTraitId != null) {
-            studyPage = studyRepository.findByDiseaseTraitId(diseaseTraitId, constructPageSpecification(page - 1,
-                                                                                                        sort));
-            studySearchFilter.setDiseaseTraitSearchFilterId(diseaseTraitId);
-            filters = filters + "&diseasetraitid=" + diseaseTraitId;
-        }
-
-
-        // Search by notes for entered string -- Removed Distinct because publicationDate is another table
-        if (notesQuery != null && !notesQuery.isEmpty()) {
-            studyPage = studyRepository.findByNotesTextNoteContainingIgnoreCase(notesQuery,
-                    constructPageSpecification(page - 1,
-                            sort));
-
-            studySearchFilter.setNotesQuery(notesQuery);
-            filters = filters + "&notesquery=" + notesQuery;
-        }
-
-        // If user entered a status
-        if (status != null) {
-            // If we have curator and status find by both
-            if (curator != null) {
-
-                // This is just used to link from reports tab
-                if (year != null && month != null) {
-                    studyPage = studyRepository.findByPublicationDateAndCuratorAndStatus(curator,
-                                                                                         status,
-                                                                                         year,
-                                                                                         month,
-                                                                                         constructPageSpecification(
-                                                                                                 page - 1,
-                                                                                                 sort));
-
-                    studySearchFilter.setMonthFilter(month);
-                    studySearchFilter.setYearFilter(year);
-                    filters =
-                            filters + "&status=" + status + "&curator=" + curator + "&year=" + year + "&month=" + month;
-
-                }
-                else {
-
-                    studyPage = studyRepository.findByHousekeepingCurationStatusIdAndHousekeepingCuratorId(status,
-                                                                                                           curator,
-                                                                                                           constructPageSpecification(
-                                                                                                                   page -
-                                                                                                                           1,
-                                                                                                                   sort));
-                    filters = filters + "&status=" + status + "&curator=" + curator;
-                }
-
-                // Return these values so they appear in filter results
-                studySearchFilter.setCuratorSearchFilterId(curator);
-                studySearchFilter.setStatusSearchFilterId(status);
-
-            }
-            else {
-                studyPage = studyRepository.findByHousekeepingCurationStatusId(status, constructPageSpecification(
-                        page - 1,
-                        sort));
-                filters = filters + "&status=" + status;
-
-                // Return this value so it appears in filter result
-                studySearchFilter.setStatusSearchFilterId(status);
-
-            }
-        }
-        // If user entered curator
-        else if (curator != null) {
-            studyPage = studyRepository.findByHousekeepingCuratorId(curator, constructPageSpecification(
-                    page - 1,
-                    sort));
-            filters = filters + "&curator=" + curator;
-
-            // Return this value so it appears in filter result
-            studySearchFilter.setCuratorSearchFilterId(curator);
-        }
-
-        else if (gcstId != null) {
-            studyPage = studyRepository.findByAccessionId(gcstId, constructPageSpecification(
-                    page - 1,
-                    sort));
-            filters = filters + "&gcstId=" + gcstId;
-
-            // Return this value so it appears in filter result
-            studySearchFilter.setGcstId(gcstId);
-        }
-
-        else if (studyId != null) {
-            studyPage = studyRepository.findById(Long.valueOf(studyId), constructPageSpecification(
-                    page - 1,
-                    sort));
-            filters = filters + "&studyId=" + studyId;
-
-            // Return this value so it appears in filter result
-            studySearchFilter.setStudyId(studyId);
-        }
-
-        // Return URI, this will build thymeleaf links using by sort buttons.
-        // At present, do not add the current sort to the URI,
-        // just maintain any filter values (pubmed id, author etc) used by curator
         String uri = "/studies?page=1";
+        String downloadUrl = String.format("%s%s/export?page=all", Endpoint.API_V1, Endpoint.STUDIES);
         if (!filters.isEmpty()) {
             uri = uri + filters;
+            downloadUrl += filters;
         }
         model.addAttribute("uri", uri);
+        model.addAttribute("downloadUrl", downloadUrl);
 
-        // Return study page and filters,
-        // filters will be used by pagination bar
+        // Return study page and filters, filters will be used by pagination bar
         if (!filters.isEmpty()) {
             if (!sortString.isEmpty()) {
                 filters = filters + sortString;
             }
         }
-        // If user has just sorted without any filter we need
-        // to pass this back to pagination bar
+        // If user has just sorted without any filter we need to pass this back to pagination bar
         else {
             if (!sortString.isEmpty()) {
                 filters = sortString;
@@ -443,7 +222,6 @@ public class StudyController {
             model.addAttribute("beginIndex", begin);
             model.addAttribute("endIndex", end);
             model.addAttribute("currentIndex", current);
-
         }
         else {
             model.addAttribute("studies", studies);
@@ -455,9 +233,7 @@ public class StudyController {
         // Add studySearchFilter to model so user can filter table
         model.addAttribute("studySearchFilter", studySearchFilter);
 
-        // Add assignee and status assignment so user can assign
-        // study to curator or assign a status
-        // Also set uri so we can redirect to page user was on
+        // Add assignee and status assignment so user can assign study to curator or assign a status. Also set uri so we can redirect to page user was on
         Assignee assignee = new Assignee();
         StatusAssignment statusAssignment = new StatusAssignment();
         assignee.setUri("/studies?page=" + current + filters);

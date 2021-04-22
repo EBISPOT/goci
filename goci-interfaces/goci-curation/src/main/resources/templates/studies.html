@@ -23,7 +23,7 @@
     <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"
           rel="stylesheet"/>
     <link th:href="@{/css/bootstrap-table.css}" rel="stylesheet"/>
-    <!--<link href="../static/css/bootstrap-theme.css" th:href="@{css/bootstrap-theme.min.css}" rel="stylesheet"/>-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" />
 
    <!-- Custom styles for this template -->
     <link th:href="@{/css/jumbotron.css}" rel="stylesheet"/>
@@ -93,12 +93,22 @@
             <br/>
 
 
-            <div>
-                <ul class="nav nav-pills">
-                    <li class="active"><a th:href="@{/studies}">All studies</a></li>
-                    <br/>
-                </ul>
+<!--            <div>-->
+<!--                <ul class="nav nav-pills">-->
+<!--                    <li class="active"><a ></a></li>-->
+<!--                    <br/>-->
+<!--                </ul>-->
+<!--            </div>-->
+            <div class="col-md-12">
+                <a th:href="@{/studies}" class="btn btn-primary mt-25" style="float:left;">
+                     All studies
+                </a>
+                <a th:href="@{${downloadUrl}}" class="btn btn-primary mt-25" style="float:right;">
+                    <i class="fa fa-download"></i> Export Result <span id="total" th:text="'Total: '+ ${totalStudies}"></span>
+                </a>
             </div>
+
+
 
             <!--Table-->
             <!--Two different table views available depending on if any results are found-->
