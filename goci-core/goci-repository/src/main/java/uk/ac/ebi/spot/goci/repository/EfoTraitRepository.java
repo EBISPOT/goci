@@ -1,14 +1,15 @@
 package uk.ac.ebi.spot.goci.repository;
 
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
+import uk.ac.ebi.spot.goci.model.projection.StudySearchProjection;
 
 import java.util.List;
 
@@ -22,6 +23,14 @@ import java.util.List;
 
 @RepositoryRestResource
 public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
+
+    @Query("select efoTrait.trait as trait, studies.id as studyId" +
+            " FROM EfoTrait as efoTrait" +
+
+            " INNER JOIN efoTrait.studies as studies " +
+            " WHERE studies.id in :ids")
+    List<StudySearchProjection> findUsingStudyIds(@Param("ids") List<Long> ids);
+
     @RestResource(exported = false)
     List<EfoTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
             Long studyId);
