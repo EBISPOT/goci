@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
-import uk.ac.ebi.spot.goci.curation.controller.assembler.StudyDtoAssembler;
+import uk.ac.ebi.spot.goci.curation.controller.assembler.PublicStudyAssembler;
 import uk.ac.ebi.spot.goci.curation.dto.StudyPatchRequest;
 import uk.ac.ebi.spot.goci.curation.dto.FileUploadRequest;
 import uk.ac.ebi.spot.goci.curation.exception.FileValidationException;
@@ -33,12 +33,12 @@ public class StudyRestController {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     private StudyDataService studyDataService;
-    private StudyDtoAssembler studyDtoAssembler;
+    private PublicStudyAssembler publicStudyAssembler;
 
     public StudyRestController(StudyDataService studyDataService,
-                               StudyDtoAssembler studyDtoAssembler) {
+                               PublicStudyAssembler publicStudyAssembler) {
         this.studyDataService = studyDataService;
-        this.studyDtoAssembler = studyDtoAssembler;
+        this.publicStudyAssembler = publicStudyAssembler;
     }
 
     public Object getOneStudy(Long id) {
@@ -55,7 +55,7 @@ public class StudyRestController {
                         .methodOn(StudyRestController.class)
                         .getStudies(assembler, pageable)
         );
-        return assembler.toResource(studies, studyDtoAssembler, linkBuilder.withSelfRel());
+        return assembler.toResource(studies, publicStudyAssembler, linkBuilder.withSelfRel());
     }
 
     @PostMapping(Endpoint.STUDIES)

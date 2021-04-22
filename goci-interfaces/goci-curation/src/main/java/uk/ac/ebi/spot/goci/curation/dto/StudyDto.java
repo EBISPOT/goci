@@ -1,6 +1,6 @@
 package uk.ac.ebi.spot.goci.curation.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,35 +8,47 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.core.Relation;
 
+import java.util.Date;
+
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Relation(value = "study", collectionRelation = "studies")
 public class StudyDto {
 
     private Long id;
 
-    @JsonProperty("initial_sample_size")
-    private String initialSampleSize;
+    @JsonProperty("author")
+    private String author;
 
-    @JsonProperty("snp_count")
-    private Integer snpCount;
+    @JsonProperty("title")
+    private String title;
 
-    @JsonProperty("accession_id")
-    private String accessionId;
+    @JsonProperty("publication_date")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="BST")
+    private Date publicationDate;
 
-    @JsonProperty("full_pvalue_set")
-    private Boolean fullPvalueSet;
+    @JsonProperty("pubmed_id")
+    private String pubmedId;
 
-    @JsonProperty("user_requested")
-    private Boolean userRequested;
+    @JsonProperty("publication")
+    private String publication;
 
-    @JsonProperty("open_targets")
-    private Boolean openTargets;
+    @JsonProperty("disease_trait")
+    private String diseaseTrait;
 
-    @JsonProperty("housekeeping")
-    private HousekeepingDto housekeepingDto;
+    @JsonProperty("efo_trait")
+    private String efoTrait;
+
+    @JsonProperty("curator")
+    private String curator;
+
+    @JsonProperty("curation_status")
+    private String curationStatus;
+
+    @JsonProperty("notes")
+    private String notes;
 
 }
