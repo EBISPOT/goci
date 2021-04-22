@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Study;
+import uk.ac.ebi.spot.goci.model.projection.StudySearchProjection;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
@@ -28,6 +29,50 @@ import java.util.Optional;
 
 @RepositoryRestResource
 public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecificationExecutor {
+
+    @Query("Select DISTINCT study.id as studyId, firstAuthor.fullname as author, pub.title as title, " +
+            " pub.publicationDate as date, pub.pubmedId as pubmedId, pub.publication as publication, diseaseTrait.trait as diseaseTrait, " +
+            " curator.lastName as curatorLastName, status.status as curationStatus " +
+
+            " from Study study" +
+            " LEFT JOIN study.publicationId pub JOIN pub.firstAuthor firstAuthor " +
+            " LEFT JOIN study.efoTraits efoTraits " +
+            " LEFT JOIN study.diseaseTrait diseaseTrait " +
+            " LEFT JOIN study.notes notes " +
+            " LEFT JOIN study.genotypingTechnologies gtech " +
+            " LEFT JOIN study.housekeeping housekeeping JOIN housekeeping.curationStatus status " +
+            " LEFT JOIN housekeeping.curator curator " +
+
+            " WHERE (pub.pubmedId = :pubmedId OR :pubmedId = '*') " +
+            " AND ((lower(firstAuthor.fullnameStandard) = lower(:author)) OR :author = '*') " +
+            " AND (curator.id = :curator OR :curator = 0) " +
+            " AND (efoTraits.id = :efoTraitId OR :efoTraitId = 0) " +
+            " AND (diseaseTrait.id = :diseaseTraitId OR :diseaseTraitId = 0) " +
+            " AND (status.id LIKE :status OR :status = 0) " +
+            " AND (study.accessionId = :accessionId OR :accessionId = '*') " +
+            " AND (study.id = :studyId OR :studyId = 0) " +
+
+            " AND (study.gxe = :gxe OR :gxe IS NULL) " +
+            " AND (study.gxg = :gxg OR :gxg IS NULL) " +
+            " AND (study.cnv = :cnv OR :cnv IS NULL) " +
+            " AND (gtech.genotypingTechnology = :genotypeTech OR :genotypeTech = '*') " +
+
+            " AND ((lower(notes.textNote) LIKE lower(CONCAT('%',:notesQuery,'%'))) OR :notesQuery = '*') "
+    )
+    List<StudySearchProjection> findByMultipleFilters(@Param("pubmedId") String pubmedId,
+                                                      @Param("author") String author,
+                                                      @Param("efoTraitId") Long efoTraitId,
+                                                      @Param("diseaseTraitId") Long diseaseTraitId,
+                                                      @Param("notesQuery") String notesQuery,
+                                                      @Param("status") Long status,
+                                                      @Param("curator") Long curator,
+                                                      @Param("accessionId") String accessionId,
+                                                      @Param("studyId") Long studyId,
+
+                                                      @Param("gxe") Boolean gxe,
+                                                      @Param("gxg") Boolean gxg,
+                                                      @Param("cnv") Boolean cnv,
+                                                      @Param("genotypeTech") String genotypeTech, Pageable pageable);
 
     Page<Study> findByHousekeepingIsPublished(Pageable pageable, Boolean isPublished);
 
