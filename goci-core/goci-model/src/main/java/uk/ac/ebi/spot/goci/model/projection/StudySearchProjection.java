@@ -4,6 +4,7 @@ import java.util.Date;
 
 public interface StudySearchProjection {
 
+    String getAccessionId();
     Long getStudyId();
     String getAuthor();
     String getTitle();

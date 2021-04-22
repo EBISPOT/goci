@@ -1,7 +1,9 @@
 package uk.ac.ebi.spot.goci.curation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,39 +18,55 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Relation(value = "study", collectionRelation = "studies")
+@JsonPropertyOrder({
+        "Accession ID",
+        "Author",
+        "Title",
+        "Publication Date",
+        "Pubmed ID",
+        "Publication",
+        "Disease/Trait",
+        "EFO Trait",
+        "Curator",
+        "Curation Status",
+        "Notes"
+})
 public class StudyDto {
 
+    @JsonIgnore
     private Long id;
 
-    @JsonProperty("author")
+    @JsonProperty("Accession ID")
+    private String accession;
+
+    @JsonProperty("Author")
     private String author;
 
-    @JsonProperty("title")
+    @JsonProperty("Title")
     private String title;
 
-    @JsonProperty("publication_date")
+    @JsonProperty("Publication Date")
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="BST")
     private Date publicationDate;
 
-    @JsonProperty("pubmed_id")
+    @JsonProperty("Pubmed ID")
     private String pubmedId;
 
-    @JsonProperty("publication")
+    @JsonProperty("Publication")
     private String publication;
 
-    @JsonProperty("disease_trait")
-    private String diseaseTrait;
+    @JsonProperty("Disease/Trait")
+    private String diseaseTrait = "NA";
 
-    @JsonProperty("efo_trait")
-    private String efoTrait;
+    @JsonProperty("EFO Trait")
+    private String efoTrait = "NA";
 
-    @JsonProperty("curator")
+    @JsonProperty("Curator")
     private String curator;
 
-    @JsonProperty("curation_status")
+    @JsonProperty("Curation Status")
     private String curationStatus;
 
-    @JsonProperty("notes")
+    @JsonProperty("Notes")
     private String notes;
-
 }

@@ -30,8 +30,9 @@ import java.util.Optional;
 @RepositoryRestResource
 public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecificationExecutor {
 
-    @Query("Select DISTINCT study.id as studyId, firstAuthor.fullname as author, pub.title as title, " +
-            " pub.publicationDate as date, pub.pubmedId as pubmedId, pub.publication as publication, diseaseTrait.trait as diseaseTrait, " +
+    @Query("Select DISTINCT study.id as studyId, study.accessionId as accessionId, firstAuthor.fullname as author, " +
+            " pub.title as title, pub.publicationDate as date, pub.pubmedId as pubmedId, " +
+            " pub.publication as publication, diseaseTrait.trait as diseaseTrait, " +
             " curator.lastName as curatorLastName, status.status as curationStatus " +
 
             " from Study study" +

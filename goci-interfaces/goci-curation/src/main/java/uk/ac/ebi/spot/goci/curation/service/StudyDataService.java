@@ -38,7 +38,7 @@ public class StudyDataService {
         this.studyNoteRepository = studyNoteRepository;
     }
 
-    public Page<Study> getStudiesByHousekeepingStatus(Pageable pageable, boolean isPublished){
+    public Page<Study> getStudiesByHousekeepingStatus(Pageable pageable, boolean isPublished) {
         return studyRepository.findByHousekeepingIsPublished(pageable, isPublished);
     }
 
@@ -46,12 +46,12 @@ public class StudyDataService {
         return studyRepository.findByAccessionId(accessionId);
     }
 
-    public Study updateStudyDiseaseTraitByAccessionId(String trait, String accessionId){
+    public Study updateStudyDiseaseTraitByAccessionId(String trait, String accessionId) {
         Study study = this.getStudyByAccessionId(accessionId)
-                .orElseThrow(()-> new ResourceNotFoundException("Study", accessionId));
+                .orElseThrow(() -> new ResourceNotFoundException("Study", accessionId));
 
         DiseaseTrait diseaseTrait = Optional.ofNullable(diseaseTraitRepository.findByTraitIgnoreCase(trait))
-                .orElseThrow(()->new ResourceNotFoundException("Disease Trait", trait));
+                .orElseThrow(() -> new ResourceNotFoundException("Disease Trait", trait));
 
         study.setDiseaseTrait(diseaseTrait);
         studyRepository.save(study);
@@ -115,6 +115,7 @@ public class StudyDataService {
         studyDataList.forEach(study -> {
             studyDtos.add(StudyDto.builder()
                                   .id(study.getStudyId())
+                                  .accession(study.getAccessionId())
                                   .author(study.getAuthor())
                                   .title(study.getTitle())
                                   .publicationDate(study.getDate())
@@ -122,7 +123,7 @@ public class StudyDataService {
                                   .publication(study.getPublication())
                                   .curator(study.getCuratorLastName())
                                   .curationStatus(study.getCurationStatus())
-                                  .diseaseTrait(study.getDiseaseTrait())
+                                  .diseaseTrait((Optional.ofNullable(study.getDiseaseTrait()).isPresent()) ? study.getDiseaseTrait() : "")
 
                                   .efoTrait(efoTraitsDataList.stream()
                                                     .filter(efoData -> efoData.getStudyId().equals(study.getStudyId()))
