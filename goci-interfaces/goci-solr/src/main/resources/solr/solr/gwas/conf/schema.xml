@@ -190,6 +190,10 @@
     <field name="mappedLabel" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="mappedUri" type="text_general" indexed="true" stored="true" multiValued="true" />
 
+    <!-- background efotrait -->
+    <field name="mappedBkgLabel" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="mappedBkgUri" type="text_general" indexed="true" stored="true" multiValued="true" />
+
     <!-- ontology expanded info -->
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="traitUri" type="text_general" indexed="true" stored="true" multiValued="true" />

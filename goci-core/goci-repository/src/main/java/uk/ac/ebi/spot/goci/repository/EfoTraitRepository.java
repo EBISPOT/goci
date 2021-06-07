@@ -36,6 +36,10 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
             Long studyId);
 
     @RestResource(exported = false)
+    List<EfoTrait> findByStudiesBkgIdAndStudiesBkgHousekeepingCatalogPublishDateIsNotNullAndStudiesBkgHousekeepingCatalogUnpublishDateIsNull(
+            Long studyId);
+
+    @RestResource(exported = false)
     List<EfoTrait> findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
             Sort sort,
             Long studyId);
@@ -50,6 +54,10 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
     @RestResource(exported = false)
     @Query("select e.trait from EfoTrait e join e.associations a where a.id = :associationId")
     List<String> findTraitNamesByAssociationsId(Long associationId);
+
+    @RestResource(exported = false)
+    @Query("select e.trait from EfoTrait e join e.associationsBkg a where a.id = :associationId")
+    List<String> findBkgTraitNamesByAssociationsId(Long associationId);
 
     @RestResource(exported = false)
     List<EfoTrait> findByAssociationsId(Sort sort, Long associationId);

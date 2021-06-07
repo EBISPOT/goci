@@ -174,6 +174,12 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
     @Field("mappedUri")
     private Collection<String> mappedUris;
 
+    // embedded background EfoTrait info
+    @Field("mappedBkgLabel")
+    private Collection<String> mappedBkgLabels;
+    @Field("mappedBkgUri")
+    private Collection<String> mappedBkgUris;
+
     public AssociationDocument(Association association) {
         super(association);
         this.riskFrequency = association.getRiskFrequency();
@@ -220,6 +226,9 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
+
+        this.mappedBkgLabels = new LinkedHashSet<>();
+        this.mappedBkgUris = new LinkedHashSet<>();
 
         this.ancestralGroups = new LinkedHashSet<>();
         this.countriesOfOrigin = new LinkedHashSet<>();
@@ -432,6 +441,14 @@ public class AssociationDocument extends OntologyEnabledDocument<Association> {
 
     public void addMappedUri(String mappedUri) {
         this.mappedUris.add(mappedUri);
+    }
+
+    public void addMappedBkgUri(String mappedBkgUri) {
+        this.mappedBkgUris.add(mappedBkgUri);
+    }
+
+    public void addMappedBkgLabel(String mappedBkgLabel) {
+        this.mappedBkgLabels.add(mappedBkgLabel);
     }
 
     public void addStudyId(String studyId) {

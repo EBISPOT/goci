@@ -93,7 +93,7 @@ public class Study implements Trackable {
             inverseJoinColumns = @JoinColumn(name = "DISEASE_TRAIT_ID"))
     private DiseaseTrait backgroundTrait;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "STUDY_BACKGROUND_EFO_TRAIT",
             joinColumns = @JoinColumn(name = "STUDY_ID"),
             inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
