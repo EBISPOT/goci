@@ -16,7 +16,7 @@ public class BackgroundEfoDocument extends OntologyEnabledDocument<EfoTrait> {
         super(efoTrait);
         this.mappedBkgLabel = efoTrait.getTrait();
         this.mappedBkgUri = efoTrait.getUri();
-        addTraitUri(mappedBkgUri);
+        // addTraitUri(mappedBkgUri);
     }
 
     public String getMappedBkgLabel() {
