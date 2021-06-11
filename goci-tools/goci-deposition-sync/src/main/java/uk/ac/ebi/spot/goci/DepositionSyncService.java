@@ -327,7 +327,6 @@ public class DepositionSyncService {
                         study.setStudyTag(tag);
                         studyService.save(study);
                         match = true;
-                        continue;
                     }
                 }
                 if (!match) {
