@@ -405,6 +405,8 @@
     <copyField source="traitName" dest="text" />
     <copyField source="mappedLabel" dest="text" />
     <copyField source="mappedUri" dest="text" />
+    <copyField source="mappedBkgLabel" dest="text" />
+    <copyField source="mappedBkgUri" dest="text" />
     <copyField source="trait" dest="text" />
     <copyField source="traitUri" dest="text" />
     <copyField source="shortForm" dest="text" />
