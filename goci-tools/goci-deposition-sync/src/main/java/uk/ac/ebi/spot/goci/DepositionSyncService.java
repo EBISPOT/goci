@@ -325,9 +325,9 @@ public class DepositionSyncService {
                     if (study.getAccessionId().equals(studyDto.getAccession())) {
                         study.setFullPvalueSet(true);
                         study.setStudyTag(tag);
+                        study.setAgreedToCc0(studyDto.getAgreedToCc0());
                         studyService.save(study);
                         match = true;
-                        continue;
                     }
                 }
                 if (!match) {
