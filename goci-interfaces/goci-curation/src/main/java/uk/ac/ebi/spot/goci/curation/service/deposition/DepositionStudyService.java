@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.service.StudyService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DepositionStudyService {
@@ -108,15 +109,25 @@ public class DepositionStudyService {
     @Transactional
     public String deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
         try {
-            if (dbStudies != null) {
-                for (int i = 0; i < dbStudies.size(); i++) {
-                    addStudyNote(dbStudies.toArray(new Study[0])[i], null,
+            List<Study> oldStudies = dbStudies.stream()
+                    .filter(dbStudy -> dbStudy.getAccessionId() == null || dbStudy.getAccessionId().isEmpty())
+                    .collect(Collectors.toList());
+
+            List<Study> duplicateStudies = dbStudies.stream()
+                    .filter(dbStudy -> dbStudy.getAccessionId() != null && !dbStudy.getAccessionId().isEmpty())
+                    .collect(Collectors.toList());
+
+            duplicateStudies.forEach((study) -> studyService.deleteByStudyId(study.getId()));
+
+            if (oldStudies != null) {
+                for (int i = 0; i < oldStudies.size(); i++) {
+                    addStudyNote(oldStudies.toArray(new Study[0])[i], null,
                             "Review for deletion, replaced by deposition import", null, curator, null, currentUser);
                     //          studyService.deleteByStudyId(study.getId());
                 }
             }
             CurationStatus requiresReview = statusRepository.findByStatus("Requires Review");
-            dbStudies.forEach(study -> {
+            oldStudies.forEach(study -> {
                 study.getHousekeeping().setCurationStatus(requiresReview);
                 Event event = eventOperationsService.createEvent("REQUIRES_REVIEW", currentUser,
                         requiresReview.getStatus());
