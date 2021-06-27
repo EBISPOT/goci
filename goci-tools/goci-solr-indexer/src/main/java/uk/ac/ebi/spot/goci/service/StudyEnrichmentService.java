@@ -53,5 +53,7 @@ public class StudyEnrichmentService implements DocumentEnrichmentService<StudyDo
                 trait -> document.embed(diseaseTraitCache.getDocument(trait.getTrait())));
         traitService.findMappedTraitByStudyId(id).forEach(
                 trait -> document.embed(efoCache.getDocument(trait.getTrait())));
+        traitService.findMappedBkgTraitByStudyId(id).forEach(
+                trait -> document.embed(efoCache.getBkgDocument(trait.getTrait())));
     }
 }

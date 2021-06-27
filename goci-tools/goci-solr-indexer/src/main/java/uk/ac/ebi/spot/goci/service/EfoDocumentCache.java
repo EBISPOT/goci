@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.ac.ebi.spot.goci.model.BackgroundEfoDocument;
 import uk.ac.ebi.spot.goci.model.EfoDocument;
 import uk.ac.ebi.spot.goci.model.EfoTrait;
 import uk.ac.ebi.spot.goci.repository.EfoTraitRepository;
@@ -33,5 +34,13 @@ public class EfoDocumentCache {
 
     public EfoDocument getDocument(String efoId){
         return documentMap.get(efoId);
+    }
+
+    public BackgroundEfoDocument getBkgDocument(String efoId){
+        EfoDocument efoDoc = documentMap.get(efoId);
+        EfoTrait efoTrait = new EfoTrait(efoDoc.getMappedLabel(), efoDoc.getMappedUri(), null, null, null);
+        // id is irrelevant, but not setting it causes a runtime error by a generic method
+        efoTrait.setId(-1L);
+        return new BackgroundEfoDocument(efoTrait);
     }
 }
