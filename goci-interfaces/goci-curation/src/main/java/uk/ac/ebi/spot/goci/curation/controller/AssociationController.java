@@ -1300,6 +1300,7 @@ public class AssociationController {
         associations.addAll(associationRepository.findByStudyId(studyId));
         Study study = studyRepository.findOne((studyId));
         Collection<EfoTrait> efoTraits = study.getEfoTraits();
+        Collection<EfoTrait> backgroundEfoTraits = study.getMappedBackgroundTraits();
 
 
         if (associations.size() == 0 || efoTraits.size() == 0) {
@@ -1332,6 +1333,7 @@ public class AssociationController {
                 else {
                     association.setEfoTraits(associationTraits);
                 }
+                association.setBkgEfoTraits(backgroundEfoTraits);
                 association.setLastUpdateDate(new Date());
                 associationRepository.save(association);
             }
