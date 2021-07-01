@@ -1322,6 +1322,8 @@ public class AssociationController {
                 associationTraits.add(efoTrait);
             }
 
+            Collection<EfoTrait> associationBackgroundTraits = new ArrayList<>(backgroundEfoTraits);
+
             for (Association association : associations) {
                 if (association.getEfoTraits().size() != 0 && !overwrite) {
                     for (EfoTrait trait : associationTraits) {
@@ -1333,7 +1335,7 @@ public class AssociationController {
                 else {
                     association.setEfoTraits(associationTraits);
                 }
-                association.setBkgEfoTraits(backgroundEfoTraits);
+                association.setBkgEfoTraits(associationBackgroundTraits);
                 association.setLastUpdateDate(new Date());
                 associationRepository.save(association);
             }
