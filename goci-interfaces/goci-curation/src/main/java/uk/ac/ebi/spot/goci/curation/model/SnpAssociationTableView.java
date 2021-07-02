@@ -41,6 +41,8 @@ public class SnpAssociationTableView {
 
     private String efoTraits;
 
+    private String backgroundEfoTraits;
+
     private Float orPerCopyNum;
 
     private Float orPerCopyRecip;
@@ -93,6 +95,7 @@ public class SnpAssociationTableView {
                                    String betaUnit,
                                    String description,
                                    String efoTraits,
+                                   String backgroundEfoTraits,
                                    String lastMappingDate,
                                    String lastMappingPerformedBy,
                                    String multiSnpHaplotype,
@@ -120,6 +123,7 @@ public class SnpAssociationTableView {
         this.betaUnit = betaUnit;
         this.description = description;
         this.efoTraits = efoTraits;
+        this.backgroundEfoTraits = backgroundEfoTraits;
         this.lastMappingDate = lastMappingDate;
         this.lastMappingPerformedBy = lastMappingPerformedBy;
         this.multiSnpHaplotype = multiSnpHaplotype;
@@ -211,6 +215,14 @@ public class SnpAssociationTableView {
 
     public void setEfoTraits(String efoTraits) {
         this.efoTraits = efoTraits;
+    }
+
+    public String getBackgroundEfoTraits() {
+        return backgroundEfoTraits;
+    }
+
+    public void setBackgroundEfoTraits(String backgroundEfoTraits) {
+        this.backgroundEfoTraits = backgroundEfoTraits;
     }
 
     public String getLastMappingDate() {

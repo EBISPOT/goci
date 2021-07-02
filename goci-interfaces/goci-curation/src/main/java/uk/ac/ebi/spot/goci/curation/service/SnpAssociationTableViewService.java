@@ -223,6 +223,13 @@ public class SnpAssociationTableViewService {
         associationEfoTraits = String.join(", ", efoTraits);
         snpAssociationTableView.setEfoTraits(associationEfoTraits);
 
+        Collection<String> backgroundEfoTraits = new ArrayList<>();
+        for (EfoTrait efoTrait: association.getBkgEfoTraits()) {
+            backgroundEfoTraits.add(efoTrait.getTrait());
+        }
+        String associationBackgroundEfoTraits = String.join(",", backgroundEfoTraits);
+        snpAssociationTableView.setBackgroundEfoTraits(associationBackgroundEfoTraits);
+
         // Set OR values
         snpAssociationTableView.setOrPerCopyNum(association.getOrPerCopyNum());
         snpAssociationTableView.setOrPerCopyRecip(association.getOrPerCopyRecip());
