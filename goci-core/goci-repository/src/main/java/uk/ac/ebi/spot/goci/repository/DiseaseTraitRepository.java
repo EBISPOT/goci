@@ -76,4 +76,12 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
             "group by dt.id order by count(dt.id) desc")
     List<Map.Entry> getDiseaseTraitCounts();
 
+    //findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull
+    @RestResource(exported = false)
+    @Query("select t from DiseaseTrait t join t.studies s join s.housekeeping h  where h.catalogPublishDate is null " +
+            "and h.catalogUnpublishDate is not null and s.id = :studyId")
+    List<DiseaseTrait> findBackgroundTraitByStudyId(
+            Long studyId);
+
+
 }

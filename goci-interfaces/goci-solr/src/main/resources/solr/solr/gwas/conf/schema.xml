@@ -185,10 +185,13 @@
 
     <!-- diseasetrait -->
     <field name="traitName" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="backgroundTraitName" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- efotrait -->
     <field name="mappedLabel" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="mappedUri" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="backgroundEfoLabel" type="text_general" indexed="true" stored="true" multiValued="true" />
+    <field name="backgroundEfoUri" type="text_general" indexed="true" stored="true" multiValued="true" />
 
     <!-- ontology expanded info -->
     <field name="trait" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -399,8 +402,11 @@
     <copyField source="study_additionalAncestryDescription" dest="text" />
     <copyField source="study_accessionId" dest="text" />
     <copyField source="traitName" dest="text" />
+    <copyField source="backgroundTraitName" dest="text" />
     <copyField source="mappedLabel" dest="text" />
     <copyField source="mappedUri" dest="text" />
+    <copyField source="backgroundEfoLabel" dest="text" />
+    <copyField source="backgroundEfoUri" dest="text" />
     <copyField source="trait" dest="text" />
     <copyField source="traitUri" dest="text" />
     <copyField source="shortForm" dest="text" />

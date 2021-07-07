@@ -34,9 +34,18 @@ public class TraitService {
                 studyId);
     }
 
+    public Collection<DiseaseTrait> findBackgroundTraitByStudyId(Long studyId) {
+        return diseaseTraitRepository.findBackgroundTraitByStudyId(
+                studyId);
+    }
+
     public Collection<DiseaseTrait> findReportedTraitByAssociationId(Long associationId) {
         return diseaseTraitRepository.findByStudiesAssociationsIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull(
                 associationId);
+    }
+
+    public Collection<EfoTrait> findMappedBackgroundTraitByStudyId(Long studyId) {
+        return efoTraitRepository.findMappedBackgroundTraitByStudyId(studyId);
     }
 
     public Collection<EfoTrait> findMappedTraitByStudyId(Long studyId) {

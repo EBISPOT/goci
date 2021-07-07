@@ -2,11 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.AssociationDocument;
-import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
-import uk.ac.ebi.spot.goci.model.EfoDocument;
-import uk.ac.ebi.spot.goci.model.EfoTrait;
-import uk.ac.ebi.spot.goci.model.StudyDocument;
+import uk.ac.ebi.spot.goci.model.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +14,7 @@ import java.util.Set;
  * @date 13/02/15
  */
 @Service
-public class TraitEnrichmentService implements DocumentEnrichmentService<DiseaseTraitDocument> {
+public class TraitEnrichmentService implements DocumentEnrichmentService<DiseaseTraitDocument, DiseaseTrait> {
     private final EfoDocumentCache efoCache;
     private StudyService studyService;
     private AssociationService associationService;
@@ -38,7 +34,7 @@ public class TraitEnrichmentService implements DocumentEnrichmentService<Disease
         return 3;
     }
 
-    @Override public void doEnrichment(DiseaseTraitDocument document) {
+    @Override public void doEnrichment(DiseaseTraitDocument document, DiseaseTrait diseaseTrait) {
         long id = Long.valueOf(document.getId().split(":")[1]);
         // Comment this part if you want to exclude the DiseaseTrait Doc Enrichment
         studyService.findByDiseaseTraitId(id).forEach(

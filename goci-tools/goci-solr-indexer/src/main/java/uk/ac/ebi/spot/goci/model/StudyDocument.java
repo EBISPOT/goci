@@ -77,6 +77,13 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("mappedLabel") private Collection<String> mappedLabels;
     @Field("mappedUri") private Collection<String> mappedUris;
 
+    // embedded DiseaseTrait info
+    @Field("backgroundTraitName") private Collection<String> backgroundTraitNames;
+
+    // embedded EfoTrait info
+    @Field("backgroundEfoLabel") private Collection<String> backgroundEfoLabels;
+    @Field("backgroundEfoUri") private Collection<String> backgroundEfoUris;
+
     public StudyDocument(Study study) {
         super(study);
         this.pubmedId = study.getPublicationId().getPubmedId();
@@ -148,6 +155,11 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
+
+        this.backgroundTraitNames = new LinkedHashSet<>();
+
+        this.backgroundEfoLabels = new LinkedHashSet<>();
+        this.backgroundEfoUris = new LinkedHashSet<>();
     }
 
     public String getPubmedId() {
@@ -273,6 +285,18 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public void addMappedUri(String mappedUri) {
         this.mappedUris.add(mappedUri);
+    }
+
+    public void addBackgroundTraitName(String traitName) {
+        this.backgroundTraitNames.add(traitName);
+    }
+
+    public void addBackgroundEfoLabel(String mappedLabel) {
+        this.backgroundEfoLabels.add(mappedLabel);
+    }
+
+    public void addBackgroundEfoUri(String mappedUri) {
+        this.backgroundEfoUris.add(mappedUri);
     }
 
     public Collection<String> getAncestralGroups() {

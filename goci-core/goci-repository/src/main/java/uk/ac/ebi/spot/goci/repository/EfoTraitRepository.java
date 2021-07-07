@@ -71,5 +71,11 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
     @RestResource(exported = false)
     Page<EfoTrait> findByStudiesPublicationIdPubmedId(String pumbedId, Pageable pageable);
 
+    //findByStudiesIdAndStudiesHousekeepingCatalogPublishDateIsNotNullAndStudiesHousekeepingCatalogUnpublishDateIsNull
+    @RestResource(exported = false)
+    @Query("select t from EfoTrait t join t.studies s join s.housekeeping h  where h.catalogPublishDate is null " +
+            "and h.catalogUnpublishDate is not null and s.id = :studyId")
+    List<EfoTrait> findMappedBackgroundTraitByStudyId(
+            Long studyId);
 }
 

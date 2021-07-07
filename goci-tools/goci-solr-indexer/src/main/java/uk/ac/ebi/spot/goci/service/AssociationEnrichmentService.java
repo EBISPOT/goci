@@ -2,10 +2,7 @@ package uk.ac.ebi.spot.goci.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import uk.ac.ebi.spot.goci.model.AssociationDocument;
-import uk.ac.ebi.spot.goci.model.DiseaseTraitDocument;
-import uk.ac.ebi.spot.goci.model.EfoDocument;
-import uk.ac.ebi.spot.goci.model.StudyDocument;
+import uk.ac.ebi.spot.goci.model.*;
 
 /**
  * Javadocs go here!
@@ -14,7 +11,7 @@ import uk.ac.ebi.spot.goci.model.StudyDocument;
  * @date 13/02/15
  */
 @Service
-public class AssociationEnrichmentService implements DocumentEnrichmentService<AssociationDocument> {
+public class AssociationEnrichmentService implements DocumentEnrichmentService<AssociationDocument, Association> {
     private final DiseaseTraitDocumentCache diseaseTraitCache;
     private final StudyDocumentCache studyCache;
     private StudyService studyService;
@@ -36,7 +33,7 @@ public class AssociationEnrichmentService implements DocumentEnrichmentService<A
         return 2;
     }
 
-    @Override public void doEnrichment(AssociationDocument document) {
+    @Override public void doEnrichment(AssociationDocument document, Association association) {
         long id = Long.valueOf(document.getId().split(":")[1]);
 
         studyService.findByAssociationId(id).forEach(

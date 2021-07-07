@@ -187,6 +187,8 @@ public class AssociationService {
         int traitCount = association.getEfoTraits().size();
         //Study study = studyService.fetchOne(association.getStudy());
         Study study = association.getStudy();
+        study.getBackgroundTrait().getTrait();
+        study.getMappedBackgroundTraits().size();
         AtomicInteger reportedGeneCount = new AtomicInteger();
         Collection<SingleNucleotidePolymorphism> snps = new HashSet<>();
         Collection<SingleNucleotidePolymorphism> proxySnps = new HashSet<>();
