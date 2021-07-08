@@ -59,6 +59,13 @@ public class DepositionStudyService {
     StudyExtensionRepository studyExtensionRepository;
     @Autowired
     EventOperationsService eventOperationsService;
+    @Autowired
+    AssociationRepository associationRepository;
+    @Autowired
+    AncestryRepository ancestryRepository;
+    @Autowired
+    CuratorTrackingRepository curatorTrackingRepository;
+
 
 
     public void publishSummaryStats(Study study, String studyTag) {
@@ -117,7 +124,9 @@ public class DepositionStudyService {
                     .filter(dbStudy -> dbStudy.getAccessionId() != null && !dbStudy.getAccessionId().isEmpty())
                     .collect(Collectors.toList());
 
-            duplicateStudies.forEach((study) -> studyService.deleteByStudyId(study.getId()));
+            duplicateStudies.forEach((study) -> {
+                deleteStudyWithChildren(study.getId());
+            });
 
             if (oldStudies != null) {
                 for (int i = 0; i < oldStudies.size(); i++) {
@@ -139,6 +148,14 @@ public class DepositionStudyService {
         }
 
         return null;
+    }
+
+    public void deleteStudyWithChildren(Long studyId) {
+        associationRepository.findByStudyId(studyId).forEach((association) -> associationRepository.delete(association));
+        ancestryRepository.findByStudyId(studyId).forEach(ancestry -> ancestryRepository.delete(ancestry));
+        curatorTrackingRepository.findByStudy(studyService.findOne(studyId)).forEach(curatorTracking -> curatorTrackingRepository.delete(curatorTracking));
+        studyService.deleteByStudyId(studyId);
+
     }
 
     public void addStudyNote(Study study, String studyTag, String noteText, String noteStatus, Curator noteCurator,
