@@ -154,6 +154,7 @@ public class DepositionStudyService {
         associationRepository.findByStudyId(studyId).forEach((association) -> associationRepository.delete(association));
         ancestryRepository.findByStudyId(studyId).forEach(ancestry -> ancestryRepository.delete(ancestry));
         curatorTrackingRepository.findByStudy(studyService.findOne(studyId)).forEach(curatorTracking -> curatorTrackingRepository.delete(curatorTracking));
+        noteRepository.findByStudyId(studyId).forEach(note -> noteRepository.delete(note) );
         studyService.deleteByStudyId(studyId);
 
     }
