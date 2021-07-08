@@ -80,6 +80,12 @@ public class Association implements Trackable {
                inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
     private Collection<EfoTrait> efoTraits = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(name = "ASSOCIATION_BKG_EFO_TRAIT",
+            joinColumns = @JoinColumn(name = "ASSOCIATION_ID"),
+            inverseJoinColumns = @JoinColumn(name = "EFO_TRAIT_ID"))
+    private Collection<EfoTrait> bkgEfoTraits = new ArrayList<>();
+
     @JsonIgnore
     @OneToOne(mappedBy = "association", orphanRemoval = true)
     private AssociationReport associationReport;
@@ -165,6 +171,7 @@ public class Association implements Trackable {
                        Study study,
                        Collection<Locus> loci,
                        Collection<EfoTrait> efoTraits,
+                       Collection<EfoTrait> bkgEfoTraits,
                        AssociationReport associationReport,
                        Collection<AssociationValidationReport> associationValidationReport,
                        Date lastMappingDate,
@@ -193,6 +200,7 @@ public class Association implements Trackable {
         this.study = study;
         this.loci = loci;
         this.efoTraits = efoTraits;
+        this.bkgEfoTraits = bkgEfoTraits;
         this.associationReport = associationReport;
         this.associationValidationReports = associationValidationReport;
         this.lastMappingDate = lastMappingDate;
@@ -341,6 +349,18 @@ public class Association implements Trackable {
 
     public void addEfoTrait(EfoTrait efoTrait) {
         efoTraits.add(efoTrait);
+    }
+
+    public Collection<EfoTrait> getBkgEfoTraits() {
+        return bkgEfoTraits;
+    }
+
+    public void setBkgEfoTraits(Collection<EfoTrait> bkgEfoTraits) {
+        this.bkgEfoTraits = bkgEfoTraits;
+    }
+
+    public void addBkgEfoTrait(EfoTrait bkgEfoTrait) {
+        bkgEfoTraits.add(bkgEfoTrait);
     }
 
     public Boolean getSnpApproved() {

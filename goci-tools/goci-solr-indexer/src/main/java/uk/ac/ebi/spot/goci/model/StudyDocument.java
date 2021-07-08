@@ -77,6 +77,12 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("mappedLabel") private Collection<String> mappedLabels;
     @Field("mappedUri") private Collection<String> mappedUris;
 
+    // embedded background EfoTrait info
+    @Field("mappedBkgLabel")
+    private Collection<String> mappedBkgLabels;
+    @Field("mappedBkgUri")
+    private Collection<String> mappedBkgUris;
+
     public StudyDocument(Study study) {
         super(study);
         this.pubmedId = study.getPublicationId().getPubmedId();
@@ -148,6 +154,9 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         this.mappedLabels = new LinkedHashSet<>();
         this.mappedUris = new LinkedHashSet<>();
+
+        this.mappedBkgLabels = new LinkedHashSet<>();
+        this.mappedBkgUris = new LinkedHashSet<>();
     }
 
     public String getPubmedId() {
@@ -227,7 +236,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
     public void addEnsemblMappedGenes(Collection<String> mappedGenes) {
-            this.ensemblMappedGenes.addAll(mappedGenes);
+        this.ensemblMappedGenes.addAll(mappedGenes);
     }
 
     public void addEnsemblMappedGeneLinks(Collection<String> mappedGeneLinks) {
@@ -273,6 +282,14 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public void addMappedUri(String mappedUri) {
         this.mappedUris.add(mappedUri);
+    }
+
+    public void addMappedBkgUri(String mappedBkgUri) {
+        this.mappedBkgUris.add(mappedBkgUri);
+    }
+
+    public void addMappedBkgLabel(String mappedBkgLabel) {
+        this.mappedBkgLabels.add(mappedBkgLabel);
     }
 
     public Collection<String> getAncestralGroups() {
@@ -457,7 +474,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
             platform = platform.concat(study.getSnpCount().toString()).concat("]");
         }
         else if (study.getSnpCount() == null && manufacturers.size() != 0 && study.getStudyDesignComment() != null){
-             platform = platform.concat(study.getStudyDesignComment()).concat("]");
+            platform = platform.concat(study.getStudyDesignComment()).concat("]");
         }
         else {
             platform = platform.concat("NR]");
@@ -469,7 +486,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         if (manufacturers.size() == 0 && study.getSnpCount() == null && study.getStudyDesignComment() != null) {
             platform = study.getStudyDesignComment();
-         }
+        }
 
 
         return platform;

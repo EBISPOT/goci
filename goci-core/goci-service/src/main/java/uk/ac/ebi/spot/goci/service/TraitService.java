@@ -44,12 +44,21 @@ public class TraitService {
                 studyId);
     }
 
+    public Collection<EfoTrait> findMappedBkgTraitByStudyId(Long studyId) {
+        return efoTraitRepository.findByStudiesBkgIdAndStudiesBkgHousekeepingCatalogPublishDateIsNotNullAndStudiesBkgHousekeepingCatalogUnpublishDateIsNull(
+                studyId);
+    }
+
     public Collection<EfoTrait> findMappedTraitByAssociationId(Long associationId) {
         return efoTraitRepository.findByAssociationsId(associationId);
     }
 
     public Collection<String> findMappedTraitNamesByAssociationId(Long associationId) {
         return efoTraitRepository.findTraitNamesByAssociationsId(associationId);
+    }
+
+    public Collection<String> findMappedBkgTraitNamesByAssociationId(Long associationId) {
+        return efoTraitRepository.findBkgTraitNamesByAssociationsId(associationId);
     }
 
     @Transactional(readOnly = true)

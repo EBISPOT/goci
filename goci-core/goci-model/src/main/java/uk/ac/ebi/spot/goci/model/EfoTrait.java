@@ -33,8 +33,14 @@ public class EfoTrait {
     @ManyToMany(mappedBy = "efoTraits")
     private Collection<Study> studies;
 
+    @ManyToMany(mappedBy = "mappedBackgroundTraits")
+    private Collection<Study> studiesBkg;
+
     @ManyToMany(mappedBy = "efoTraits")
     private Collection<Association> associations;
+
+    @ManyToMany(mappedBy = "bkgEfoTraits")
+    private Collection<Association> associationsBkg;
 
     // JPA no-args constructor
     public EfoTrait() {
@@ -84,12 +90,28 @@ public class EfoTrait {
         this.studies = studies;
     }
 
+    public Collection<Study> getStudiesBkg() {
+        return studiesBkg;
+    }
+
+    public void setStudiesBkg(Collection<Study> studiesBkg) {
+        this.studiesBkg = studiesBkg;
+    }
+
     public Collection<Association> getAssociations() {
         return associations;
     }
 
     public void setAssociations(Collection<Association> associations) {
         this.associations = associations;
+    }
+
+    public Collection<Association> getAssociationsBkg() {
+        return associationsBkg;
+    }
+
+    public void setAssociationsBkg(Collection<Association> associationsBkg) {
+        this.associationsBkg = associationsBkg;
     }
 
     public String getShortForm() {

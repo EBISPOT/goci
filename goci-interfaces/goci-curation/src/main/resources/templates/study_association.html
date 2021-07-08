@@ -182,6 +182,7 @@
                     <th style="font-size: small">p-Value (mantissa x 10 exponent)</th>
                     <th style="font-size: small">p-Value Description</th>
                     <th style="font-size: small">EFO trait</th>
+                    <th style="font-size: small">Background EFO trait</th>
                     <th style="font-size: small">OR</th>
                     <th style="font-size: small">OR reciprocal</th>
                     <th style="font-size: small">Beta</th>
@@ -483,6 +484,13 @@
                                  <span style="font-style: italic; color:red; font-size: small"
                                        th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
                                        th:text="'Warning: EFO trait not assigned'"></span>
+                                </td>
+
+                                <td>
+                                    <p th:text="${snpAssociationTableView.backgroundEfoTraits} ?: ''"></p>
+                                    <span style="font-style: italic; color:red; font-size: small"
+                                          th:if="*{#strings.isEmpty(snpAssociationTableView.backgroundEfoTraits)}"
+                                          th:text="'Warning: EFO trait not assigned'"></span>
                                 </td>
 
                                 <td th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
