@@ -157,8 +157,8 @@ public class DepositionSyncService {
                         depositionPublicationService.addPublication(newPublication);
                         syncLog.addNewPublication(pubmedId, newPublication.getStatus());
                     } else {
-                        if (depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUBMISSION") ||
-                                depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUMMARY_STATS_SUBMISSION")) {
+                        if (depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUBMISSION") && (!isPublished || hasSS)
+                                || depositionPublication.getStatus().equalsIgnoreCase("UNDER_SUMMARY_STATS_SUBMISSION")) {
                             continue;
                         }
 
