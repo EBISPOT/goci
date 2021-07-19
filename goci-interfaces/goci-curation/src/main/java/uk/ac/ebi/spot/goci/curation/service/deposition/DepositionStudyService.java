@@ -82,7 +82,7 @@ public class DepositionStudyService {
                 boolean match = false;
                 for (Long studyId : studyIds) {
                     Study study = studyService.findOne(studyId);
-                    if (study.getAccessionId().equals(studyDto.getAccession())) {
+                    if (study.getAccessionId() != null && study.getAccessionId().equals(studyDto.getAccession())) {
                         publishSummaryStats(study, tag);
                         match = true;
                     }
