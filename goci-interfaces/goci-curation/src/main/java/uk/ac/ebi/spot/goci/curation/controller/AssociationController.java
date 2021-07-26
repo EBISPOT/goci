@@ -1300,6 +1300,7 @@ public class AssociationController {
         associations.addAll(associationRepository.findByStudyId(studyId));
         Study study = studyRepository.findOne((studyId));
         Collection<EfoTrait> efoTraits = study.getEfoTraits();
+        Collection<EfoTrait> backgroundEfoTraits = study.getMappedBackgroundTraits();
 
 
         if (associations.size() == 0 || efoTraits.size() == 0) {
@@ -1321,6 +1322,8 @@ public class AssociationController {
                 associationTraits.add(efoTrait);
             }
 
+            Collection<EfoTrait> associationBackgroundTraits = new ArrayList<>(backgroundEfoTraits);
+
             for (Association association : associations) {
                 if (association.getEfoTraits().size() != 0 && !overwrite) {
                     for (EfoTrait trait : associationTraits) {
@@ -1332,6 +1335,7 @@ public class AssociationController {
                 else {
                     association.setEfoTraits(associationTraits);
                 }
+                association.setBkgEfoTraits(associationBackgroundTraits);
                 association.setLastUpdateDate(new Date());
                 associationRepository.save(association);
             }

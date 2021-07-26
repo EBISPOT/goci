@@ -60,5 +60,8 @@ public class AssociationEnrichmentService implements DocumentEnrichmentService<A
         traitService.findMappedTraitNamesByAssociationId(id).forEach(
                 trait -> document.embed(efoCache.getDocument(trait)));
 
+        traitService.findMappedBkgTraitNamesByAssociationId(id).forEach(
+                trait -> document.embed(efoCache.getBkgDocument(trait)));
+
     }
 }
