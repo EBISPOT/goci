@@ -260,6 +260,13 @@
                                        th:text="'Warning: EFO trait not assigned'"></span>
                             </td>
 
+                            <td>
+                                <p th:text="${snpAssociationTableView.backgroundEfoTraits} ?: ''"></p>
+                                <span style="font-style: italic; color:red; font-size: small"
+                                      th:if="*{#strings.isEmpty(snpAssociationTableView.backgroundEfoTraits)}"
+                                      th:text="'Warning: EFO trait not assigned'"></span>
+                            </td>
+
                             <td style="background-color: darkgrey"
                                 th:text="${snpAssociationTableView.orPerCopyNum} ?: ''"></td>
                             <td style="background-color: darkgrey">
@@ -376,6 +383,13 @@
                                  <span style="font-style: italic; color:red; font-size: small"
                                        th:if="*{#strings.isEmpty(snpAssociationTableView.efoTraits)}"
                                        th:text="'Warning: EFO trait not assigned'"></span>
+                                </td>
+
+                                <td>
+                                    <p th:text="${snpAssociationTableView.backgroundEfoTraits} ?: ''"></p>
+                                    <span style="font-style: italic; color:red; font-size: small"
+                                          th:if="*{#strings.isEmpty(snpAssociationTableView.backgroundEfoTraits)}"
+                                          th:text="'Warning: EFO trait not assigned'"></span>
                                 </td>
 
                                 <td style="background-color: lightyellow"
