@@ -18,6 +18,7 @@ import uk.ac.ebi.spot.goci.service.StudyService;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DepositionStudyService {
@@ -58,6 +59,13 @@ public class DepositionStudyService {
     StudyExtensionRepository studyExtensionRepository;
     @Autowired
     EventOperationsService eventOperationsService;
+    @Autowired
+    AssociationRepository associationRepository;
+    @Autowired
+    AncestryRepository ancestryRepository;
+    @Autowired
+    CuratorTrackingRepository curatorTrackingRepository;
+
 
 
     public void publishSummaryStats(Study study, String studyTag) {
@@ -108,15 +116,27 @@ public class DepositionStudyService {
     @Transactional
     public String deleteStudies(Collection<Study> dbStudies, Curator curator, SecureUser currentUser) {
         try {
-            if (dbStudies != null) {
-                for (int i = 0; i < dbStudies.size(); i++) {
-                    addStudyNote(dbStudies.toArray(new Study[0])[i], null,
+            List<Study> oldStudies = dbStudies.stream()
+                    .filter(dbStudy -> dbStudy.getAccessionId() == null || dbStudy.getAccessionId().isEmpty())
+                    .collect(Collectors.toList());
+
+            List<Study> duplicateStudies = dbStudies.stream()
+                    .filter(dbStudy -> dbStudy.getAccessionId() != null && !dbStudy.getAccessionId().isEmpty())
+                    .collect(Collectors.toList());
+
+            duplicateStudies.forEach((study) -> {
+                deleteStudyWithChildren(study.getId());
+            });
+
+            if (oldStudies != null) {
+                for (int i = 0; i < oldStudies.size(); i++) {
+                    addStudyNote(oldStudies.toArray(new Study[0])[i], null,
                             "Review for deletion, replaced by deposition import", null, curator, null, currentUser);
                     //          studyService.deleteByStudyId(study.getId());
                 }
             }
             CurationStatus requiresReview = statusRepository.findByStatus("Requires Review");
-            dbStudies.forEach(study -> {
+            oldStudies.forEach(study -> {
                 study.getHousekeeping().setCurationStatus(requiresReview);
                 Event event = eventOperationsService.createEvent("REQUIRES_REVIEW", currentUser,
                         requiresReview.getStatus());
@@ -128,6 +148,15 @@ public class DepositionStudyService {
         }
 
         return null;
+    }
+
+    public void deleteStudyWithChildren(Long studyId) {
+        associationRepository.findByStudyId(studyId).forEach((association) -> associationRepository.delete(association));
+        ancestryRepository.findByStudyId(studyId).forEach(ancestry -> ancestryRepository.delete(ancestry));
+        curatorTrackingRepository.findByStudy(studyService.findOne(studyId)).forEach(curatorTracking -> curatorTrackingRepository.delete(curatorTracking));
+        noteRepository.findByStudyId(studyId).forEach(note -> noteRepository.delete(note) );
+        studyService.deleteByStudyId(studyId);
+
     }
 
     public void addStudyNote(Study study, String studyTag, String noteText, String noteStatus, Curator noteCurator,
