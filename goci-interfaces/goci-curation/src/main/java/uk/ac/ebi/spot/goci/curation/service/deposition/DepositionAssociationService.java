@@ -173,18 +173,7 @@ public class DepositionAssociationService {
                     errorBuffer.append("Save error: " + associationValidationView.getWarning() + " | " +
                             associationValidationView.getErrorMessage() + " | " + associationValidationView.getField()).append("\n");
                 }
-                if (errors.isEmpty()) {
-                    try {
-                        mapCatalogService.mapCatalogContentsByAssociations(currentUser.getEmail(),
-                                Collections.singleton(association));
-                        studyNote.append("mapped associations" + "\n");
-                    } catch (EnsemblMappingException e) {
-                        getLog().error("Ensembl mapping failure: {}", e.getMessage(), e);
-                        importLog.addError("Ensembl mapping failure: " + e.getMessage(), "Creating association");
-                        importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
-                        continue;
-                    }
-                } else {
+                if (!errors.isEmpty()) {
                     importLog.addWarning(errorBuffer.toString().trim(), "Creating association");
                 }
                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);

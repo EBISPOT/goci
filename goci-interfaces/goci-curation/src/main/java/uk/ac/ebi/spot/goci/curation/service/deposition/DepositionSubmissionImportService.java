@@ -119,38 +119,55 @@ public class DepositionSubmissionImportService {
             ImportLogStep studiesStep = importLog.addStep(new ImportLogStep("Verifying studies", submissionID));
             if (studies != null) {// && dbStudies.size() == 1) { //only do this for un-curated publications
                 importLog.updateStatus(studiesStep.getId(), ImportLog.SUCCESS);
-                getLog().info("[{}] Deleting proxy studies created when the publication was initially imported.", submissionID);
-                ImportLogStep importStep = importLog.addStep(new ImportLogStep("Deleting proxy studies", submissionID));
-                String result = depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
-                if (result != null) {
-                    importLog.addError(result, "Deleting proxy studies");
+                getLog().info("[{}] Validating associations ...", submissionID);
+                ImportLogStep importStep = importLog.addStep(new ImportLogStep("Validating associations", submissionID));
+                for (DepositionStudyDto studyDto : studies) {
+                    List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
+                    if (associations != null) {
+                        List<String> errors = associationValidationService.validateAssociations(studyDto.getStudyTag(), studyDto.getAccession(), associations);
+                        importLog.addWarnings(errors, "Validating associations");
+                    }
+                }
+                getLog().info("[{}] Associations validated. Found {} errors and {} warnings.", submissionID, importLog.getErrorList().size(),
+                        importLog.getWarnings().size());
+                if (!importLog.getErrorList().isEmpty()) {
                     importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
                     outcome = false;
                 } else {
                     importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
-                }
-
-                if (outcome) {
-                    outcome = studiesProcessingService.processStudies(depositionSubmission, currentUser, publication, curator, importLog);
+                    getLog().info("[{}] Deleting proxy studies created when the publication was initially imported.", submissionID);
+                    importStep = importLog.addStep(new ImportLogStep("Deleting proxy studies", submissionID));
+                    String result = depositionStudyService.deleteStudies(dbStudies, curator, currentUser);
+                    if (result != null) {
+                        importLog.addError(result, "Deleting proxy studies");
+                        importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+                        outcome = false;
+                    } else {
+                        importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+                    }
 
                     if (outcome) {
-                        getLog().info("[{}] Deleting unpublished studies and body of works.", submissionID);
-                        importStep = importLog.addStep(new ImportLogStep("Deleting unpublished data", submissionID));
-                        result = cleanupPrePublishedStudies(studies);
-                        if (result != null) {
-                            importLog.addWarning(result, "Deleting unpublished data");
-                            importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS_WITH_WARNINGS);
-                        } else {
-                            importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
-                        }
+                        outcome = studiesProcessingService.processStudies(depositionSubmission, currentUser, publication, curator, importLog);
 
-                        importStep = importLog.addStep(new ImportLogStep("Updating submission status: CURATION_COMPLETE", submissionID));
-                        result = ingestService.updateSubmissionStatus(depositionSubmission, "CURATION_COMPLETE", "CURATION_STARTED");
-                        if (result != null) {
-                            importLog.addWarning(result, "Updating submission status: CURATION_COMPLETE");
-                            importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS_WITH_WARNINGS);
-                        } else {
-                            importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+                        if (outcome) {
+                            getLog().info("[{}] Deleting unpublished studies and body of works.", submissionID);
+                            importStep = importLog.addStep(new ImportLogStep("Deleting unpublished data", submissionID));
+                            result = cleanupPrePublishedStudies(studies);
+                            if (result != null) {
+                                importLog.addWarning(result, "Deleting unpublished data");
+                                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS_WITH_WARNINGS);
+                            } else {
+                                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+                            }
+
+                            importStep = importLog.addStep(new ImportLogStep("Updating submission status: CURATION_COMPLETE", submissionID));
+                            result = ingestService.updateSubmissionStatus(depositionSubmission, "CURATION_COMPLETE", "CURATION_STARTED");
+                            if (result != null) {
+                                importLog.addWarning(result, "Updating submission status: CURATION_COMPLETE");
+                                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS_WITH_WARNINGS);
+                            } else {
+                                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
+                            }
                         }
                     }
                 }
