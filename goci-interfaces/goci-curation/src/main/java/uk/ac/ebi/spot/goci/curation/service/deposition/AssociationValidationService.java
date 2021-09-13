@@ -158,14 +158,14 @@ public class AssociationValidationService {
                         getLog().error("Full validation error: {} | {} | {} | {}", validationError.getField(), validationError.getTypeError(), validationError.getError(), validationError.getWarning());
                         errorList.add("[" + accessionId + " | " + associationDto.getStudyTag() + "] Full validation error: " + validationError.getField() + " [" + validationError.getTypeError() + "]: " + validationError.getError() + " | " + validationError.getWarning());
                     }
-                    if (!associationValidationErrors.isEmpty()) {
+                    /* if (!associationValidationErrors.isEmpty()) {
                         continue;
                     }
 
                     List<String> list = mapCatalogService.validateMappingForAssociation(association, rsID);
                     for (String error : list) {
                         errorList.add("[" + accessionId + " | " + associationDto.getStudyTag() + "] :: " + error);
-                    }
+                    } */
                 }
             }
         }
