@@ -62,7 +62,7 @@ public class DepositionSampleService {
                 List<Country> countryList = new ArrayList<>();
                 String countryRecruitment = sampleDto.getCountryRecruitement();
                 if (countryRecruitment != null) {
-                    String[] countries = countryRecruitment.split("\\||,");
+                    String[] countries = countryRecruitment.split("\\|");
                     Map<String, String> countryMap = new HashMap<>();
                     for (String country : countries) {
                         countryMap.put(country.trim(), "");
