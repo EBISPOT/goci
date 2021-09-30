@@ -161,7 +161,8 @@ public class EuropePMCDeserializer extends StdDeserializer<EuropePMCData> {
             record.setAuthors(listAuthors);
             Author firstAuthor = listAuthors.get(0);
             record.setFirstAuthor(firstAuthor);
-            record.setDoi(root.get("doi").asText());
+            if (root.get("doi") != null) record.setDoi(root.get("doi").asText());
+            else record.setDoi("");
         }
         else { record.setError(true);}
 
