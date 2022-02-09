@@ -64,7 +64,7 @@ public class OldDiseaseTraitController {
                                   Model model, RedirectAttributes redirectAttributes) {
 
         // Check if it exists already
-        DiseaseTrait existingDiseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait());
+        DiseaseTrait existingDiseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait()).get();
         String existingTrait = null;
         if (existingDiseaseTrait != null) {
             existingTrait = existingDiseaseTrait.getTrait();

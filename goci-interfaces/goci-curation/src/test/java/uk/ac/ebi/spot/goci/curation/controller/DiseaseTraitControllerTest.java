@@ -134,7 +134,7 @@ public class DiseaseTraitControllerTest {
     @Test
     public void testAddDiseaseTraitWithExistingTrait() throws Exception {
 
-        when(diseaseTraitRepository.findByTraitIgnoreCase(Matchers.anyString())).thenReturn(DISEASE_TRAIT_1);
+        when(diseaseTraitRepository.findByTraitIgnoreCase(Matchers.anyString()).get()).thenReturn(DISEASE_TRAIT_1);
 
         mockMvc.perform(post("/diseasetraits")
                                 .param("trait", DISEASE_TRAIT_1.getTrait()))

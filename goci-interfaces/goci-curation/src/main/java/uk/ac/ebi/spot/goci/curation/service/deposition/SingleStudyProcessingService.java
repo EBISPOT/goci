@@ -57,7 +57,7 @@ public class SingleStudyProcessingService {
 
         getLog().info("Initializing study: {} | {}", publication.getPubmedId(), studyDto.getAccession());
         Study study = studyDto.buildStudy();
-        DiseaseTrait diseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait());
+        DiseaseTrait diseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait()).get();
         study.setDiseaseTrait(diseaseTrait);
 
         String manufacturerString = studyDto.getArrayManufacturer();
@@ -125,7 +125,7 @@ public class SingleStudyProcessingService {
         }
         getLog().info("Background EFO traits mapped: {}", mappedTraitList);
         study.setMappedBackgroundTraits(mappedTraitList);
-        DiseaseTrait backgroundTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait());
+        DiseaseTrait backgroundTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait()).get();
         study.setBackgroundTrait(backgroundTrait);
 
         if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")) {
