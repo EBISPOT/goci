@@ -29,7 +29,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(Endpoint.API_V1 + Endpoint.DISEASE_TRAITS)
-public class DiseaseTraitUploadController {
+public class    DiseaseTraitUploadController {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
@@ -42,7 +42,8 @@ public class DiseaseTraitUploadController {
         }
         MultipartFile multipartFile = fileUploadRequest.getMultipartFile();
         List<DiseaseTrait> diseaseTraits = DiseaseTraitDtoAssembler.disassemble(multipartFile);
-        diseaseTraits = diseaseTraitService.createDiseaseTraits(diseaseTraits);
+        List<DiseaseTrait> filterDiseaseTraits = diseaseTraitService.removeExistingTraits(diseaseTraits);
+        diseaseTraits = diseaseTraitService.createDiseaseTraits(filterDiseaseTraits);
         log.info("{} {} were created", diseaseTraits.size(), EntityType.DISEASE_TRAIT);
         return new ResponseEntity<>(DiseaseTraitDtoAssembler.assemble(diseaseTraits), HttpStatus.CREATED);
     }

@@ -3,6 +3,8 @@ package uk.ac.ebi.spot.goci.curation.controller.assembler;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceAssembler;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -22,6 +24,8 @@ import java.util.List;
 @Component
 public class DiseaseTraitDtoAssembler implements ResourceAssembler<DiseaseTrait, Resource<DiseaseTraitDto>> {
 
+    private static final Logger log = LoggerFactory.getLogger(DiseaseTraitDtoAssembler.class);
+
     public Resource<DiseaseTraitDto> toResource(DiseaseTrait diseaseTrait) {
         DiseaseTraitDto diseaseTraitDTO = DiseaseTraitDto.builder()
                 .id(diseaseTrait.getId())
@@ -36,9 +40,10 @@ public class DiseaseTraitDtoAssembler implements ResourceAssembler<DiseaseTrait,
     }
 
     public static List<DiseaseTraitDto> assemble(List<DiseaseTrait> diseaseTraits) {
-
+        log.info("Inside Assemble method");
         List<DiseaseTraitDto> diseaseTraitDTOS = new ArrayList<>();
         diseaseTraits.forEach(diseaseTrait -> {
+            log.info("diseaseTrait retrieved from file-:"+diseaseTrait.getTrait());
             DiseaseTraitDto diseaseTraitDTO = DiseaseTraitDto.builder()
                     .id(diseaseTrait.getId())
                     .trait(diseaseTrait.getTrait())

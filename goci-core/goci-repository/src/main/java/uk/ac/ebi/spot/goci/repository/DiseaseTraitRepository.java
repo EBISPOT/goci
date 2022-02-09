@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @RepositoryRestResource
 public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long> {
-    DiseaseTrait findByTraitIgnoreCase(String trait);
+    Optional<DiseaseTrait> findByTraitIgnoreCase(String trait);
 
     @Query("Select diseaseTrait.id as id, diseaseTrait.trait as trait, count(studies.id) as studiesCount from DiseaseTrait diseaseTrait " +
             "LEFT JOIN diseaseTrait.studies studies group by diseaseTrait.id, diseaseTrait.trait " +
