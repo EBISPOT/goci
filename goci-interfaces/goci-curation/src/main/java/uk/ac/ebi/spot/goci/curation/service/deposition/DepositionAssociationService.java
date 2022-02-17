@@ -59,7 +59,7 @@ public class DepositionAssociationService {
 
     @Transactional
     public String saveAssociations(SecureUser currentUser, String studyTag, Study study, List<DepositionAssociationDto> associations,
-                                   List<EfoTrait> efoTraits, ImportLog importLog) {
+                                   List<EfoTrait> efoTraits, List<EfoTrait> bkgEfoTraits, ImportLog importLog) {
         //find associations in study
         String eRelease = ensemblRestTemplateService.getRelease();
         StringBuffer studyNote = new StringBuffer();
@@ -159,6 +159,11 @@ public class DepositionAssociationService {
                 if (efoTraits != null) {
                     association.setEfoTraits(efoTraits);
                 }
+
+                if (bkgEfoTraits != null) {
+                    association.setBkgEfoTraits(bkgEfoTraits);
+                }
+
                 associationOperationsService.saveAssociation(association, study, new ArrayList<>());
                 extensionRepository.save(associationExtension);
                 association.setAssociationExtension(associationExtension);

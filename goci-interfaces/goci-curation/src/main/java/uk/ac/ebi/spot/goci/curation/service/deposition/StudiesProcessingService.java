@@ -15,10 +15,7 @@ import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class StudiesProcessingService {
@@ -72,10 +69,12 @@ public class StudiesProcessingService {
 
             Study study;
             List<EfoTrait> efoTraits;
+            List<EfoTrait> bkgEfoTraits;
             try {
                 Pair<Study, List<EfoTrait>> pair = singleStudyProcessingService.processStudy(studyDto, publication);
                 study = pair.getLeft();
                 efoTraits = pair.getRight();
+                bkgEfoTraits = new ArrayList<>(study.getMappedBackgroundTraits());
             } catch (Exception e) {
                 getLog().error("Unable to create study [{} | {}]: {}", studyDto.getStudyTag(), studyDto.getAccession(), e.getMessage(), e);
                 importLog.addError("Unable to create study [" + studyDto.getStudyTag() + " | " + studyDto.getAccession() + "]: " + e.getMessage(), "Creating study [" + studyDto.getAccession() + "]");
@@ -92,7 +91,7 @@ public class StudiesProcessingService {
             publicationService.save(publication);
             if (associations != null) {
                 getLog().info("Found {} associations in the submission retrieved from the Deposition App.", associations.size());
-                studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study, associations, efoTraits, importLog));
+                studyNote.append(depositionAssociationService.saveAssociations(currentUser, studyTag, study, associations, efoTraits, bkgEfoTraits, importLog));
             }
             if (samples != null) {
                 getLog().info("Found {} samples in the submission retrieved from the Deposition App.", samples.size());
