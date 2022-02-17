@@ -83,7 +83,7 @@ public class DiseaseTraitController {
                 ).orElseThrow(() -> new ResourceNotFoundException(EntityType.DISEASE_TRAIT, traitId));
     }
 
-    @DeleteMapping("/{traitId}")
+    @DeleteMapping(value ="/{traitId}", produces = MediaType.TEXT_PLAIN_VALUE)
     public String deleteDiseaseTrait(@PathVariable Long traitId){
         diseaseTraitService.deleteDiseaseTrait(traitId);
         return "Done";

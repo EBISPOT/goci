@@ -50,7 +50,7 @@ public class StudyDataService {
         Study study = this.getStudyByAccessionId(accessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Study", accessionId));
 
-        DiseaseTrait diseaseTrait = Optional.ofNullable(diseaseTraitRepository.findByTraitIgnoreCase(trait))
+        DiseaseTrait diseaseTrait = Optional.ofNullable(diseaseTraitRepository.findByTraitIgnoreCase(trait).get())
                 .orElseThrow(() -> new ResourceNotFoundException("Disease Trait", trait));
 
         study.setDiseaseTrait(diseaseTrait);

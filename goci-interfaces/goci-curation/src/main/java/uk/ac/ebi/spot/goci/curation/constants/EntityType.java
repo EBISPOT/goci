@@ -6,4 +6,6 @@ public class EntityType {
 
     public static final String DISEASE_TRAIT = "Disease Trait";
 
+    public static final String PARAM_TRAIT = "trait";
+
 }

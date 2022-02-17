@@ -39,12 +39,17 @@ public class DiseaseTraitService {
         return Optional.ofNullable(diseaseTraitRepository.findOne(traitId));
     }
 
+    public List<DiseaseTrait> removeExistingTraits(List<DiseaseTrait> diseaseTraits) {
+        return diseaseTraits.stream().filter((diseaseTrait) -> !diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait()).isPresent())
+                .collect(Collectors.toList());
+    }
+
     public Page<DiseaseTrait> getDiseaseTraits(Pageable pageable) {
         return diseaseTraitRepository.findAll(pageable);
     }
 
     public DiseaseTrait createDiseaseTrait(DiseaseTrait diseaseTrait) {
-        diseaseTraitRepository.findByTrait(diseaseTrait.getTrait())
+        diseaseTraitRepository.findByTraitIgnoreCase(diseaseTrait.getTrait())
                 .ifPresent(trait -> {
                     throw new DataIntegrityException(String.format("Trait %s already exist", trait.getTrait()));
                 });
