@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.service.HousekeepingOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
@@ -14,6 +13,7 @@ import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SingleStudyProcessingService {
@@ -125,8 +125,8 @@ public class SingleStudyProcessingService {
         }
         getLog().info("Background EFO traits mapped: {}", mappedTraitList);
         study.setMappedBackgroundTraits(mappedTraitList);
-        DiseaseTrait backgroundTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait()).get();
-        study.setBackgroundTrait(backgroundTrait);
+        Optional<DiseaseTrait> backgroundTraitOpt = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait());
+        backgroundTraitOpt.ifPresent(study::setBackgroundTrait);
 
         if (studyDto.getSummaryStatisticsFile() != null && !studyDto.getSummaryStatisticsFile().equals("") && !studyDto.getSummaryStatisticsFile().equals("NR")) {
             study.setFullPvalueSet(true);
