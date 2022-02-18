@@ -57,8 +57,8 @@ public class SingleStudyProcessingService {
 
         getLog().info("Initializing study: {} | {}", publication.getPubmedId(), studyDto.getAccession());
         Study study = studyDto.buildStudy();
-        DiseaseTrait diseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait()).get();
-        study.setDiseaseTrait(diseaseTrait);
+        Optional<DiseaseTrait> diseaseTraitOpt = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait());
+        diseaseTraitOpt.ifPresent(study::setDiseaseTrait);
 
         String manufacturerString = studyDto.getArrayManufacturer();
         if (manufacturerString != null) {
