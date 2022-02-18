@@ -4,12 +4,12 @@
 
 == Ancestry category distribution in the GWAS Catalog.
 
-Here we present analysis of the ancestry data contained in the GWAS Catalog, last updated Jan 2018.
+The https://gwasdiversitymonitor.com[GWAS Diversity Monitor] maintains an up-to-date interactive dashboard monitoring the diversity of participants across all published GWAS, based on data from the GWAS Catalog.
+
+Here we present an earlier in-house analysis of the ancestry data contained in the GWAS Catalog, last updated Jan 2018.
 
 image::ancestry-data.png[Ancestry data,1000,1000,align="center"]
 
 {empty} +
 
 This figure summarizes the distribution of ancestry categories in percentages, of individuals (N=110,291,046; panel a), individuals over time (N=110,291,046; panel b), studies (N= 4,655; panel c) and associations (N=60,970; panel d). The largest category in all panels is European (aqua). At the level of individuals (a), the largest non-European category is Asian (bright pink), with East Asian (light pink) accounting for the majority. Non-European, Non-Asian categories together (yellow) comprise 4% of individuals, and there are 6% (white) of samples for which an ancestry category could not be specified. Panel b displays the distribution of individuals in percentages, included in the 915 studies published between 2005 – 2010 compared to the distribution of individuals included in the 2,905 studies published between 2011 – 2016. Panel d demonstrates the disproportionate contribution of associations from African (blue) and Hispanic/Latin American (purple) categories, when compared to the percentage of individuals (a, blue, purple, respectively) and studies (b, blue, purple, respectively). 
-
-
