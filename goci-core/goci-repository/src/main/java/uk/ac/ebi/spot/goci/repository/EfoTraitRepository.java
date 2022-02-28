@@ -76,8 +76,12 @@ public interface EfoTraitRepository extends JpaRepository<EfoTrait, Long> {
 
     EfoTrait findByShortForm(String shortForm);
 
+    EfoTrait findByMongoSeqId(String mongoSeqId);
+
     @RestResource(exported = false)
     Page<EfoTrait> findByStudiesPublicationIdPubmedId(String pumbedId, Pageable pageable);
+
+
 
 }
 

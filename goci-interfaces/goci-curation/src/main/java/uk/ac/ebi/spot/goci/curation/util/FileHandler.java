@@ -8,7 +8,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.constants.FileUploadType;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
-import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
+import uk.ac.ebi.spot.goci.model.deposition.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.dto.StudyPatchRequest;
 import uk.ac.ebi.spot.goci.curation.dto.FileUploadRequest;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
