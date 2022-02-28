@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.constants.EntityType;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisCacheDto;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
-import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
+import uk.ac.ebi.spot.goci.model.deposition.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -37,6 +37,10 @@ public class DiseaseTraitService {
 
     public Optional<DiseaseTrait> getDiseaseTrait(Long traitId) {
         return Optional.ofNullable(diseaseTraitRepository.findOne(traitId));
+    }
+
+    public void syncDiseaseTraitMongoSeqId(DiseaseTrait diseaseTrait) {
+        diseaseTraitRepository.save(diseaseTrait);
     }
 
     public List<DiseaseTrait> removeExistingTraits(List<DiseaseTrait> diseaseTraits) {

@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Study;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -106,6 +107,8 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
 
     Collection<Association> findBylastMappingDateIsNull();
+
+    Collection<Association> findByEfoTraitsId(Long efoTraitId);
 
     @RestResource(exported = false)
     Page<Association> findByStudyPublicationIdPubmedId(String pubmedId, Pageable pageable);

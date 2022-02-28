@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import uk.ac.ebi.spot.goci.model.*;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -73,6 +75,13 @@ public class DepositionStudyDto {
 
     @JsonProperty("agreedToCc0")
     private Boolean agreedToCc0;
+
+    @JsonProperty("diseaseTrait")
+    private DiseaseTraitDto diseaseTraitDto;
+
+    @JsonProperty("efoTraits")
+    private List<EFOTraitDTO> efoTraitDtos;
+
 
     public Study buildStudy(){
         Study study = new Study();

@@ -9,11 +9,15 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.curation.service.HousekeepingOperationsService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
+import uk.ac.ebi.spot.goci.model.deposition.DiseaseTraitDto;
+import uk.ac.ebi.spot.goci.model.deposition.EFOTraitDTO;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SingleStudyProcessingService {
@@ -57,7 +61,13 @@ public class SingleStudyProcessingService {
 
         getLog().info("Initializing study: {} | {}", publication.getPubmedId(), studyDto.getAccession());
         Study study = studyDto.buildStudy();
-        DiseaseTrait diseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait()).get();
+        DiseaseTrait diseaseTrait = Optional.ofNullable(studyDto.getDiseaseTraitDto())
+                .map(DiseaseTraitDto::getTrait)
+                .map(diseaseTraitRepository::findByTraitIgnoreCase)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(null);
+        //DiseaseTrait diseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getTrait()).get();
         study.setDiseaseTrait(diseaseTrait);
 
         String manufacturerString = studyDto.getArrayManufacturer();
@@ -101,16 +111,25 @@ public class SingleStudyProcessingService {
         if (variantCount != -1) {
             study.setSnpCount(variantCount);
         }
-        List<EfoTrait> efoTraitList = new ArrayList<>();
-        String efoTrait = studyDto.getEfoTrait();
-        if (efoTrait != null) {
+       // List<EfoTrait> efoTraitList = new ArrayList<>();
+        //String efoTrait = studyDto.getEfoTrait();
+
+        List<EfoTrait> efoTraitList =  Optional.ofNullable(studyDto.getEfoTraitDtos())
+                .map(efoTraitDTOList -> efoTraitDTOList.stream()
+                        .map(EFOTraitDTO::getShortForm)
+                        .map(efoTraitRepository::findByShortForm)
+                        .collect(Collectors.toList()))
+                .orElse(null);
+
+
+        /*if (efoTrait != null) {
             String[] efoTraits = efoTrait.split("\\||,");
             getLog().info("EFO traits provided: {}", efoTraits);
             for (String trait : efoTraits) {
                 EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait.trim());
                 efoTraitList.add(dbTrait);
             }
-        }
+        }*/
         List<EfoTrait> mappedTraitList = new ArrayList<>();
         getLog().info("EFO traits mapped: {}", efoTraitList);
         study.setEfoTraits(efoTraitList);

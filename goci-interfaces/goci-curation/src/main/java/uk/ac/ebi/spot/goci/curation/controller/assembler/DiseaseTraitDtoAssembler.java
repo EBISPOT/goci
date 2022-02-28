@@ -11,7 +11,7 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import uk.ac.ebi.spot.goci.curation.controller.rest.DiseaseTraitController;
-import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
+import uk.ac.ebi.spot.goci.model.deposition.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.util.FileHandler;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
@@ -56,6 +56,7 @@ public class DiseaseTraitDtoAssembler implements ResourceAssembler<DiseaseTrait,
     public static DiseaseTrait disassemble(DiseaseTraitDto diseaseTraitDTO) {
         DiseaseTrait diseaseTrait = new DiseaseTrait();
         diseaseTrait.setTrait(diseaseTraitDTO.getTrait());
+        diseaseTrait.setMongoSeqId(diseaseTraitDTO.getMongoSeqId());
         return diseaseTrait;
     }
 
