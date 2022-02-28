@@ -58,7 +58,7 @@ public class SyncReportedTraitsTask {
     @Value("${deposition.ingest.efoTraits.uri}")
     private String efoTraitsUri;
 
-    @Scheduled(cron = "* 00 * * * *")
+     @Scheduled(cron = "* 00 * * * *")
     public void syncDiseaseTraits() {
 
         String endpoint = depositionIngestURL + diseaseTraitsUri;
