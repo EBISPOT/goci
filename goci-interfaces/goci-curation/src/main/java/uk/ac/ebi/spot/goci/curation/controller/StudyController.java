@@ -53,9 +53,9 @@ import java.util.concurrent.Callable;
  * Created by emma on 20/11/14.
  *
  * @author emma
- *         <p>
- *         Study Controller interprets user input and transform it into a study model that is represented to the user by
- *         the associated HTML page.
+ * <p>
+ * Study Controller interprets user input and transform it into a study model that is represented to the user by
+ * the associated HTML page.
  */
 
 @Controller
@@ -67,7 +67,6 @@ public class StudyController {
 
     private final StudyExtensionRepository studyExtensionRepository;
     private final DepositionSubmissionService submissionService;
-    // Repositories allowing access to database objects associated with a study
     private StudyRepository studyRepository;
     private HousekeepingRepository housekeepingRepository;
     private DiseaseTraitRepository diseaseTraitRepository;
@@ -81,8 +80,6 @@ public class StudyController {
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
     private PublicationOperationsService publicationOperationsService;
 
-    // Services
-    //private DefaultPubMedSearchService defaultPubMedSearchService;
     private StudyOperationsService studyOperationsService;
     private MappingDetailsService mappingDetailsService;
     private CurrentUserDetailsService currentUserDetailsService;
@@ -175,7 +172,7 @@ public class StudyController {
 
         StudyViewDto studyViewDto =
                 studyOperationsService.getStudies(page, studyType, sortType, pubmed, author, pagination, efoTraitId,
-                                                  diseaseTraitId, notesQuery, status, curator, month, year, gcstId, studyId);
+                        diseaseTraitId, notesQuery, status, curator, month, year, gcstId, studyId);
         String filters = studyViewDto.getFilters();
         String sortString = studyViewDto.getSortString();
         List<Study> studies = studyViewDto.getStudies();
@@ -222,8 +219,7 @@ public class StudyController {
             model.addAttribute("beginIndex", begin);
             model.addAttribute("endIndex", end);
             model.addAttribute("currentIndex", current);
-        }
-        else {
+        } else {
             model.addAttribute("studies", studies);
             totalStudies = studies.size();
         }
@@ -242,8 +238,8 @@ public class StudyController {
         model.addAttribute("statusAssignment", statusAssignment);
 
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
-        studyPage.forEach(study->{
-            if(pubmedMap.containsKey(study.getPublicationId().getPubmedId())){
+        studyPage.forEach(study -> {
+            if (pubmedMap.containsKey(study.getPublicationId().getPubmedId())) {
                 study.getPublicationId().setActiveSubmission(true);
                 study.getPublicationId().setSubmissionId(pubmedMap.get(study.getPublicationId().getPubmedId()));
             }
@@ -251,7 +247,6 @@ public class StudyController {
         return "studies";
     }
 
-    // Redirects from landing page and main page
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
     public String searchForStudyByFilter(@ModelAttribute StudySearchFilter studySearchFilter) {
 
@@ -302,19 +297,16 @@ public class StudyController {
             // If we have curator and status find by both
             if (curator != null) {
                 return "redirect:/studies?page=1&status=" + status + "&curator=" + curator;
-            }
-            else {
+            } else {
                 return "redirect:/studies?page=1&status=" + status;
             }
         }
         // If user entered curator
         else if (curator != null) {
             return "redirect:/studies?page=1&curator=" + curator;
-        }
-        else if(gcstId != null){
+        } else if (gcstId != null) {
             return "redirect:/studies?page=1&gcstId=" + gcstId;
-        }
-        else if(studyId != null){
+        } else if (studyId != null) {
             return "redirect:/studies?page=1&studyId=" + studyId;
         }
 
@@ -326,81 +318,45 @@ public class StudyController {
 
     }
 
-   /* New Study:
-   *
-   * Adding a study is synchronised to ensure the method can only be accessed once.
-   *
-   * */
-
-    // Add a new study
-    // Directs user to an empty form to which they can create a new study
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String newStudyForm(Model model) {
         model.addAttribute("study", new Study());
-
-        // Return an empty pubmedIdForImport object to store user entered pubmed id
         model.addAttribute("pubmedIdForImport", new PubmedIdForImport());
         return "add_study";
     }
 
-    // Save study found by Pubmed Id
-    // @ModelAttribute is a reference to the object holding the data entered in the form
     @CrossOrigin
     @RequestMapping(value = "/new/import", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<ArrayList<HashMap<String,String>>> importStudy(@RequestBody String pubmedIdForImport,
-                               HttpServletRequest request) {
-        ArrayList<HashMap<String,String>> result = new ArrayList<>();
+    public @ResponseBody
+    ResponseEntity<ArrayList<HashMap<String, String>>> importStudy(@RequestBody String pubmedIdForImport,
+                                                                   HttpServletRequest request) {
         SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
-
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
-
-        result = publicationOperationsService.importNewPublications(pubmedIdForImport, currentUser);
-
-        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
+        ArrayList<HashMap<String, String>> result = publicationOperationsService.importNewPublications(pubmedIdForImport, currentUser);
+        return new ResponseEntity<>(result, responseHeaders, HttpStatus.OK);
     }
 
-    // Option 2: move this functionality as JAVA migration.
-    @RequestMapping(value = "/new/migratePublications", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET,RequestMethod.POST})
-    public synchronized String importAllStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport,
-                                           HttpServletRequest request,
-                                           Model model)
-            throws PubmedImportException, NoStudyDirectoryException {
-
-
+    @RequestMapping(value = "/new/migratePublications", produces = MediaType.TEXT_HTML_VALUE, method = {RequestMethod.GET, RequestMethod.POST})
+    public synchronized String importAllStudy(@ModelAttribute PubmedIdForImport pubmedIdForImport) throws PubmedImportException, NoStudyDirectoryException {
         publicationOperationsService.importPublicationsWithoutFirstAuthor();
-
         return "redirect:/studies/";
-
     }
 
-
-    // Save newly added study details
-    // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/new", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public synchronized String addStudy(@Valid @ModelAttribute Study study,
-                                        BindingResult bindingResult,
-                                        Model model,
+    public synchronized String addStudy(@Valid @ModelAttribute Study study, BindingResult bindingResult, Model model,
                                         HttpServletRequest request) throws NoStudyDirectoryException {
 
-
-        // If we have errors in the fields entered, i.e they are blank, then return these to form so user can fix
         if (bindingResult.hasErrors()) {
             model.addAttribute("study", study);
-
-            // Return an empty pubmedIdForImport object to store user entered pubmed id
             model.addAttribute("pubmedIdForImport", new PubmedIdForImport());
-
             return "add_study";
         }
 
-        Study savedStudy =
-                studyOperationsService.createStudy(study, currentUserDetailsService.getUserFromRequest(request));
-        // Create directory to store associated files
+        Study savedStudy = studyOperationsService.createStudy(study, currentUserDetailsService.getUserFromRequest(request));
         try {
             studyFileService.createStudyDir(savedStudy.getId());
-        }
-        catch (NoStudyDirectoryException e) {
+        } catch (NoStudyDirectoryException e) {
             getLog().error("No study directory exception");
             model.addAttribute("study", savedStudy);
             return "error_pages/study_dir_failure";
@@ -408,21 +364,18 @@ public class StudyController {
         return "redirect:/studies/" + savedStudy.getId();
     }
 
-   /* Existing study*/
-
-    // View a study
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable Long studyId) {
 
         Study studyToView = studyRepository.findOne(studyId);
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
-        if(pubmedMap.containsKey(studyToView.getPublicationId().getPubmedId())){
+        if (pubmedMap.containsKey(studyToView.getPublicationId().getPubmedId())) {
             studyToView.getPublicationId().setActiveSubmission(true);
             studyToView.getPublicationId().setSubmissionId(pubmedMap.get(studyToView.getPublicationId().getPubmedId()));
         }
 
         model.addAttribute("study", studyToView);
-        if(studyToView.getStudyExtension() == null){
+        if (studyToView.getStudyExtension() == null) {
             StudyExtension extension = new StudyExtension();
             extension.setStudy(studyToView);
             studyToView.setStudyExtension(extension);
@@ -436,52 +389,38 @@ public class StudyController {
         return "study";
     }
 
-    // Edit an existing study
-    // @ModelAttribute is a reference to the object holding the data entered in the form
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String updateStudy(@ModelAttribute Study study,
-                              @ModelAttribute StudyExtension extension,
-                              @PathVariable Long studyId,
+    public String updateStudy(@ModelAttribute Study study, @ModelAttribute StudyExtension extension, @PathVariable Long studyId,
                               RedirectAttributes redirectAttributes, HttpServletRequest request) {
-//        xintodo edit study
-        if(extension == null){
+        if (extension == null) {
             extension = new StudyExtension();
         }
         studyUpdateService.updateStudy(studyId, study, extension, currentUserDetailsService.getUserFromRequest(request));
-
-        // Add save message
         String message = "Changes saved successfully";
         redirectAttributes.addFlashAttribute("changesSaved", message);
         return "redirect:/studies/" + study.getId();
     }
 
-    //For @RequestParam we can use, @RequestParam(value="somevalue", required=false) and for optional params rather than a pathVariable
     @CrossOrigin
     @RequestMapping(value = "/{studyId}/changeFirstAuthor/{authorId}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<HashMap<String,String>> changeFirstAuthor(@PathVariable(value="studyId") Long studyId,
-                                                                                  @PathVariable(value="authorId") Long authorId) {
+    public @ResponseBody
+    ResponseEntity<HashMap<String, String>> changeFirstAuthor(@PathVariable(value = "studyId") Long studyId,
+                                                              @PathVariable(value = "authorId") Long authorId) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
 
         HashMap<String, String> result = new HashMap<String, String>();
-        Boolean isChangeAuthor = publicationOperationsService.changeFirstAuthorByStudyId(studyId,authorId);
-        String key = (isChangeAuthor) ? "success": "error";
+        Boolean isChangeAuthor = publicationOperationsService.changeFirstAuthorByStudyId(studyId, authorId);
+        String key = (isChangeAuthor) ? "success" : "error";
         result.put(key, "");
-        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
+        return new ResponseEntity<>(result, responseHeaders, HttpStatus.OK);
     }
 
-
-
-
-    // Delete an existing study
     @RequestMapping(value = "/{studyId}/delete", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyToDelete(Model model, @PathVariable Long studyId) {
 
         Study studyToDelete = studyRepository.findOne(studyId);
-
-        // Check if it has any associations
         Collection<Association> associations = associationRepository.findByStudyId(studyId);
-
         Long housekeepingId = studyToDelete.getHousekeeping().getId();
         Housekeeping housekeepingAttachedToStudy = housekeepingRepository.findOne(housekeepingId);
         Map<String, Submission> submissions = studyToDelete.getPublicationId() != null ? submissionService.getSubmissionsForPMID(studyToDelete.getPublicationId().getPubmedId()) :
@@ -490,11 +429,9 @@ public class StudyController {
 
         if (housekeepingAttachedToStudy.getCatalogPublishDate() != null) {
             return "delete_published_study_warning";
-        }
-        else if (!associations.isEmpty()) {
+        } else if (!associations.isEmpty()) {
             return "delete_study_with_associations_warning";
-        }
-        else {
+        } else {
             return "delete_study";
         }
     }
@@ -508,33 +445,10 @@ public class StudyController {
         return "redirect:/studies";
     }
 
-    // Duplicate a study
-    /*
-    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String duplicateStudy(@PathVariable Long studyId,
-                                 RedirectAttributes redirectAttributes,
-                                 HttpServletRequest request) {
-
-        // Find study user wants to duplicate, based on the ID
-        Study studyToDuplicate = studyRepository.findOne(studyId);
-        Study duplicateStudy = studyDuplicationService.duplicateStudy(studyToDuplicate,
-                                                                      currentUserDetailsService.getUserFromRequest(
-                                                                              request));
-
-        // Add duplicate message
-        String message =
-                "Study is a duplicate of " + studyToDuplicate.getAuthor() + ", PMID: " + studyToDuplicate.getPubmedId();
-        redirectAttributes.addFlashAttribute("duplicateMessage", message);
-
-        return "redirect:/studies/" + duplicateStudy.getId();
-    }
-    */
-
-    // Duplicate a study GET form
     @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String duplicateStudyGet(Model model, @PathVariable Long studyId,
-                                 RedirectAttributes redirectAttributes,
-                                 HttpServletRequest request) {
+                                    RedirectAttributes redirectAttributes,
+                                    HttpServletRequest request) {
 
         Study studyToDuplicate = studyRepository.findOne(studyId);
         model.addAttribute("study", studyToDuplicate);
@@ -542,12 +456,10 @@ public class StudyController {
         return "study_duplication";
     }
 
-    // Duplication a study POST form
-    @RequestMapping(value = "/{studyId}/duplicate",
-            produces = MediaType.APPLICATION_JSON_VALUE,
-            method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<String> duplicateStudyPost(@PathVariable Long studyId,
-            @RequestBody String tagsNoteList, HttpServletRequest request) {
+    @RequestMapping(value = "/{studyId}/duplicate", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<String> duplicateStudyPost(@PathVariable Long studyId,
+                                              @RequestBody String tagsNoteList, HttpServletRequest request) {
 
         String result = "";
         HttpHeaders responseHeaders = new HttpHeaders();
@@ -556,24 +468,19 @@ public class StudyController {
         // Find study user wants to duplicate, based on the ID
         Study studyToDuplicate = studyRepository.findOne(studyId);
         SecureUser secureUser = currentUserDetailsService.getUserFromRequest(request);
-        result = studyDuplicationService.create(studyToDuplicate,tagsNoteList, secureUser);
+        result = studyDuplicationService.create(studyToDuplicate, tagsNoteList, secureUser);
 
         if (result == "") {
-            result =  new StringBuilder("{\"success\":\"studies?page=1&pubmed=").append(studyToDuplicate.getPublicationId().getPubmedId()).append("\"}").toString();
+            result = new StringBuilder("{\"success\":\"studies?page=1&pubmed=").append(studyToDuplicate.getPublicationId().getPubmedId()).append("\"}").toString();
         }
-
-        return new ResponseEntity<>(result,responseHeaders,HttpStatus.OK);
+        return new ResponseEntity<>(result, responseHeaders, HttpStatus.OK);
     }
 
 
-
-    // Assign a curator to a study
     @RequestMapping(value = "/{studyId}/assign", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String assignStudyCurator(@PathVariable Long studyId,
-                                     @ModelAttribute Assignee assignee,
+    public String assignStudyCurator(@PathVariable Long studyId, @ModelAttribute Assignee assignee,
                                      RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
 
         if (assignee.getCuratorId() == null) {
@@ -581,141 +488,80 @@ public class StudyController {
                     "Cannot assign a blank value as a curator for study: " + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", " + " pubmed = " +
                             study.getPublicationId().getPubmedId();
             redirectAttributes.addFlashAttribute("blankAssignee", blankAssignee);
-        }
-        else {
-            studyOperationsService.assignStudyCurator(study,
-                                                      assignee,
-                                                      currentUserDetailsService.getUserFromRequest(request));
+        } else {
+            studyOperationsService.assignStudyCurator(study, assignee, currentUserDetailsService.getUserFromRequest(request));
         }
         return "redirect:" + assignee.getUri();
     }
 
-    // Assign a status to a study
-    @RequestMapping(value = "/{studyId}/status_update",
-                    produces = MediaType.TEXT_HTML_VALUE,
-                    method = RequestMethod.POST)
-    public String assignStudyStatus(@PathVariable Long studyId,
-                                    @ModelAttribute StatusAssignment statusAssignment,
+    @RequestMapping(value = "/{studyId}/status_update", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String assignStudyStatus(@PathVariable Long studyId, @ModelAttribute StatusAssignment statusAssignment,
                                     RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        // Find the study and the curator user wishes to assign
         Study study = studyRepository.findOne(studyId);
-
         if (statusAssignment.getStatusId() == null) {
             String blankStatus =
                     "Cannot assign a blank value as a status for study: " + study.getPublicationId().getFirstAuthor().getFullnameShort(30) + ", " + " pubmed = " +
                             study.getPublicationId().getPubmedId();
             redirectAttributes.addFlashAttribute("blankStatus", blankStatus);
-        }
-        else {
+        } else {
             String message = studyOperationsService.assignStudyStatus(study,
-                                                                      statusAssignment,
-                                                                      currentUserDetailsService.getUserFromRequest(
-                                                                              request));
+                    statusAssignment,
+                    currentUserDetailsService.getUserFromRequest(
+                            request));
             redirectAttributes.addFlashAttribute("studySnpsNotApproved", message);
         }
         return "redirect:" + statusAssignment.getUri();
     }
 
-
-    /* Study housekeeping/curator information */
-
-    // Generate page with housekeeping/curator information linked to a study
     @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyHousekeeping(Model model, @PathVariable Long studyId) {
 
-        // Find study
         Study study = studyRepository.findOne(studyId);
-
-        // If we don't have a housekeeping object create one, this should not occur though as they are created when study is created
         if (study.getHousekeeping() == null) {
             model.addAttribute("studyHousekeeping", new Housekeeping());
-        }
-        else {
+        } else {
             model.addAttribute("studyHousekeeping", study.getHousekeeping());
         }
 
-        // Return the housekeeping object attached to study and return the study
         model.addAttribute("study", study);
-
-        // Return a DTO that holds a summary of any automated mappings
         model.addAttribute("mappingDetails", mappingDetailsService.createMappingSummary(study));
-
         return "study_housekeeping";
     }
 
-
-    // Update page with housekeeping/curator information linked to a study
-    @RequestMapping(value = "/{studyId}/housekeeping",
-                    produces = MediaType.TEXT_HTML_VALUE,
-                    method = RequestMethod.POST)
-    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping,
-                                          @PathVariable Long studyId,
+    @RequestMapping(value = "/{studyId}/housekeeping", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
+    public String updateStudyHousekeeping(@ModelAttribute Housekeeping housekeeping, @PathVariable Long studyId,
                                           RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-
-        // Establish linked study
         Study study = studyRepository.findOne(studyId);
-
-        // Update housekeeping
-        String message = studyOperationsService.updateHousekeeping(housekeeping,
-                                                                   study,
-                                                                   currentUserDetailsService.getUserFromRequest(request));
-
-        // Add save message
+        String message = studyOperationsService.updateHousekeeping(housekeeping, study, currentUserDetailsService.getUserFromRequest(request));
         if (message == null) {
             message = "Changes saved successfully";
             redirectAttributes.addFlashAttribute("changesSaved", message);
-        }
-        else{
+        } else {
             redirectAttributes.addFlashAttribute("publishError", message);
         }
-
-//        redirectAttributes.addFlashAttribute("changesSaved", message);
         return "redirect:/studies/" + study.getId() + "/housekeeping";
     }
 
 
     @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudyToUnpublish(Model model, @PathVariable Long studyId) {
-
         Study studyToUnpublish = studyRepository.findOne(studyId);
-
-        // Check if it has any associations or ancestry information
-//        Collection<Association> associations = associationRepository.findByStudyId(studyId);
-//        Collection<Ancestry> ancestryInfo = ancestryRepository.findByStudyId(studyId);
-//
-//        // If so warn the curator
-//        if (!associations.isEmpty() || !ancestryInfo.isEmpty()) {
-//            model.addAttribute("study", studyToUnpublish);
-//            return "unpublish_study_with_associations_warning";
-//
-//        }
-//        else {
-            model.addAttribute("studyToUnpublish", studyToUnpublish);
-            return "unpublish_study";
-//        }
-
+        model.addAttribute("studyToUnpublish", studyToUnpublish);
+        return "unpublish_study";
     }
 
     @RequestMapping(value = "/{studyId}/unpublish", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.POST)
-    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, @PathVariable Long studyId,
-                                 HttpServletRequest request) {
-
-        // studyToUnpuplish attribute is used simply to retrieve unpublsih reason
-        studyOperationsService.unpublishStudy(studyId,
-                                              studyToUnpublish.getHousekeeping().getUnpublishReason(),
-                                              currentUserDetailsService.getUserFromRequest(request));
+    public String unpublishStudy(@ModelAttribute Study studyToUnpublish, @PathVariable Long studyId, HttpServletRequest request) {
+        studyOperationsService.unpublishStudy(studyId, studyToUnpublish.getHousekeeping().getUnpublishReason(),
+                currentUserDetailsService.getUserFromRequest(request));
         return "redirect:/studies/" + studyToUnpublish.getId() + "/housekeeping";
     }
 
-
-    // Find correct sorting type and direction
     private Sort findSort(String sortType) {
 
-        // Default sort by date
         Sort sort = sortByPublicationDateDesc();
-
         Map<String, Sort> sortTypeMap = new HashMap<>();
         sortTypeMap.put("authorsortasc", sortByAuthorAsc());
         sortTypeMap.put("authorsortdesc", sortByAuthorDesc());
@@ -740,7 +586,6 @@ public class StudyController {
         sortTypeMap.put("curationstatussortasc", sortByCurationStatusAsc());
         sortTypeMap.put("curationstatussortdesc", sortByCurationStatusDesc());
 
-
         if (sortType != null && !sortType.isEmpty()) {
             sort = sortTypeMap.get(sortType);
         }
@@ -748,7 +593,6 @@ public class StudyController {
         return sort;
     }
 
-    /* Functionality to view, upload and download a study file(s)*/
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getStudyFiles(Model model, @PathVariable Long studyId) {
         model.addAttribute("files", studyFileService.getStudyFiles(studyId));
@@ -761,8 +605,6 @@ public class StudyController {
     public FileSystemResource downloadStudyFile(@PathVariable Long studyId,
                                                 HttpServletRequest request,
                                                 HttpServletResponse response) throws FileNotFoundException {
-
-        // Using this logic so can get full file name, if it was an @PathVariable everything after final '.' would be removed
         String path = request.getServletPath();
         String fileName = path.substring(path.lastIndexOf('/') + 1);
         HttpHeaders headers = new HttpHeaders();
@@ -794,8 +636,7 @@ public class StudyController {
                 studyFileService.upload(file, studyId);
                 studyFileService.createFileUploadEvent(studyId, currentUserDetailsService.getUserFromRequest(request));
                 return "redirect:/studies/" + studyId + "/studyfiles";
-            }
-            catch (FileUploadException | IOException e) {
+            } catch (FileUploadException | IOException e) {
                 getLog().error("File upload exception", e);
                 return "error_pages/study_file_upload_failure";
             }
@@ -808,8 +649,6 @@ public class StudyController {
         model.addAttribute("study", studyRepository.findOne(studyId));
         return "study_events";
     }
-
-    /* Exception handling */
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PubmedLookupException.class)
@@ -829,56 +668,41 @@ public class StudyController {
         return "error_pages/file_not_found";
     }
 
-    /* Model Attributes :
-    *  Used for dropdowns in HTML forms
-    */
-
-    // Disease Traits
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits() {
         return diseaseTraitRepository.findAll(sortByTraitAsc());
     }
 
-    // EFO traits
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEFOTraits() {
         return efoTraitRepository.findAll(sortByTraitAsc());
     }
 
-//    // Background traits
-//    @ModelAttribute("studyExtensions")
-//    public List<StudyExtension> populateBackgroundTraits() {
-//        return studyExtensionRepository.findAll(sortByTraitAsc());
-//    }
-//
-    // Curators
     @ModelAttribute("curators")
     public List<Curator> populateCurators() {
         return curatorRepository.findAll(sortByLastNameAsc());
     }
 
-    //Platforms
     @ModelAttribute("platforms")
-    public List<Platform> populatePlatforms() {return platformRepository.findAll(); }
+    public List<Platform> populatePlatforms() {
+        return platformRepository.findAll();
+    }
 
     @ModelAttribute("genotypingTechnologies")
-    public List<GenotypingTechnology> populateGenotypingTechnologies() {return genotypingTechnologyRepository.findAll();}
+    public List<GenotypingTechnology> populateGenotypingTechnologies() {
+        return genotypingTechnologyRepository.findAll();
+    }
 
-
-    // Curation statuses
     @ModelAttribute("curationstatuses")
     public List<CurationStatus> populateCurationStatuses() {
         return curationStatusRepository.findAll(sortByStatusAsc());
     }
 
-    // Unpublish reasons
     @ModelAttribute("unpublishreasons")
     public List<UnpublishReason> populateUnpublishReasons() {
         return unpublishReasonRepository.findAll();
     }
 
-
-    // Study types
     @ModelAttribute("studyTypes")
     public List<String> populateStudyTypeOptions() {
 
@@ -911,15 +735,10 @@ public class StudyController {
         return qualifierOptions;
     }
 
-    // Authors
-    // THOR
     @ModelAttribute("authors")
     public List<String> populateAuthors() {
         return publicationOperationsService.listFirstAuthors();
     }
-
-
-    /* Sorting options */
 
     private Sort sortByLastNameAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "lastName").ignoreCase());
@@ -929,7 +748,6 @@ public class StudyController {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "status").ignoreCase());
     }
 
-    // Returns a Sort object which sorts disease traits in ascending order by trait, ignoring case
     private Sort sortByTraitAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
     }
@@ -1016,16 +834,14 @@ public class StudyController {
 
     private Sort sortByCurationStatusAsc() {
         return new Sort(new Sort.Order(Sort.Direction.ASC,
-                                       "housekeeping.curationStatus.status"));
+                "housekeeping.curationStatus.status"));
     }
 
     private Sort sortByCurationStatusDesc() {
         return new Sort(new Sort.Order(Sort.Direction.DESC,
-                                       "housekeeping.curationStatus.status"));
+                "housekeeping.curationStatus.status"));
     }
 
-    /* Pagination */
-    // Pagination, method passed page index and includes max number of studies, sorted by study date, to return
     private Pageable constructPageSpecification(int pageIndex, Sort sort) {
         return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
     }
