@@ -395,9 +395,10 @@
                                 class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
-                            <option th:each="diseaseTrait : ${diseaseTraits}"
-                                    th:value="${diseaseTrait.id}"
-                                    th:text="${diseaseTrait.trait}"></option>
+                            <th:block th:utext="${diseaseTraitsHtml}"> </th:block>
+<!--                            <option th:each="diseaseTrait : ${diseaseTraits}"-->
+<!--                                    th:value="${diseaseTrait.id}"-->
+<!--                                    th:text="${diseaseTrait.trait}"></option>-->
                         </select>
                     </div>
                 </div>
@@ -409,9 +410,10 @@
                     <div class="col-md-10">
                         <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select"
                                 multiple="multiple" id="EFOTrait">
-                            <option th:each="efoTrait : ${efoTraits}"
-                                    th:value="${efoTrait.id}"
-                                    th:text="${efoTrait.trait}"></option>
+                            <th:block th:utext="${efoTraitsHtml}"> </th:block>
+<!--                            <option th:each="efoTrait : ${efoTraits}"-->
+<!--                                    th:value="${efoTrait.id}"-->
+<!--                                    th:text="${efoTrait.trait}"></option>-->
                         </select>
                     </div>
                 </div>
@@ -423,9 +425,10 @@
                         <select name="mappedBackgroundTraits" th:field="*{mappedBackgroundTraits}"
                                 class="form-control select2-select"
                                 multiple="multiple" id="mappedBackgroundTraits">
-                            <option th:each="efoTrait : ${efoTraits}"
-                                    th:value="${efoTrait.id}"
-                                    th:text="${efoTrait.trait}"></option>
+                            <th:block th:utext="${efoTraitsHtml}"> </th:block>
+<!--                            <option th:each="efoTrait : ${efoTraits}"-->
+<!--                                    th:value="${efoTrait.id}"-->
+<!--                                    th:text="${efoTrait.trait}"></option>-->
                         </select>
                     </div>
                 </div>
@@ -447,9 +450,10 @@
                                 class="form-control select2-select">
                             <!-- Empty value for first entry-->
                             <option value=""></option>
-                            <option th:each="diseaseTrait : ${diseaseTraits}"
-                                    th:value="${diseaseTrait.id}"
-                                    th:text="${diseaseTrait.trait}"></option>
+                            <th:block th:utext="${diseaseTraitsHtml}"> </th:block>
+<!--                            <option th:each="diseaseTrait : ${diseaseTraits}"-->
+<!--                                    th:value="${diseaseTrait.id}"-->
+<!--                                    th:text="${diseaseTrait.trait}"></option>-->
                         </select>
                     </div>
                 </div>
@@ -470,23 +474,9 @@
                     </div>
                 </div>
 
-                <!-- CNV information in no longer captured but is still stored in database, thus field is left as
-                hidden to preserve existing values in database -->
                 <div class="form-group">
                     <input id="cnv" type="hidden" th:field="*{cnv}"/>
                 </div>
-
-                <!--<div class="form-group">-->
-                    <!--<label for="genomewideArray" class="control-label col-md-2">Genomewide Genotyping Array</label>-->
-
-                    <!--<input id="genomewideArray" type="checkbox" th:field="*{genomewideArray}"/>-->
-                <!--</div>-->
-
-                <!--<div class="form-group">-->
-                    <!--<label for="targetedArray" class="control-label col-md-2">Targeted Genotyping Array</label>-->
-
-                    <!--<input id="targetedArray" type="checkbox" th:field="*{targetedArray}"/>-->
-                <!--</div>-->
 
                 <div class="form-group">
                     <label for="gxe" class="control-label col-md-2">GxE</label>
@@ -581,5 +571,16 @@
 <script src="../static/js/study/study-init.js" th:src="@{../js/study/study-init.js}"></script>
 <script async="async" th:src="@{/js/study/study-authors.js}"></script>
 
+<script type="text/javascript" th:inline="javascript">
+    let diseaseTrait = [[${studyToViewDto.diseaseTrait}]];
+    let mainEfoTrait = [[${studyToViewDto.mainEfoTraits}]];
+    let mappedBackgroundTraits = [[${studyToViewDto.mappedBackgroundTraits}]];
+    let backgroundTrait = [[${studyToViewDto.backgroundTrait}]];
+
+    $('#diseaseTrait').val(diseaseTrait).trigger('change');
+    $('#EFOTrait').val(mainEfoTrait).trigger('change');
+    $('#mappedBackgroundTraits').val(mappedBackgroundTraits).trigger('change');
+    $('#backgroundTrait').val(backgroundTrait).trigger('change');
+</script>
 </body>
 </html>

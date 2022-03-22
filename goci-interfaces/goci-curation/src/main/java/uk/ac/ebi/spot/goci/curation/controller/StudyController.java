@@ -1,6 +1,5 @@
 package uk.ac.ebi.spot.goci.curation.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
+import uk.ac.ebi.spot.goci.curation.controller.assembler.StudyToViewAssembler;
 import uk.ac.ebi.spot.goci.curation.dto.StudyViewDto;
 import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
@@ -34,6 +34,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
 import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
+import uk.ac.ebi.spot.goci.curation.caching.CacheService;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionProvenance;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionUser;
@@ -328,8 +329,7 @@ public class StudyController {
     @CrossOrigin
     @RequestMapping(value = "/new/import", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public @ResponseBody
-    ResponseEntity<ArrayList<HashMap<String, String>>> importStudy(@RequestBody String pubmedIdForImport,
-                                                                   HttpServletRequest request) {
+    ResponseEntity<ArrayList<HashMap<String, String>>> importStudy(@RequestBody String pubmedIdForImport, HttpServletRequest request) {
         SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.add("Content-Type", "application/json; charset=utf-8");
@@ -366,8 +366,9 @@ public class StudyController {
 
     @RequestMapping(value = "/{studyId}", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String viewStudy(Model model, @PathVariable Long studyId) {
-
+        log.info("Started retrieving study with id: {}", studyId);
         Study studyToView = studyRepository.findOne(studyId);
+        log.info("Finished retrieving study with id: {}", studyId);
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         if (pubmedMap.containsKey(studyToView.getPublicationId().getPubmedId())) {
             studyToView.getPublicationId().setActiveSubmission(true);
@@ -375,17 +376,22 @@ public class StudyController {
         }
 
         model.addAttribute("study", studyToView);
+        log.info("Started retrieving study extension id: {}", studyId);
         if (studyToView.getStudyExtension() == null) {
             StudyExtension extension = new StudyExtension();
             extension.setStudy(studyToView);
             studyToView.setStudyExtension(extension);
         }
         model.addAttribute("extension", studyToView.getStudyExtension());
+        log.info("Finished retrieving study extension id: {}", studyId);
 
         DepositionProvenance depositionProvenance = submissionService.getProvenance(studyToView.getPublicationId().getPubmedId());
         DepositionUser depositionUser = depositionProvenance == null ? new DepositionUser("N/A", "N/A") : depositionProvenance.getUser();
         model.addAttribute("submitter", depositionUser);
 
+        model.addAttribute("studyToViewDto", StudyToViewAssembler.assemble(studyToView));
+
+        log.info("Finished retrieving study provenance");
         return "study";
     }
 
@@ -559,40 +565,6 @@ public class StudyController {
         return "redirect:/studies/" + studyToUnpublish.getId() + "/housekeeping";
     }
 
-    private Sort findSort(String sortType) {
-
-        Sort sort = sortByPublicationDateDesc();
-        Map<String, Sort> sortTypeMap = new HashMap<>();
-        sortTypeMap.put("authorsortasc", sortByAuthorAsc());
-        sortTypeMap.put("authorsortdesc", sortByAuthorDesc());
-        sortTypeMap.put("titlesortasc", sortByTitleAsc());
-        sortTypeMap.put("titlesortdesc", sortByTitleDesc());
-        sortTypeMap.put("publicationdatesortasc", sortByPublicationDateAsc());
-        sortTypeMap.put("publicationdatesortdesc", sortByPublicationDateDesc());
-        sortTypeMap.put("pubmedsortasc", sortByPubmedIdAsc());
-        sortTypeMap.put("pubmedsortdesc", sortByPubmedIdDesc());
-        sortTypeMap.put("userrequestedsortasc", sortByUserRequestedAsc());
-        sortTypeMap.put("userrequestedsortdesc", sortByUserRequestedDesc());
-        sortTypeMap.put("opentargetssortasc", sortByOpenTargetsAsc());
-        sortTypeMap.put("opentargetssortdesc", sortByOpenTargetsDesc());
-        sortTypeMap.put("publicationsortasc", sortByPublicationAsc());
-        sortTypeMap.put("publicationsortdesc", sortByPublicationDesc());
-        sortTypeMap.put("efotraitsortasc", sortByEfoTraitAsc());
-        sortTypeMap.put("efotraitsortdesc", sortByEfoTraitDesc());
-        sortTypeMap.put("diseasetraitsortasc", sortByDiseaseTraitAsc());
-        sortTypeMap.put("diseasetraitsortdesc", sortByDiseaseTraitDesc());
-        sortTypeMap.put("curatorsortasc", sortByCuratorAsc());
-        sortTypeMap.put("curatorsortdesc", sortByCuratorDesc());
-        sortTypeMap.put("curationstatussortasc", sortByCurationStatusAsc());
-        sortTypeMap.put("curationstatussortdesc", sortByCurationStatusDesc());
-
-        if (sortType != null && !sortType.isEmpty()) {
-            sort = sortTypeMap.get(sortType);
-        }
-
-        return sort;
-    }
-
     @RequestMapping(value = "/{studyId}/studyfiles", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String getStudyFiles(Model model, @PathVariable Long studyId) {
         model.addAttribute("files", studyFileService.getStudyFiles(studyId));
@@ -668,40 +640,59 @@ public class StudyController {
         return "error_pages/file_not_found";
     }
 
+    @Autowired
+    private CacheService cacheService;
+
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits() {
-        return diseaseTraitRepository.findAll(sortByTraitAsc());
+        return cacheService.getAllDiseaseTraits();
+    }
+
+    @ModelAttribute("diseaseTraitsHtml")
+    public String populateDiseaseTraitsHtml() {
+        return cacheService.getAllDiseaseTraitsHtml();
     }
 
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEFOTraits() {
-        return efoTraitRepository.findAll(sortByTraitAsc());
+        return cacheService.getAllEFOTraits();
+    }
+
+    @ModelAttribute("efoTraitsHtml")
+    public String populateEFOTraitsHtml() {
+        return cacheService.getAllEFOTraitsHtml();
     }
 
     @ModelAttribute("curators")
     public List<Curator> populateCurators() {
-        return curatorRepository.findAll(sortByLastNameAsc());
+        return cacheService.getAllCurators();
     }
 
     @ModelAttribute("platforms")
     public List<Platform> populatePlatforms() {
-        return platformRepository.findAll();
+        return cacheService.getAllPlatforms();
+    }
+
+    @ModelAttribute("platformsHtml")
+    public String populatePlatformsHtml() {
+        return cacheService.getAllPlatformsHtml();
     }
 
     @ModelAttribute("genotypingTechnologies")
     public List<GenotypingTechnology> populateGenotypingTechnologies() {
-        return genotypingTechnologyRepository.findAll();
+        return cacheService.getAllGenotypingTechnologies();
     }
 
     @ModelAttribute("curationstatuses")
     public List<CurationStatus> populateCurationStatuses() {
-        return curationStatusRepository.findAll(sortByStatusAsc());
+        return cacheService.getAllCurationStatuses();
     }
 
     @ModelAttribute("unpublishreasons")
     public List<UnpublishReason> populateUnpublishReasons() {
-        return unpublishReasonRepository.findAll();
+        return cacheService.getAllUnpublishReasons();
     }
+
 
     @ModelAttribute("studyTypes")
     public List<String> populateStudyTypeOptions() {
@@ -740,109 +731,5 @@ public class StudyController {
         return publicationOperationsService.listFirstAuthors();
     }
 
-    private Sort sortByLastNameAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "lastName").ignoreCase());
-    }
 
-    private Sort sortByStatusAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "status").ignoreCase());
-    }
-
-    private Sort sortByTraitAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase());
-    }
-
-    private Sort sortByPublicationDateAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.publicationDate"));
-    }
-
-    private Sort sortByPublicationDateDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publicationDate"));
-    }
-
-    private Sort sortByAuthorAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.firstAuthor.fullname").ignoreCase());
-    }
-
-    private Sort sortByAuthorDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.firstAuthor.fullname").ignoreCase());
-    }
-
-    private Sort sortByTitleAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.title").ignoreCase());
-    }
-
-    private Sort sortByTitleDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.title").ignoreCase());
-    }
-
-    private Sort sortByPublicationAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.publication").ignoreCase());
-    }
-
-    private Sort sortByPublicationDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.publication").ignoreCase());
-    }
-
-    private Sort sortByPubmedIdAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "publicationId.pubmedId"));
-    }
-
-    private Sort sortByUserRequestedAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "userRequested"));
-    }
-
-    private Sort sortByUserRequestedDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "userRequested"));
-    }
-
-    private Sort sortByOpenTargetsAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "openTargets"));
-    }
-
-    private Sort sortByOpenTargetsDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "openTargets"));
-    }
-
-    private Sort sortByPubmedIdDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "publicationId.pubmedId"));
-    }
-
-    private Sort sortByDiseaseTraitAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "diseaseTrait.trait").ignoreCase());
-    }
-
-    private Sort sortByDiseaseTraitDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "diseaseTrait.trait").ignoreCase());
-    }
-
-    private Sort sortByEfoTraitAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "efoTraits.trait").ignoreCase());
-    }
-
-    private Sort sortByEfoTraitDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "efoTraits.trait").ignoreCase());
-    }
-
-    private Sort sortByCuratorAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC, "housekeeping.curator.lastName").ignoreCase());
-    }
-
-    private Sort sortByCuratorDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC, "housekeeping.curator.lastName").ignoreCase());
-    }
-
-    private Sort sortByCurationStatusAsc() {
-        return new Sort(new Sort.Order(Sort.Direction.ASC,
-                "housekeeping.curationStatus.status"));
-    }
-
-    private Sort sortByCurationStatusDesc() {
-        return new Sort(new Sort.Order(Sort.Direction.DESC,
-                "housekeeping.curationStatus.status"));
-    }
-
-    private Pageable constructPageSpecification(int pageIndex, Sort sort) {
-        return new PageRequest(pageIndex, MAX_PAGE_ITEM_DISPLAY, sort);
-    }
 }
