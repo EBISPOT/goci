@@ -57,7 +57,7 @@ public class DiseaseTraitService {
     public List<DiseaseTrait> getAllDiseaseTraits() {
         log.info("Caching Disease Traits ... ");
         List<DiseaseTrait> diseaseTraits = diseaseTraitRepository.findAll(Sorting.sortByTraitAsc());
-        log.info("{} efo traits found", diseaseTraits.size());
+        log.info("{} Disease traits found", diseaseTraits.size());
         return diseaseTraits;
     }
 
