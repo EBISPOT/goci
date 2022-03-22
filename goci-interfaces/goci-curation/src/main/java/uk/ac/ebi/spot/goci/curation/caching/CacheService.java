@@ -20,50 +20,12 @@ import java.util.List;
 @Service
 public class CacheService {
 
-    @Autowired private DiseaseTraitRepository diseaseTraitRepository;
-    @Autowired private EfoTraitRepository efoTraitRepository;
     @Autowired private CuratorRepository curatorRepository;
     @Autowired private PlatformRepository platformRepository;
     @Autowired private GenotypingTechnologyRepository genotypingTechnologyRepository;
     @Autowired private CurationStatusRepository curationStatusRepository;
     @Autowired private UnpublishReasonRepository unpublishReasonRepository;
     @Autowired private PublicationOperationsService publicationOperationsService;
-
-    @Cacheable("diseaseTraits")
-    public List<DiseaseTrait> getAllDiseaseTraits() {
-        log.info("Caching Disease Traits ... ");
-        List<DiseaseTrait> diseaseTraits = diseaseTraitRepository.findAll(Sorting.sortByTraitAsc());
-        log.info("{} efo traits found", diseaseTraits.size());
-        return diseaseTraits;
-    }
-
-    @Cacheable("diseaseTraitsHtml")
-    public String getAllDiseaseTraitsHtml() {
-        List<DiseaseTrait> diseaseTraits = this.getAllDiseaseTraits();
-        StringBuilder traitString = new StringBuilder();
-        for (DiseaseTrait diseaseTrait : diseaseTraits){
-            traitString.append(String.format("<option value='%s'> %s </option>", diseaseTrait.getId(), diseaseTrait.getTrait()));
-        }
-        return traitString.toString();
-    }
-
-    @Cacheable("efoTraits")
-    public List<EfoTrait> getAllEFOTraits() {
-        log.info("Caching Efo Traits ... ");
-        List<EfoTrait> efoTraits = efoTraitRepository.findAll(Sorting.sortByTraitAsc());
-        log.info("{} efo traits found", efoTraits.size());
-        return efoTraits;
-    }
-
-    @Cacheable("efoTraitsHtml")
-    public String getAllEFOTraitsHtml() {
-        List<EfoTrait> efoTraits = this.getAllEFOTraits();
-        StringBuilder traitString = new StringBuilder();
-        for (EfoTrait efoTrait : efoTraits){
-            traitString.append(String.format("<option value='%s'> %s </option>", efoTrait.getId(), efoTrait.getTrait()));
-        }
-        return traitString.toString();
-    }
 
     @Cacheable("curators")
     public List<Curator> getAllCurators() {

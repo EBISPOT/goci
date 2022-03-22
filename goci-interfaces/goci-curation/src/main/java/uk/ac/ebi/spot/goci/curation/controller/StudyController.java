@@ -24,15 +24,7 @@ import uk.ac.ebi.spot.goci.curation.exception.FileUploadException;
 import uk.ac.ebi.spot.goci.curation.exception.NoStudyDirectoryException;
 import uk.ac.ebi.spot.goci.curation.exception.PubmedImportException;
 import uk.ac.ebi.spot.goci.curation.model.*;
-import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
-import uk.ac.ebi.spot.goci.curation.service.EventsViewService;
-import uk.ac.ebi.spot.goci.curation.service.MappingDetailsService;
-import uk.ac.ebi.spot.goci.curation.service.StudyDeletionService;
-import uk.ac.ebi.spot.goci.curation.service.StudyDuplicationService;
-import uk.ac.ebi.spot.goci.curation.service.StudyFileService;
-import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
-import uk.ac.ebi.spot.goci.curation.service.StudyUpdateService;
-import uk.ac.ebi.spot.goci.curation.service.PublicationOperationsService;
+import uk.ac.ebi.spot.goci.curation.service.*;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.curation.caching.CacheService;
 import uk.ac.ebi.spot.goci.model.*;
@@ -66,19 +58,13 @@ public class StudyController {
     @Value("${deposition.ui.uri}")
     private String depositionUiURL;
 
-    private final StudyExtensionRepository studyExtensionRepository;
+    @Autowired private CacheService cacheService;
+    @Autowired private DiseaseTraitService diseaseTraitService;
+    @Autowired private EfoTraitService efoTraitService;
     private final DepositionSubmissionService submissionService;
     private StudyRepository studyRepository;
-    private HousekeepingRepository housekeepingRepository;
-    private DiseaseTraitRepository diseaseTraitRepository;
-    private EfoTraitRepository efoTraitRepository;
-    private CuratorRepository curatorRepository;
-    private CurationStatusRepository curationStatusRepository;
-    private PlatformRepository platformRepository;
+    private HousekeepingRepository housekeepingRepository;;
     private AssociationRepository associationRepository;
-    private AncestryRepository ancestryRepository;
-    private UnpublishReasonRepository unpublishReasonRepository;
-    private GenotypingTechnologyRepository genotypingTechnologyRepository;
     private PublicationOperationsService publicationOperationsService;
 
     private StudyOperationsService studyOperationsService;
@@ -101,15 +87,7 @@ public class StudyController {
     @Autowired
     public StudyController(StudyRepository studyRepository,
                            HousekeepingRepository housekeepingRepository,
-                           DiseaseTraitRepository diseaseTraitRepository,
-                           EfoTraitRepository efoTraitRepository,
-                           CuratorRepository curatorRepository,
-                           CurationStatusRepository curationStatusRepository,
-                           PlatformRepository platformRepository,
                            AssociationRepository associationRepository,
-                           AncestryRepository ancestryRepository,
-                           UnpublishReasonRepository unpublishReasonRepository,
-                           GenotypingTechnologyRepository genotypingTechnologyRepository,
                            StudyOperationsService studyOperationsService,
                            MappingDetailsService mappingDetailsService,
                            CurrentUserDetailsService currentUserDetailsService,
@@ -119,19 +97,10 @@ public class StudyController {
                            @Qualifier("studyEventsViewService") EventsViewService eventsViewService,
                            StudyUpdateService studyUpdateService,
                            PublicationOperationsService publicationOperationsService,
-                           StudyExtensionRepository studyExtensionRepository,
                            DepositionSubmissionService submissionService) {
         this.studyRepository = studyRepository;
         this.housekeepingRepository = housekeepingRepository;
-        this.diseaseTraitRepository = diseaseTraitRepository;
-        this.efoTraitRepository = efoTraitRepository;
-        this.curatorRepository = curatorRepository;
-        this.curationStatusRepository = curationStatusRepository;
-        this.platformRepository = platformRepository;
         this.associationRepository = associationRepository;
-        this.ancestryRepository = ancestryRepository;
-        this.unpublishReasonRepository = unpublishReasonRepository;
-        this.genotypingTechnologyRepository = genotypingTechnologyRepository;
         this.studyOperationsService = studyOperationsService;
         this.mappingDetailsService = mappingDetailsService;
         this.currentUserDetailsService = currentUserDetailsService;
@@ -141,7 +110,6 @@ public class StudyController {
         this.eventsViewService = eventsViewService;
         this.studyUpdateService = studyUpdateService;
         this.publicationOperationsService = publicationOperationsService;
-        this.studyExtensionRepository = studyExtensionRepository;
         this.submissionService = submissionService;
     }
 
@@ -640,27 +608,24 @@ public class StudyController {
         return "error_pages/file_not_found";
     }
 
-    @Autowired
-    private CacheService cacheService;
-
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits() {
-        return cacheService.getAllDiseaseTraits();
+        return diseaseTraitService.getAllDiseaseTraits();
     }
 
     @ModelAttribute("diseaseTraitsHtml")
     public String populateDiseaseTraitsHtml() {
-        return cacheService.getAllDiseaseTraitsHtml();
+        return diseaseTraitService.getAllDiseaseTraitsHtml();
     }
 
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEFOTraits() {
-        return cacheService.getAllEFOTraits();
+        return efoTraitService.getAllEFOTraits();
     }
 
     @ModelAttribute("efoTraitsHtml")
     public String populateEFOTraitsHtml() {
-        return cacheService.getAllEFOTraitsHtml();
+        return efoTraitService.getAllEFOTraitsHtml();
     }
 
     @ModelAttribute("curators")
