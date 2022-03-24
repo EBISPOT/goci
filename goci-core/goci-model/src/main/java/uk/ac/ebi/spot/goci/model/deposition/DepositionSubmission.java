@@ -62,4 +62,10 @@ public class DepositionSubmission {
 
     @JsonProperty("agreedToCc0")
     private Boolean agreedToCc0;
+
+    @JsonProperty("opentargets_flag")
+    private Boolean opentargetsFlag;
+
+    @JsonProperty("userrequested_flag")
+    private Boolean userrequestedFlag;
 }

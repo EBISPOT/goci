@@ -147,6 +147,7 @@ public class DepositionSubmissionImportService {
                     }
 
                     if (outcome) {
+
                         outcome = studiesProcessingService.processStudies(depositionSubmission, currentUser, publication, curator, importLog);
 
                         if (outcome) {
