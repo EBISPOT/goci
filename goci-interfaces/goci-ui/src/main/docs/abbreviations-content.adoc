@@ -82,6 +82,9 @@ AIMS: Abnormal Involuntary Movements Scale
 AIRg: Acute insulin response
 
 
+AKI: Acute kidney injury
+
+
 Ala: Alaine
 
 
