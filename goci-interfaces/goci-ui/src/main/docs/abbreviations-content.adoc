@@ -366,6 +366,9 @@ CS: cardioembolic stroke
 cSJC: Swollen joint count
 
 
+CTCAE: Common Terminology Criteria for Adverse Events
+
+
 cTJC: Tender joint count
 
 
