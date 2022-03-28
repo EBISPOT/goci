@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import uk.ac.ebi.spot.goci.curation.caching.CacheService;
 import uk.ac.ebi.spot.goci.curation.model.Assignee;
 import uk.ac.ebi.spot.goci.curation.model.StatusAssignment;
 import uk.ac.ebi.spot.goci.curation.model.StudyFileSummary;
@@ -77,6 +78,10 @@ public class PublicationController {
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
     @Autowired
     private BulkOperationsService bulkOperationsService;
+
+    @Autowired private CacheService cacheService;
+    @Autowired private DiseaseTraitService diseaseTraitService;
+    @Autowired private EfoTraitService efoTraitService;
 
     @RequestMapping(value = "/match", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST)
     public @ResponseBody
@@ -187,28 +192,34 @@ public class PublicationController {
         return "publication";
     }
 
-    // Disease Traits
     @ModelAttribute("diseaseTraits")
     public List<DiseaseTrait> populateDiseaseTraits() {
-        return diseaseTraitRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase()));
+        return diseaseTraitService.getAllDiseaseTraits();
     }
 
-    // EFO traits
+    @ModelAttribute("diseaseTraitsHtml")
+    public String populateDiseaseTraitsHtml() {
+        return diseaseTraitService.getAllDiseaseTraitsHtml();
+    }
+
     @ModelAttribute("efoTraits")
     public List<EfoTrait> populateEFOTraits() {
-        return efoTraitRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "trait").ignoreCase()));
+        return efoTraitService.getAllEFOTraits();
     }
 
-    // Curation statuses
-    @ModelAttribute("curationstatuses")
-    public List<CurationStatus> populateCurationStatuses() {
-        return curationStatusRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "status").ignoreCase()));
+    @ModelAttribute("efoTraitsHtml")
+    public String populateEFOTraitsHtml() {
+        return efoTraitService.getAllEFOTraitsHtml();
     }
 
-    // Curators
     @ModelAttribute("curators")
     public List<Curator> populateCurators() {
-        return curatorRepository.findAll(new Sort(new Sort.Order(Sort.Direction.ASC, "lastName").ignoreCase()));
+        return cacheService.getAllCurators();
+    }
+
+    @ModelAttribute("curationstatuses")
+    public List<CurationStatus> populateCurationStatuses() {
+        return cacheService.getAllCurationStatuses();
     }
 
     @RequestMapping(value = "/{publicationId}/changeOpenTargets",

@@ -185,15 +185,7 @@ public class StudyControllerTest {
     public void setUpMock() {
         StudyController studyController = new StudyController(studyRepository,
                                                               housekeepingRepository,
-                                                              diseaseTraitRepository,
-                                                              efoTraitRepository,
-                                                              curatorRepository,
-                                                              curationStatusRepository,
-                                                              platformRepository,
                                                               associationRepository,
-                                                              ancestryRepository,
-                                                              unpublishReasonRepository,
-                                                              genotypingTechnologyRepository,
                                                               studyOperationsService,
                                                               mappingDetailsService,
                                                               currentUserDetailsService,
@@ -202,7 +194,6 @@ public class StudyControllerTest {
                                                               studyDeletionService,
                                                               eventsViewService, studyUpdateService,
                                                               publicationOperationsService,
-                                                              extensionRepository,
                                                               depositionSubmissionService);
         mockMvc = MockMvcBuilders.standaloneSetup(studyController).build();
     }
