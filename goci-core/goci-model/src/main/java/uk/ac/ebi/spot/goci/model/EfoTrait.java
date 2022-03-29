@@ -30,6 +30,8 @@ public class EfoTrait {
 
     private String shortForm;
 
+    private String mongoSeqId;
+
     @ManyToMany(mappedBy = "efoTraits")
     private Collection<Study> studies;
 
@@ -120,6 +122,14 @@ public class EfoTrait {
 
     public void setShortForm(String shortForm) {
         this.shortForm = shortForm;
+    }
+
+    public String getMongoSeqId() {
+        return mongoSeqId;
+    }
+
+    public void setMongoSeqId(String mongoSeqId) {
+        this.mongoSeqId = mongoSeqId;
     }
 
     @Override

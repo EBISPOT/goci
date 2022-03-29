@@ -18,7 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uk.ac.ebi.spot.goci.curation.constants.Endpoint;
 import uk.ac.ebi.spot.goci.curation.constants.EntityType;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.DiseaseTraitDtoAssembler;
-import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
+import uk.ac.ebi.spot.goci.model.deposition.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.exception.ResourceNotFoundException;
 import uk.ac.ebi.spot.goci.curation.service.DiseaseTraitService;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;

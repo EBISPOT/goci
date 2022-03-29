@@ -38,6 +38,8 @@ public interface DiseaseTraitRepository extends JpaRepository<DiseaseTrait, Long
 
     Optional<DiseaseTrait> findByTrait(String trait);
 
+    Optional<DiseaseTrait> findByMongoSeqId(String seqId);
+
     List<DiseaseTrait> findAllByIdIsIn(List<Long> id);
 
     @RestResource(exported = false)

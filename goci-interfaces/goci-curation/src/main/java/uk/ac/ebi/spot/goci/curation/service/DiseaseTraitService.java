@@ -4,6 +4,8 @@ import org.apache.commons.text.similarity.CosineDistance;
 import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +13,8 @@ import org.springframework.stereotype.Service;
 import uk.ac.ebi.spot.goci.curation.constants.EntityType;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisCacheDto;
 import uk.ac.ebi.spot.goci.curation.dto.AnalysisDTO;
-import uk.ac.ebi.spot.goci.curation.dto.DiseaseTraitDto;
+import uk.ac.ebi.spot.goci.curation.util.Sorting;
+import uk.ac.ebi.spot.goci.model.deposition.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.curation.exception.DataIntegrityException;
 import uk.ac.ebi.spot.goci.model.DiseaseTrait;
 import uk.ac.ebi.spot.goci.model.Study;
@@ -26,8 +29,8 @@ import java.util.stream.Collectors;
 public class DiseaseTraitService {
 
     private static final Logger log = LoggerFactory.getLogger(DiseaseTraitService.class);
-    private DiseaseTraitRepository diseaseTraitRepository;
-    private StudyRepository studyRepository;
+    private final DiseaseTraitRepository diseaseTraitRepository;
+    private final StudyRepository studyRepository;
 
     public DiseaseTraitService(DiseaseTraitRepository diseaseTraitRepository,
                                StudyRepository studyRepository) {
@@ -35,8 +38,45 @@ public class DiseaseTraitService {
         this.studyRepository = studyRepository;
     }
 
+    @CachePut(value= {"diseaseTraits", "diseaseTraitsHtml"})
+    public DiseaseTrait save(DiseaseTrait diseaseTrait){
+        return diseaseTraitRepository.save(diseaseTrait);
+    }
+
+    @CachePut(value={"diseaseTraits", "diseaseTraitsHtml"})
+    public List<DiseaseTrait> saveAll(List<DiseaseTrait> diseaseTraits){
+        return diseaseTraitRepository.save(diseaseTraits);
+    }
+
+    @CacheEvict(value={"diseaseTraits", "diseaseTraitsHtml"})
+    public void delete(DiseaseTrait diseaseTraits){
+        diseaseTraitRepository.delete(diseaseTraits);
+    }
+
+    @Cacheable("diseaseTraits")
+    public List<DiseaseTrait> getAllDiseaseTraits() {
+        log.info("Caching Disease Traits ... ");
+        List<DiseaseTrait> diseaseTraits = diseaseTraitRepository.findAll(Sorting.sortByTraitAsc());
+        log.info("{} Disease traits found", diseaseTraits.size());
+        return diseaseTraits;
+    }
+
+    @Cacheable("diseaseTraitsHtml")
+    public String getAllDiseaseTraitsHtml() {
+        List<DiseaseTrait> diseaseTraits = this.getAllDiseaseTraits();
+        StringBuilder traitString = new StringBuilder();
+        for (DiseaseTrait diseaseTrait : diseaseTraits){
+            traitString.append(String.format("<option value='%s'> %s </option>", diseaseTrait.getId(), diseaseTrait.getTrait()));
+        }
+        return traitString.toString();
+    }
+
     public Optional<DiseaseTrait> getDiseaseTrait(Long traitId) {
         return Optional.ofNullable(diseaseTraitRepository.findOne(traitId));
+    }
+
+    public void syncDiseaseTraitMongoSeqId(DiseaseTrait diseaseTrait) {
+        this.save(diseaseTrait);
     }
 
     public List<DiseaseTrait> removeExistingTraits(List<DiseaseTrait> diseaseTraits) {
@@ -53,7 +93,7 @@ public class DiseaseTraitService {
                 .ifPresent(trait -> {
                     throw new DataIntegrityException(String.format("Trait %s already exist", trait.getTrait()));
                 });
-        diseaseTrait = diseaseTraitRepository.save(diseaseTrait);
+        diseaseTrait = this.save(diseaseTrait);
         return diseaseTrait;
     }
 
@@ -100,7 +140,7 @@ public class DiseaseTraitService {
                  diseaseTraits.stream()
                          .map(DiseaseTrait::getTrait)
                          .collect(Collectors.toList()));
-        diseaseTraits = diseaseTraitRepository.save(diseaseTraits);
+        diseaseTraits = this.saveAll(diseaseTraits);
         log.info("Bulk {} created", EntityType.DISEASE_TRAIT);
         return diseaseTraits;
     }

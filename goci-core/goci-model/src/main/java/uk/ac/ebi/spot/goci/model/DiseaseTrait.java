@@ -2,10 +2,7 @@ package uk.ac.ebi.spot.goci.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Collection;
 
 /**
@@ -25,6 +22,8 @@ public class DiseaseTrait {
 
     @NotBlank
     private String trait;
+
+    private String mongoSeqId;
 
     @OneToMany(mappedBy = "diseaseTrait")
     private Collection<Study> studies;
@@ -60,6 +59,14 @@ public class DiseaseTrait {
 
     public void setStudies(Collection<Study> studies) {
         this.studies = studies;
+    }
+
+    public String getMongoSeqId() {
+        return mongoSeqId;
+    }
+
+    public void setMongoSeqId(String mongoSeqId) {
+        this.mongoSeqId = mongoSeqId;
     }
 
     @Override
