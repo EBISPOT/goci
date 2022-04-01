@@ -54,7 +54,7 @@ public class SyncReportedTraitsTask {
     @Value("${deposition.ingest.efoTraits.uri}")
     private String efoTraitsUri;
 
-    @Scheduled(cron = "* 00 * * * *")
+    @Scheduled(cron = "0 00 * * * *")
     public void syncDiseaseTraits() {
 
         String endpoint = depositionIngestURL + diseaseTraitsUri;
@@ -69,20 +69,26 @@ public class SyncReportedTraitsTask {
 
         Optional.of(diseaseTraitDtos).ifPresent(entity -> entity.getBody()
                 .forEach(diseaseTraitDto -> {
-                    Optional<DiseaseTrait> optionalDiseaseTrait = diseaseTraitRepository.findByMongoSeqId(diseaseTraitDto.getMongoSeqId());
-                    //Optional<DiseaseTrait> optionalDiseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(diseaseTraitDto.getTrait());
-                    if (optionalDiseaseTrait.isPresent()) {
-                        log.info("Disease Trait Synced from Depo-Curation -: {}", optionalDiseaseTrait.get().getTrait());
-                        DiseaseTrait diseaseTrait = optionalDiseaseTrait.get();
-                        if (!diseaseTraitDto.getTrait().equalsIgnoreCase(diseaseTrait.getTrait())) {
-                            diseaseTrait.setTrait(diseaseTraitDto.getTrait());
-                            //diseaseTrait.setMongoSeqId(diseaseTraitDto.getMongoSeqId());
-                            diseaseTraitService.syncDiseaseTraitMongoSeqId(diseaseTrait);
+                    try {
+                        Optional<DiseaseTrait> optionalDiseaseTrait = diseaseTraitRepository.findByMongoSeqId(diseaseTraitDto.getMongoSeqId());
+                        //Optional<DiseaseTrait> optionalDiseaseTrait = diseaseTraitRepository.findByTraitIgnoreCase(diseaseTraitDto.getTrait());
+
+                        if (optionalDiseaseTrait.isPresent()) {
+                            log.info("Disease Trait Synced from Depo-Curation -: {}", optionalDiseaseTrait.get().getTrait());
+                            DiseaseTrait diseaseTrait = optionalDiseaseTrait.get();
+                            if (!diseaseTraitDto.getTrait().equalsIgnoreCase(diseaseTrait.getTrait())) {
+                                diseaseTrait.setTrait(diseaseTraitDto.getTrait());
+                                //diseaseTrait.setMongoSeqId(diseaseTraitDto.getMongoSeqId());
+                                diseaseTraitService.syncDiseaseTraitMongoSeqId(diseaseTrait);
+                            }
+                        } else {
+                            log.info("Disease Trait added from Depo-Curation -: {}", diseaseTraitDto.getTrait());
+                            DiseaseTrait diseaseTrait = DiseaseTraitDtoAssembler.disassemble(diseaseTraitDto);
+                            diseaseTraitService.createDiseaseTrait(diseaseTrait);
                         }
-                    } else {
-                        log.info("Disease Trait added from Depo-Curation -: {}", diseaseTraitDto.getTrait());
-                        DiseaseTrait diseaseTrait = DiseaseTraitDtoAssembler.disassemble(diseaseTraitDto);
-                        diseaseTraitService.createDiseaseTrait(diseaseTrait);
+                    } catch(Exception ex) {
+                        log.error("Exception with SeqId -: {} and Reported trait -: {}",diseaseTraitDto.getMongoSeqId(),diseaseTraitDto.getTrait());
+                        log.error("Exception in syncDiseaseTraits Insert or Update ()"+ex.getMessage(),ex );
                     }
 
                 }));
@@ -98,20 +104,25 @@ public class SyncReportedTraitsTask {
                 .collect(Collectors.toList());
 
         mongoSeqIdsDeleted.forEach((seqId) -> {
-            log.info("Mongo Ids to be deleted {}", seqId);
-            diseaseTraitRepository.findByMongoSeqId(seqId).ifPresent((diseaseTrait) -> {
-                log.info("Trait which is deleted is {}", diseaseTrait.getTrait());
-                studyRepository.findByDiseaseTraitId(diseaseTrait.getId()).forEach(study -> {
-                    study.setDiseaseTrait(null);
-                    study.setBackgroundTrait(null);
-                    studyRepository.save(study);
+            try {
+                log.info("Mongo Ids to be deleted {}", seqId);
+                diseaseTraitRepository.findByMongoSeqId(seqId).ifPresent((diseaseTrait) -> {
+                    log.info("Trait which is deleted is {}", diseaseTrait.getTrait());
+                    studyRepository.findByDiseaseTraitId(diseaseTrait.getId()).forEach(study -> {
+                        study.setDiseaseTrait(null);
+                        study.setBackgroundTrait(null);
+                        studyRepository.save(study);
+                    });
+                    diseaseTraitService.delete(diseaseTrait);
                 });
-                diseaseTraitService.delete(diseaseTrait);
-            });
+            } catch(Exception ex) {
+                log.error("Exception with SeqId -: {} ",seqId);
+                log.error("Exception in syncDiseaseTraits Delete ()"+ex.getMessage(),ex );
+            }
         });
     }
 
-    @Scheduled(cron = "* 05 * * * *")
+    @Scheduled(cron = "0 05 * * * *")
     public void syncEFOTraits() {
         String endpoint = depositionIngestURL + efoTraitsUri;
         HttpHeaders headers = new HttpHeaders();
@@ -123,24 +134,29 @@ public class SyncReportedTraitsTask {
         log.info("Size of EFOTrait response from Ingest ->" + efoTraitDtos.getBody().size());
         Optional.of(efoTraitDtos).ifPresent(entity -> entity.getBody()
                 .forEach(efoTraitDto -> {
-                    EfoTrait efoTrait = efoTraitRepository.findByMongoSeqId(efoTraitDto.getMongoSeqId());
-                    //EfoTrait efoTrait = efoTraitRepository.findByTraitIgnoreCase(efoTraitDto.getTrait());
-                    if (efoTrait != null) {
+                    try {
+                        EfoTrait efoTrait = efoTraitRepository.findByMongoSeqId(efoTraitDto.getMongoSeqId());
+                        //EfoTrait efoTrait = efoTraitRepository.findByTraitIgnoreCase(efoTraitDto.getTrait());
+                        if (efoTrait != null) {
 
-                        if (!efoTraitDto.getTrait().equalsIgnoreCase(efoTrait.getTrait()) ||
-                                !efoTraitDto.getShortForm().equalsIgnoreCase(efoTrait.getShortForm()) ||
-                                !efoTraitDto.getUri().equalsIgnoreCase(efoTrait.getUri())) {
-                            log.info("EFOTrait Synced from Depo-Curation -: {}", efoTrait.getTrait());
-                            efoTrait.setTrait(efoTraitDto.getTrait());
-                            efoTrait.setShortForm(efoTraitDto.getShortForm());
-                            efoTrait.setUri(efoTraitDto.getUri());
-                            //efoTrait.setMongoSeqId(efoTraitDto.getMongoSeqId());
-                            efoTraitService.save(efoTrait);
+                            if (!efoTraitDto.getTrait().equalsIgnoreCase(efoTrait.getTrait()) ||
+                                    !efoTraitDto.getShortForm().equalsIgnoreCase(efoTrait.getShortForm()) ||
+                                    !efoTraitDto.getUri().equalsIgnoreCase(efoTrait.getUri())) {
+                                log.info("EFOTrait Synced from Depo-Curation -: {}", efoTrait.getTrait());
+                                efoTrait.setTrait(efoTraitDto.getTrait());
+                                efoTrait.setShortForm(efoTraitDto.getShortForm());
+                                efoTrait.setUri(efoTraitDto.getUri());
+                                //efoTrait.setMongoSeqId(efoTraitDto.getMongoSeqId());
+                                efoTraitService.save(efoTrait);
+                            }
+                        } else {
+                            log.info("EFOTrait added from Depo-Curation -: {}", efoTraitDto.getTrait());
+                            EfoTrait newEfoTrait = EFOTraitAssembler.disassemble(efoTraitDto);
+                            efoTraitService.save(newEfoTrait);
                         }
-                    } else {
-                        log.info("EFOTrait added from Depo-Curation -: {}", efoTraitDto.getTrait());
-                        EfoTrait newEfoTrait = EFOTraitAssembler.disassemble(efoTraitDto);
-                        efoTraitService.save(newEfoTrait);
+                    }catch(Exception ex){
+                        log.error("Exception with SeqId -: {} and Reported trait -: {}",efoTraitDto.getMongoSeqId(),efoTraitDto.getTrait());
+                        log.error("Exception in syncEFOTraits Insert or Update ()"+ex.getMessage(),ex );
                     }
                 }));
 
@@ -155,24 +171,29 @@ public class SyncReportedTraitsTask {
                 .collect(Collectors.toList());
 
         mongoSeqIdsDeleted.forEach((seqId) -> {
-            log.info("Mongo Ids to be deleted {}", seqId);
-            Optional.ofNullable(efoTraitRepository.findByMongoSeqId(seqId)).ifPresent((efoTrait) -> {
+            try {
+                log.info("Mongo Ids to be deleted {}", seqId);
+                Optional.ofNullable(efoTraitRepository.findByMongoSeqId(seqId)).ifPresent((efoTrait) -> {
 
-                log.info("Trait which is deleted is {}", efoTrait.getShortForm());
-                studyRepository.findByEfoTraitsId(efoTrait.getId()).forEach(study -> {
-                    study.setEfoTraits(null);
-                    study.setMappedBackgroundTraits(null);
-                    studyRepository.save(study);
+                    log.info("Trait which is deleted is {}", efoTrait.getShortForm());
+                    studyRepository.findByEfoTraitsId(efoTrait.getId()).forEach(study -> {
+                        study.setEfoTraits(null);
+                        study.setMappedBackgroundTraits(null);
+                        studyRepository.save(study);
+                    });
+                    associationRepository.findByEfoTraitsId(efoTrait.getId()).forEach(asscn -> {
+                        asscn.setEfoTraits(null);
+                        asscn.setBkgEfoTraits(null);
+                        associationRepository.save(asscn);
+                    });
+                    efoTraitService.delete(efoTrait);
+
                 });
-                associationRepository.findByEfoTraitsId(efoTrait.getId()).forEach(asscn -> {
-                    asscn.setEfoTraits(null);
-                    asscn.setBkgEfoTraits(null);
-                    associationRepository.save(asscn);
-                });
-                efoTraitService.delete(efoTrait);
+            }catch(Exception ex){
+                log.error("Exception with SeqId -: {} ",seqId);
+                log.error("Exception in syncEFOTraits Delete ()"+ex.getMessage(),ex );
 
-            });
-
+            }
         });
 
     }
