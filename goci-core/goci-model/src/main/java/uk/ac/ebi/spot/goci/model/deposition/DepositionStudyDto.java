@@ -91,6 +91,12 @@ public class DepositionStudyDto {
     @JsonProperty("gxe_flag")
     private Boolean gxeFlag;
 
+    @JsonProperty("initialSampleDescription")
+    private String initialSampleDescription;
+
+    @JsonProperty("replicateSampleDescription")
+    private String replicateSampleDescription;
+
 
     public Study buildStudy(){
         Study study = new Study();
