@@ -9,6 +9,7 @@ import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import uk.ac.ebi.spot.goci.curation.caching.CacheRunner;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.DiseaseTraitDtoAssembler;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.EFOTraitAssembler;
 import uk.ac.ebi.spot.goci.curation.service.EfoTraitService;
@@ -45,6 +46,9 @@ public class SyncReportedTraitsTask {
     AssociationRepository associationRepository;
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    CacheRunner cacheRunner;
 
     @Value("${deposition.ingest.uri}")
     private String depositionIngestURL;
@@ -195,6 +199,8 @@ public class SyncReportedTraitsTask {
 
             }
         });
+
+        cacheRunner.runCache(); //Run Cache after every Sync Traits
 
     }
 
