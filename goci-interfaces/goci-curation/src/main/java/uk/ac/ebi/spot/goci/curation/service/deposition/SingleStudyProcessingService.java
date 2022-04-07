@@ -155,6 +155,8 @@ public class SingleStudyProcessingService {
         study.setUserRequested(userRequested);
         study.setPooled(studyDto.getPooledFlag());
         study.setGxe(studyDto.getGxeFlag());
+        study.setInitialSampleSize(studyDto.getInitialSampleDescription());
+        study.setReplicateSampleSize(studyDto.getReplicateSampleDescription());
         getLog().info("Saving study ...");
         studyService.save(study);
         getLog().info("Study saved: {}", study.getId());
