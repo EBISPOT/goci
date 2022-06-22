@@ -385,11 +385,11 @@ public class Study implements Trackable {
         this.imputed = imputed;
     }
 
-    public boolean getPooled() {
+    public Boolean getPooled() {
         return pooled;
     }
 
-    public void setPooled(boolean pooled) {
+    public void setPooled(Boolean pooled) {
         this.pooled = pooled;
     }
 
