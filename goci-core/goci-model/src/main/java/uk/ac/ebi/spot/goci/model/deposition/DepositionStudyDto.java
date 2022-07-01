@@ -82,6 +82,9 @@ public class DepositionStudyDto {
     @JsonProperty("efoTraits")
     private List<EFOTraitDTO> efoTraitDtos;
 
+    @JsonProperty("backgroundEfoTraits")
+    private List<EFOTraitDTO> backgroundEfoTraitDtos;
+
 
     public Study buildStudy(){
         Study study = new Study();

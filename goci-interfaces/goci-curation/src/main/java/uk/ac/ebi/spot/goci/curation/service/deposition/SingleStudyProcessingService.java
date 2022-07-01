@@ -121,6 +121,13 @@ public class SingleStudyProcessingService {
                         .collect(Collectors.toList()))
                 .orElse(null);
 
+        List<EfoTrait> backgroundEfoTraitList =  Optional.ofNullable(studyDto.getBackgroundEfoTraitDtos())
+                .map(efoTraitDTOList -> efoTraitDTOList.stream()
+                        .map(EFOTraitDTO::getShortForm)
+                        .map(efoTraitRepository::findByShortForm)
+                        .collect(Collectors.toList()))
+                .orElse(null);
+
 
         /*if (efoTrait != null) {
             String[] efoTraits = efoTrait.split("\\||,");
@@ -133,7 +140,7 @@ public class SingleStudyProcessingService {
         List<EfoTrait> mappedTraitList = new ArrayList<>();
         getLog().info("EFO traits mapped: {}", efoTraitList);
         study.setEfoTraits(efoTraitList);
-        String mappedBackgroundTrait = studyDto.getBackgroundEfoTrait();
+        /*String mappedBackgroundTrait = studyDto.getBackgroundEfoTrait();
         if (mappedBackgroundTrait != null) {
             String[] efoTraits = mappedBackgroundTrait.split("\\||,");
             getLog().info("Background EFO traits provided: {}", mappedBackgroundTrait);
@@ -141,9 +148,9 @@ public class SingleStudyProcessingService {
                 EfoTrait dbTrait = efoTraitRepository.findByShortForm(trait);
                 mappedTraitList.add(dbTrait);
             }
-        }
+        }*/
         getLog().info("Background EFO traits mapped: {}", mappedTraitList);
-        study.setMappedBackgroundTraits(mappedTraitList);
+        study.setMappedBackgroundTraits(backgroundEfoTraitList);
         Optional<DiseaseTrait> backgroundTraitOpt = diseaseTraitRepository.findByTraitIgnoreCase(studyDto.getBackgroundTrait());
         backgroundTraitOpt.ifPresent(study::setBackgroundTrait);
 
