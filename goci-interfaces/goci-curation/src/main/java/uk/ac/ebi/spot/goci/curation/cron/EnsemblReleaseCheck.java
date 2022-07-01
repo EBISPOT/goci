@@ -1,5 +1,5 @@
 
-package uk.ac.ebi.spot.goci.curation.component;
+package uk.ac.ebi.spot.goci.curation.cron;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -141,9 +141,10 @@
                                     th:field="*{efoTraitSearchFilterId}" id="efoTraits">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
-                                <option th:each="efoTrait : ${efoTraits}"
-                                        th:value="${efoTrait.id}"
-                                        th:text="${efoTrait.trait}"></option>
+                                <th:block th:utext="${efoTraitsHtml}"> </th:block>
+<!--                                <option th:each="efoTrait : ${efoTraits}"-->
+<!--                                        th:value="${efoTrait.id}"-->
+<!--                                        th:text="${efoTrait.trait}"></option>-->
                             </select>
                         </div>
 
@@ -170,9 +171,10 @@
                                     th:field="*{diseaseTraitSearchFilterId}" id="diseaseTraits">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
-                                <option th:each="diseaseTrait : ${diseaseTraits}"
-                                        th:value="${diseaseTrait.id}"
-                                        th:text="${diseaseTrait.trait}"></option>
+                                <th:block th:utext="${diseaseTraitsHtml}"> </th:block>
+<!--                                <option th:each="diseaseTrait : ${diseaseTraits}"-->
+<!--                                        th:value="${diseaseTrait.id}"-->
+<!--                                        th:text="${diseaseTrait.trait}"></option>-->
                             </select>
                         </div>
 

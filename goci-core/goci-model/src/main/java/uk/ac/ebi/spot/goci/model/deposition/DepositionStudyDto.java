@@ -85,6 +85,20 @@ public class DepositionStudyDto {
     @JsonProperty("backgroundEfoTraits")
     private List<EFOTraitDTO> backgroundEfoTraitDtos;
 
+    @JsonProperty("sumstats_flag")
+    private Boolean sumstatsFlag;
+
+    @JsonProperty("pooled_flag")
+    private Boolean pooledFlag;
+
+    @JsonProperty("gxe_flag")
+    private Boolean gxeFlag;
+
+    @JsonProperty("initialSampleDescription")
+    private String initialSampleDescription;
+
+    @JsonProperty("replicateSampleDescription")
+    private String replicateSampleDescription;
 
     public Study buildStudy(){
         Study study = new Study();

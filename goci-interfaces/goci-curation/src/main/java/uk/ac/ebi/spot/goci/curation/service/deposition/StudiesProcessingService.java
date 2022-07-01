@@ -71,7 +71,7 @@ public class StudiesProcessingService {
             List<EfoTrait> efoTraits;
             List<EfoTrait> bkgEfoTraits;
             try {
-                Pair<Study, List<EfoTrait>> pair = singleStudyProcessingService.processStudy(studyDto, publication);
+                Pair<Study, List<EfoTrait>> pair = singleStudyProcessingService.processStudy(studyDto, publication, depositionSubmission.getOpentargetsFlag(), depositionSubmission.getUserrequestedFlag());
                 study = pair.getLeft();
                 efoTraits = pair.getRight();
                 bkgEfoTraits = new ArrayList<>(study.getMappedBackgroundTraits());

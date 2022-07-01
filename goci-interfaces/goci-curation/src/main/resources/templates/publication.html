@@ -273,9 +273,10 @@
                                     class="form-control select2-select col-md-4">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
-                                <option th:each="diseaseTrait : ${diseaseTraits}"
-                                        th:value="${diseaseTrait.id}"
-                                        th:text="${diseaseTrait.trait}"></option>
+                                <th:block th:utext="${diseaseTraitsHtml}"> </th:block>
+<!--                                <option th:each="diseaseTrait : ${diseaseTraits}"-->
+<!--                                        th:value="${diseaseTrait.id}"-->
+<!--                                        th:text="${diseaseTrait.trait}"></option>-->
                             </select>
                             <a role="button" type="submit" id="saveDiseaseTrait"
                                class="btn btn-primary btn-sm">Save Disease Trait
@@ -287,9 +288,10 @@
                             <select name="EFOTrait" th:field="*{efoTraits}" class="form-control select2-select col-md-4"
                                     style="width: 300px"
                                     multiple="multiple" id="EFOTrait">
-                                <option th:each="efoTrait : ${efoTraits}"
-                                        th:value="${efoTrait.id}"
-                                        th:text="${efoTrait.trait}"></option>
+                                <th:block th:utext="${efoTraitsHtml}"> </th:block>
+<!--                                <option th:each="efoTrait : ${efoTraits}"-->
+<!--                                        th:value="${efoTrait.id}"-->
+<!--                                        th:text="${efoTrait.trait}"></option>-->
                             </select>
                             <a role="button" type="submit" id="saveEfoTrait"
                                class="btn btn-primary btn-sm">Save EFO Trait
@@ -306,9 +308,10 @@
                                     class="form-control select2-select col-md-4">
                                 <!-- Empty value for first entry-->
                                 <option value=""></option>
-                                <option th:each="diseaseTrait : ${diseaseTraits}"
-                                        th:value="${diseaseTrait.id}"
-                                        th:text="${diseaseTrait.trait}"></option>
+                                <th:block th:utext="${diseaseTraitsHtml}"> </th:block>
+<!--                                <option th:each="diseaseTrait : ${diseaseTraits}"-->
+<!--                                        th:value="${diseaseTrait.id}"-->
+<!--                                        th:text="${diseaseTrait.trait}"></option>-->
                             </select>
                             <a role="button" type="submit" id="saveBackgroundTrait"
                                class="btn btn-primary btn-sm">Save Background Trait
@@ -322,9 +325,10 @@
                                     class="form-control select2-select col-md-4"
                                     style="width: 300px"
                                     multiple="multiple" id="mappedBackgroundTraits">
-                                <option th:each="efoTrait : ${efoTraits}"
-                                        th:value="${efoTrait.id}"
-                                        th:text="${efoTrait.trait}"></option>
+                                <th:block th:utext="${efoTraitsHtml}"> </th:block>
+<!--                                <option th:each="efoTrait : ${efoTraits}"-->
+<!--                                        th:value="${efoTrait.id}"-->
+<!--                                        th:text="${efoTrait.trait}"></option>-->
                             </select>
                             <a role="button" type="submit" id="saveBackgroundEfos"
                                class="btn btn-primary btn-sm">Save Background EFOs
