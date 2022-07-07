@@ -52,10 +52,10 @@ public class DepositionSampleService {
                 Ancestry ancestry = new Ancestry();
                 if (sampleDto.getStage().equalsIgnoreCase("Discovery")) {
                     ancestry.setType("initial");
-                    initialSampleSize += buildDescription(sampleDto) + ", ";
+                    //initialSampleSize += buildDescription(sampleDto) + ", ";
                 } else if (sampleDto.getStage().equalsIgnoreCase("Replication")) {
                     ancestry.setType("replication");
-                    replicateSampleSize += buildDescription(sampleDto) + ", ";
+                   // replicateSampleSize += buildDescription(sampleDto) + ", ";
                 } else {
                     studyNote.append("unknown ancestry type: " + sampleDto.getStage());
                 }
@@ -115,7 +115,7 @@ public class DepositionSampleService {
                 importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
             }
         }
-        initialSampleSize = initialSampleSize.trim();
+     /*   initialSampleSize = initialSampleSize.trim();
         replicateSampleSize = replicateSampleSize.trim();
         if (initialSampleSize.endsWith(",")) {
             initialSampleSize = initialSampleSize.substring(0, initialSampleSize.length() - 1);
@@ -125,11 +125,11 @@ public class DepositionSampleService {
         }
         if (replicateSampleSize.equalsIgnoreCase("")) {
             replicateSampleSize = "NA";
-        }
+        }*/
         studyNote.append("initial: " + initialSampleSize + "\n");
         studyNote.append("replication: " + replicateSampleSize + "\n");
-        study.setInitialSampleSize(initialSampleSize.trim());
-        study.setReplicateSampleSize(replicateSampleSize.trim());
+        //study.setInitialSampleSize(initialSampleSize.trim());
+        //study.setReplicateSampleSize(replicateSampleSize.trim());
 
         return studyNote.toString();
     }
