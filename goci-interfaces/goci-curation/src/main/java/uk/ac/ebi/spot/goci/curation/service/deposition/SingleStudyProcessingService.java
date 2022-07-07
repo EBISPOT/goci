@@ -54,7 +54,7 @@ public class SingleStudyProcessingService {
     @Autowired
     private StudyExtensionRepository studyExtensionRepository;
 
-    public Pair<Study, List<EfoTrait>> processStudy(DepositionStudyDto studyDto, Publication publication) {
+    public Pair<Study, List<EfoTrait>> processStudy(DepositionStudyDto studyDto, Publication publication, Boolean openTargets, Boolean userRequested) {
         Curator levelTwoCurator = curatorRepository.findByLastName("Level 2 Curator");
         CurationStatus levelOneCurationComplete = statusRepository.findByStatus("Level 1 curation done");
 
@@ -151,6 +151,12 @@ public class SingleStudyProcessingService {
             study.setFullPvalueSet(true);
         }
         study.setStudyDesignComment(studyDto.getArrayInformation());
+        study.setOpenTargets(openTargets);
+        study.setUserRequested(userRequested);
+        study.setPooled(studyDto.getPooledFlag());
+        study.setGxe(studyDto.getGxeFlag());
+        study.setInitialSampleSize(studyDto.getInitialSampleDescription());
+        study.setReplicateSampleSize(studyDto.getReplicateSampleDescription());
         getLog().info("Saving study ...");
         studyService.save(study);
         getLog().info("Study saved: {}", study.getId());

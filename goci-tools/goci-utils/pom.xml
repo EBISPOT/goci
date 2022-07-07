@@ -5,7 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-utils</artifactId>
-    <version>3.3.2</version>
+
+    <version>3.3.3</version>
+
     <packaging>jar</packaging>
 
     <name>GOCI Utility Classes</name>
@@ -14,7 +16,9 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>3.3.2</version>
+
+        <version>3.3.3</version>
+
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 

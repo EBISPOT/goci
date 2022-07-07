@@ -5,7 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-interfaces</artifactId>
-    <version>3.3.2</version>
+    <version>3.3.3</version>
+
 
     <packaging>pom</packaging>
     <name>GOCI Interfaces</name>
@@ -13,7 +14,8 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.3</version>
+
     </parent>
 
     <modules>

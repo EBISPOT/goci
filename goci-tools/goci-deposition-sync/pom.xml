@@ -13,7 +13,8 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>3.3.2</version>
+        <version>3.3.3</version>
+
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
