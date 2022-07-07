@@ -5,11 +5,9 @@
 
 # Ensure all branches ready for release are merged into dev / master
 
-<<<<<<< HEAD
-DEV_BRANCH='release-traits-functionality'
-=======
+
 DEV_BRANCH='release-traits-bugfix'
->>>>>>> release-traits-bugfix
+
 MASTER_BRANCH='2.x-stable'
 
 echo "What is the new version number ?"
