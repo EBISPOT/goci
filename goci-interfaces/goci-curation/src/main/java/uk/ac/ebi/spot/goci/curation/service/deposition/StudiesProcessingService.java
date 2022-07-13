@@ -74,7 +74,7 @@ public class StudiesProcessingService {
                 Pair<Study, List<EfoTrait>> pair = singleStudyProcessingService.processStudy(studyDto, publication, depositionSubmission.getOpentargetsFlag(), depositionSubmission.getUserrequestedFlag());
                 study = pair.getLeft();
                 efoTraits = pair.getRight();
-                bkgEfoTraits = new ArrayList<>(study.getMappedBackgroundTraits());
+                bkgEfoTraits = study.getMappedBackgroundTraits() == null ? new ArrayList<>() : new ArrayList<>(study.getMappedBackgroundTraits());
             } catch (Exception e) {
                 getLog().error("Unable to create study [{} | {}]: {}", studyDto.getStudyTag(), studyDto.getAccession(), e.getMessage(), e);
                 importLog.addError("Unable to create study [" + studyDto.getStudyTag() + " | " + studyDto.getAccession() + "]: " + e.getMessage(), "Creating study [" + studyDto.getAccession() + "]");
