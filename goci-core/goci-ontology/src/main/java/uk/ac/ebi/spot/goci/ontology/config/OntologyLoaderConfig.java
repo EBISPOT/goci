@@ -20,7 +20,7 @@ public class OntologyLoaderConfig {
         loader.setOntologyURI(URI.create("http://www.ebi.ac.uk/efo"));
         loader.setOntologyResource(efoResource);
         loader.setExclusionClassURI(URI.create("http://www.geneontology.org/formats/oboInOwl#ObsoleteClass"));
-        loader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
+        // loader.setExclusionAnnotationURI(URI.create("http://www.ebi.ac.uk/efo/organizational_class"));
         loader.setSynonymURIs(Collections.singleton(URI.create("http://www.geneontology.org/formats/oboInOwl#hasExactSynonym")));
         loader.init();
         return loader;
