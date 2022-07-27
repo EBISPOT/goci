@@ -228,11 +228,10 @@
                 <!--<td th:text="${study.trait}"></td>-->
                 <!-- <td th:text="${study.efoTrait}"></td> -->
                 <td th:text="${study.diseaseTraitDto?.trait}"></td>
-                <td th:inline="text"> <th:block th:each="efoTrait : ${study.efoTraitDtos}">[[${efoTrait.shortForm}]]</th:block>
-                </td>
+                <td th:inline="text"> <th:block th:each="efoTrait : ${study.efoTraitDtos}">[[${efoTrait.shortForm}]]</th:block></td>
 
                 <td th:text="${study.backgroundTrait}"></td>
-                <td th:text="${study.backgroundEfoTrait}"></td>
+                <td th:inline="text"> <th:block th:each="backgroundEfoTrait : ${study.backgroundEfoTraitDtos}">[[${backgroundEfoTrait.shortForm}]]</th:block></td>
                 <td th:text="${study.summaryStatisticsFile}"></td>
                 <td th:text="${study.summaryStatisticsAssembly}"></td>
                 <td th:text="${study.checksum}"></td>
