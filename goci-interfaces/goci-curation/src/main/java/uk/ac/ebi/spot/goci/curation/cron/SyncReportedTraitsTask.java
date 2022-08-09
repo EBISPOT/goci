@@ -8,10 +8,14 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.DiseaseTraitDtoAssembler;
 import uk.ac.ebi.spot.goci.curation.controller.assembler.EFOTraitAssembler;
 import uk.ac.ebi.spot.goci.curation.service.EfoTraitService;
+import uk.ac.ebi.spot.goci.model.Association;
+import uk.ac.ebi.spot.goci.model.Study;
 import uk.ac.ebi.spot.goci.model.deposition.DiseaseTraitDto;
 import uk.ac.ebi.spot.goci.model.deposition.EFOTraitDTO;
 import uk.ac.ebi.spot.goci.curation.service.DiseaseTraitService;
@@ -123,6 +127,7 @@ public class SyncReportedTraitsTask {
     }
 
     @Scheduled(cron = "0 05 * * * *")
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void syncEFOTraits() {
         String endpoint = depositionIngestURL + efoTraitsUri;
         HttpHeaders headers = new HttpHeaders();
@@ -172,23 +177,7 @@ public class SyncReportedTraitsTask {
 
         mongoSeqIdsDeleted.forEach((seqId) -> {
             try {
-                log.info("Mongo Ids to be deleted {}", seqId);
-                Optional.ofNullable(efoTraitRepository.findByMongoSeqId(seqId)).ifPresent((efoTrait) -> {
-
-                    log.info("Trait which is deleted is {}", efoTrait.getShortForm());
-                    studyRepository.findByEfoTraitsId(efoTrait.getId()).forEach(study -> {
-                        study.setEfoTraits(null);
-                        study.setMappedBackgroundTraits(null);
-                        studyRepository.save(study);
-                    });
-                    associationRepository.findByEfoTraitsId(efoTrait.getId()).forEach(asscn -> {
-                        asscn.setEfoTraits(null);
-                        asscn.setBkgEfoTraits(null);
-                        associationRepository.save(asscn);
-                    });
-                    efoTraitService.delete(efoTrait);
-
-                });
+                removeStudyEFOMapping(seqId);
             }catch(Exception ex){
                 log.error("Exception with SeqId -: {} ",seqId);
                 log.error("Exception in syncEFOTraits Delete ()"+ex.getMessage(),ex );
@@ -197,6 +186,44 @@ public class SyncReportedTraitsTask {
         });
 
     }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void removeStudyEFOMapping( String seqId) {
+
+        log.info("Mongo Ids to be deleted {}", seqId);
+        Optional.ofNullable(efoTraitRepository.findByMongoSeqId(seqId)).ifPresent((efoTrait) -> {
+
+            log.info("Trait which is deleted is {}", efoTrait.getShortForm());
+            log.info("Trait ID which is deleted is {}", efoTrait.getId());
+            log.info("Size of the study list" +studyRepository.findByEfoTraitsId(efoTrait.getId()).size());
+            studyRepository.findByEfoTraitsId(efoTrait.getId()).forEach(study -> {
+                //study.setEfoTraits(null);
+                log.info("Calling removeStudyEFOMappings()");
+                study.getEfoTraits().remove(efoTrait);
+                studyRepository.save(study);
+            });
+            studyRepository.findByMappedBackgroundTraitsId(efoTrait.getId()).forEach(study -> {
+                //study.setEfoTraits(null);
+                log.info("Calling removeStudyBGEFOMappings()");
+                study.getMappedBackgroundTraits().remove(efoTrait);
+                studyRepository.save(study);
+            });
+            associationRepository.findByEfoTraitsId(efoTrait.getId()).forEach(asscn -> {
+                //asscn.setEfoTraits(null);
+                log.info("Calling removeAsscnEFOMappings()");
+                asscn.getEfoTraits().remove(efoTrait);
+                associationRepository.save(asscn);
+            });
+            associationRepository.findByBkgEfoTraitsId(efoTrait.getId()).forEach(asscn -> {
+                //asscn.setEfoTraits(null);
+                log.info("Calling removeAsscnBGEFOMappings()");
+                asscn.getBkgEfoTraits().remove(efoTrait);
+                associationRepository.save(asscn);
+            });
+            efoTraitService.delete(efoTrait);
+        });
+    }
+
 
 
 }

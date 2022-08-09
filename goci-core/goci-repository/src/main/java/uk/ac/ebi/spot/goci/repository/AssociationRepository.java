@@ -110,6 +110,9 @@ public interface AssociationRepository extends JpaRepository<Association, Long> 
 
     Collection<Association> findByEfoTraitsId(Long efoTraitId);
 
+
+    Collection<Association> findByBkgEfoTraitsId(Long efoTraitId);
+
     @RestResource(exported = false)
     Page<Association> findByStudyPublicationIdPubmedId(String pubmedId, Pageable pageable);
 }
