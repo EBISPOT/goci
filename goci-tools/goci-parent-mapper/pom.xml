@@ -41,6 +41,11 @@
             <artifactId>goci-ontology</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>uk.ac.ebi.spot</groupId>
+            <artifactId>goci-email-service</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>net.sourceforge.owlapi</groupId>
