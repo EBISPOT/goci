@@ -19,6 +19,7 @@ import uk.ac.ebi.spot.goci.export.CatalogSpreadsheetExporter;
 import uk.ac.ebi.spot.goci.model.TraitEntity;
 import uk.ac.ebi.spot.goci.service.ParentMappingService;
 import uk.ac.ebi.spot.goci.service.TermLoadingService;
+import uk.ac.ebi.spot.goci.service.mail.MailSendingService;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,9 @@ public class ParentMappingApplication {
 
     @Autowired
     private CatalogSpreadsheetExporter catalogSpreadsheetExporter;
+
+    @Autowired
+    private MailSendingService mailSendingService;
 
 //    @Autowired
 //    private ReasonedOntologyLoader ontologyLoader;
@@ -155,19 +159,51 @@ public class ParentMappingApplication {
     String[][] transformMappings(List<TraitEntity> mappedTraits){
         List<String[]> lines = new ArrayList<>();
         String[] header = {"Disease trait", "EFO term", "EFO URI", "Parent term", "Parent URI"};
+        List<String> parentNotFoundTerms = new ArrayList<>();
 
         lines.add(header);
         for(TraitEntity trait : mappedTraits){
             String[] line = new String[5];
 
-            line[0] = trait.getTrait();
-            line[1] = trait.getEfoTerm();
-            line[2] = trait.getUri();
-            line[3] = trait.getParentName();
-            line[4] = trait.getParentUri();
+            if (trait.getTrait() != null) {
+                line[0] = trait.getTrait();
+            }
+            else {
+                line[0] = "NR";
+            }
+
+            if (trait.getEfoTerm() != null) {
+                line[1] = trait.getEfoTerm();
+            }
+            else {
+                line[1] = "NR";
+            }
+
+            if (trait.getUri() != null) {
+                line[2] = trait.getUri();
+            }
+            else {
+                line[2] = "NR";
+            }
+
+            if (trait.getParentName() != null) {
+                line[3] = trait.getParentName();
+            }
+            else {
+                line[3] = "NR";
+                parentNotFoundTerms.add(line[0] + " | " + line[1] + " | " + line[2]);
+            }
+
+            if (trait.getParentUri() != null) {
+                line[4] = trait.getParentUri();
+            }
+            else {
+                line[4] = "NR";
+            }
 
             lines.add(line);
         }
+        mailSendingService.sendReportEmail(parentNotFoundTerms);
         return lines.toArray(new String[lines.size()][]);
     }
 
