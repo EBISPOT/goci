@@ -212,6 +212,7 @@ public class StudyService {
     public Collection<Study> findByPublication(String pubmedId) {
         Collection<Study> studies = studyRepository.findByPublicationIdPubmedId(pubmedId);
         studies.forEach(this::loadAssociatedData);
+        log.info("Finish getting {} studies", studies.size());
         return studies;
     }
 

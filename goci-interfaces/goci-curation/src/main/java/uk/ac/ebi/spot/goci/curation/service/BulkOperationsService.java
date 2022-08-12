@@ -15,6 +15,7 @@ import uk.ac.ebi.spot.goci.service.AssociationService;
 import uk.ac.ebi.spot.goci.service.TrackingOperationService;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -45,14 +46,14 @@ public class BulkOperationsService {
     @Qualifier("studyTrackingOperationServiceImpl")
     private TrackingOperationService trackingOperationService;
 
-    public void flipUserRequested(Publication publication, SecureUser user) {
-        Pair<Boolean, Boolean> existingStatus = getFlagStatus(publication);
+    public void flipUserRequested(Collection<Study> studies, SecureUser user) {
+        Pair<Boolean, Boolean> existingStatus = getFlagStatus(studies);
         boolean existingUserRequested = existingStatus.getRight();
         boolean newUserRequested = !existingUserRequested;
 
-        getLog().info("[{}] Changing 'User Requested' flag for {} studies", publication.getPubmedId(), publication.getStudies().size());
+        getLog().info("Changing 'User Requested' flag for {} studies", studies.size());
         List<Long> ids = new ArrayList<>();
-        for (Study study : publication.getStudies()) {
+        for (Study study : studies) {
             ids.add(study.getId());
         }
 
@@ -66,14 +67,14 @@ public class BulkOperationsService {
         }
     }
 
-    public void flipOpenTargets(Publication publication, SecureUser user) {
-        Pair<Boolean, Boolean> existingStatus = getFlagStatus(publication);
+    public void flipOpenTargets(Collection<Study> studies, SecureUser user) {
+        Pair<Boolean, Boolean> existingStatus = getFlagStatus(studies);
         boolean existingOpenTargets = existingStatus.getLeft();
         boolean newOpenTargets = !existingOpenTargets;
 
-        getLog().info("[{}] Changing 'Open Targets' flag for {} studies", publication.getPubmedId(), publication.getStudies().size());
+        getLog().info("Changing 'Open Targets' flag for {} studies", studies.size());
         List<Long> ids = new ArrayList<>();
-        for (Study study : publication.getStudies()) {
+        for (Study study : studies) {
             ids.add(study.getId());
         }
         for (Long studyId : ids) {
@@ -108,14 +109,15 @@ public class BulkOperationsService {
         return messages;
     }
 
-    public Pair<Boolean, Boolean> getFlagStatus(Publication publication) {
+    public Pair<Boolean, Boolean> getFlagStatus(Collection<Study> studies) {
+        log.info("Start getting Flag Status");
         boolean openTargets = true;
         boolean userRequested = true;
 
         boolean otFound = false;
         boolean urFound = false;
 
-        for (Study study : publication.getStudies()) {
+        for (Study study : studies) {
             if (study.getOpenTargets() != null) {
                 otFound = true;
                 if (!study.getOpenTargets()) {
@@ -137,6 +139,7 @@ public class BulkOperationsService {
             userRequested = false;
         }
 
+        log.info("Finished getting Flag Status");
         return Pair.of(openTargets, userRequested);
     }
 }
