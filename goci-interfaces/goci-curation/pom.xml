@@ -8,7 +8,7 @@
 
     <version>3.3.4</version>
 
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <name>GOCI Curation Interface</name>
     <description>The curator's interface for the GWAS Catalog</description>
