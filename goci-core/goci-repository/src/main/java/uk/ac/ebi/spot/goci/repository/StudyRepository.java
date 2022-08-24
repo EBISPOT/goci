@@ -146,6 +146,9 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @RestResource(exported = false)
     Collection<Study> findByEfoTraitsId(Long efoTraitId);
 
+    @RestResource(exported = false)
+    Collection<Study> findByMappedBackgroundTraitsId(Long efoTraitId);
+
 
     // EFO trait query
     Page<Study> findByEfoTraitsId(Long efoTraitId, Pageable pageable);
