@@ -243,7 +243,7 @@ public class DepositionSyncService {
                 autoImportSumStatsSubmission(submission, importLog);
             }
 
-            if (submission.getStatus().equals("SUBMITTED") && submission.getProvenanceType().equals("BODY_OF_WORK")) {
+            if (submission.getStatus().equals("DEPOSITION_COMPLETE") && submission.getProvenanceType().equals("BODY_OF_WORK")) {
                 getLog().info("Found new SUBMITTED & BODY_OF_WORK submission: {} | {}", submission.getSubmissionId(), submission.getBodyOfWork().getBodyOfWorkId());
                 BodyOfWorkDto bodyOfWorkDto = submission.getBodyOfWork();
                 if (isEligible(bodyOfWorkDto)) {
