@@ -380,7 +380,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr th:each="study,iter : ${publication.studies}">
+                                        <tr th:each="study,iter : ${studies}">
                                             <td><input type="checkbox" class="table-checkbox checkbox"
                                                        th:id="${study.id}"/></td>
                                             <td><a th:href="@{/studies/{studyId}(studyId=${study.id})}"

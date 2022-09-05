@@ -89,6 +89,7 @@ public class StudyFileService {
      * @param studyId Study ID which is used to find study specific dir
      */
     public List<StudyFileSummary> getStudyFiles(Long studyId) {
+        log.info("Start getting study File: {}", studyId);
         List<StudyFileSummary> files = new ArrayList<>();
         File pathToStudyDir = getStudyDirPath(studyId);
 
