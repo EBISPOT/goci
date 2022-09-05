@@ -51,9 +51,11 @@ public class DepositionSubmissionService {
     }
 
     public Map<String, String> getSubmissionPubMedIds() {
+        log.info("Start getting Submissions");
         Map<String, String> pubmedMap = new HashMap<>();
         Map<String, Submission> submissionMap = getSubmissionsBasic();
         submissionMap.entrySet().stream().filter(e -> e.getValue().getPubMedID() != null).forEach(e -> pubmedMap.put(e.getValue().getPubMedID(), e.getKey()));
+        log.info("Finished getting Submissions");
         return pubmedMap;
     }
 

@@ -8,12 +8,16 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>3.2.4</version>
+
+        <version>3.3.4</version>
+
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-public-data-export</artifactId>
-    <version>3.2.4</version>
+
+    <version>3.3.4</version>
+
     <packaging>jar</packaging>
 
 

@@ -11,8 +11,6 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -33,6 +31,7 @@ import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.EuropepmcPubMedSearchService;
+import uk.ac.ebi.spot.goci.service.StudyService;
 import uk.ac.ebi.spot.goci.utils.EuropePMCData;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,9 +41,6 @@ import java.util.*;
 @Controller
 @RequestMapping("/publication")
 public class PublicationController {
-
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     @Value("${deposition.ui.uri}")
     private String depositionUiURL;
     @Autowired
@@ -83,6 +79,8 @@ public class PublicationController {
     private GenotypingTechnologyRepository genotypingTechnologyRepository;
     @Autowired
     private BulkOperationsService bulkOperationsService;
+    @Autowired
+    private StudyService studyService;
 
     @Autowired private CacheService cacheService;
     @Autowired private DiseaseTraitService diseaseTraitService;
@@ -177,28 +175,25 @@ public class PublicationController {
     public String viewPublication(Model model, @PathVariable Long publicationId) {
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
         Set<String> studiesWithFiles = new HashSet<>();
-        log.info("Start Calling Study Directories");
-        for (Study study : publication.getStudies()) {
+        Collection<Study> studies = studyService.findByPublication(publicationId.toString());
+        for (Study study : studies) {
             List<StudyFileSummary> studyFiles = studyFileService.getStudyFiles(study.getId());
             if (studyFiles != null && studyFiles.size() != 0) {
                 studiesWithFiles.add(study.getId().toString());
             }
         }
-        log.info("End Calling Study Directories");
-        log.info("Start Calling Study PubmedIds");
+
         Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         if (pubmedMap.containsKey(publication.getPubmedId())) {
             publication.setActiveSubmission(true);
             publication.setSubmissionId(pubmedMap.get(publication.getPubmedId()));
         }
-        log.info("End Calling Study PubmedIds");
-
-        log.info("Start Calling Study Bulkops");
-        Pair<Boolean, Boolean> flagStatus = bulkOperationsService.getFlagStatus(publication);
+        Pair<Boolean, Boolean> flagStatus = bulkOperationsService.getFlagStatus(studies);
         publication.setOpenTargets(flagStatus.getLeft());
         publication.setUserRequested(flagStatus.getRight());
-        log.info("End Calling Study Bulkops");
+
         model.addAttribute("publication", publication);
+        model.addAttribute("studies", studies);
         model.addAttribute("studyFiles", studiesWithFiles);
         return "publication";
     }
@@ -240,7 +235,8 @@ public class PublicationController {
     Map<String, String> changeOpenTargets(@PathVariable Long publicationId, HttpServletRequest request) {
         SecureUser user = userDetailsService.getUserFromRequest(request);
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
-        bulkOperationsService.flipOpenTargets(publication, user);
+        Collection<Study> studies = studyService.findByPublication(publicationId.toString());
+        bulkOperationsService.flipOpenTargets(studies, user);
         return new HashMap<>();
     }
 
@@ -251,7 +247,8 @@ public class PublicationController {
     Map<String, String> changeUserRequested(@PathVariable Long publicationId, HttpServletRequest request) {
         SecureUser user = userDetailsService.getUserFromRequest(request);
         Publication publication = publicationRepository.findByPubmedId(publicationId.toString());
-        bulkOperationsService.flipUserRequested(publication, user);
+        Collection<Study> studies = studyService.findByPublication(publicationId.toString());
+        bulkOperationsService.flipUserRequested(studies, user);
         return new HashMap<>();
     }
 
