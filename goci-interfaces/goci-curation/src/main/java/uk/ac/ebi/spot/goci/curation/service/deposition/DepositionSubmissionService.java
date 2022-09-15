@@ -5,14 +5,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import uk.ac.ebi.spot.goci.curation.dto.SubmissionViewDto;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
+import uk.ac.ebi.spot.goci.curation.util.UriBuilder;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
+import java.net.URI;
 import java.util.*;
 
 @Service
@@ -37,6 +42,8 @@ public class DepositionSubmissionService {
     @Value("${deposition.token}")
     private String depositionToken;
 
+    private final Pageable pageable = new PageRequest(0, 3000, null);
+
     private SubmissionImportProgressService submissionImportProgressService;
 
     public DepositionSubmissionService(@Autowired PublicationService publicationService,
@@ -59,29 +66,16 @@ public class DepositionSubmissionService {
         return pubmedMap;
     }
 
-    public Map<String, Submission> getSubmissionsBasic() {
-        String url = "/submission-envelopes";
-        return getSubmissions(url);
+    public SubmissionViewDto getSubmissions() {
+        String url = String.format("%s%s", depositionIngestURL, "/submissions?page={page}");
+        URI targetUrl = UriBuilder.buildUrl(url, pageable);
+        return getSubmissionsWithPagination(targetUrl);
     }
 
-    public Map<String, Submission> getSubmissions() {
-        String url = "/submissions?page={page}";
-        return getSubmissions(url);
-    }
-
-    public Map<String, Submission> getSubmissionsByStatus(String status) {
-        String url = "/submissions?status=" + status;
-        return getSubmissions(url);
-    }
-
-    public Map<String, Submission> getReadyToImportSubmissions() {
-        String url = "/submissions?status=READY_TO_IMPORT";
-        return getSubmissions(url);
-    }
-
-    public Map<String, Submission> getOtherSubmissions() {
-        String url = "/submissions?status=OTHER";
-        return getSubmissions(url);
+    public SubmissionViewDto getSubmissionsByStatus(String status, Pageable pageable) {
+        String url = String.format("%s%s", depositionIngestURL, "/submissions");
+        URI targetUrl = UriBuilder.buildUrl(url, pageable, status);
+        return getSubmissionsWithPagination(targetUrl);
     }
 
     public Map<String, Submission> getSubmissionsById(List<String> submissionIds) {
@@ -92,15 +86,12 @@ public class DepositionSubmissionService {
         return submissionList;
     }
 
-    private Map<String, Submission> getSubmissions(String url) {
-
+    public Map<String, Submission> getSubmissionsBasic() {
+        String url = String.format("%s%s", depositionIngestURL, "/submission-envelopes");
         Map<String, Submission> submissionList = new TreeMap<>();
         try {
-            int i = 0;
-            Map<String, Integer> params = new HashMap<>();
-            params.put("page", i);
             DepositionSubmission[] submissions =
-                    template.getForObject(depositionIngestURL + url, DepositionSubmission[].class, params);
+                    template.getForObject(depositionIngestURL + url, DepositionSubmission[].class);
             Arrays.stream(submissions).forEach(s -> {
                 Submission testSub = buildSubmission(s);
                 submissionList.put(testSub.getId(), testSub);
@@ -109,6 +100,29 @@ public class DepositionSubmissionService {
             e.printStackTrace();
         }
         return submissionList;
+    }
+
+    private SubmissionViewDto getSubmissionsWithPagination(URI targetUrl) {
+        Map<String, Submission> submissionList = new TreeMap<>();
+        DepositionSubmissionDto depositionSubmissionDto = DepositionSubmissionDto.builder().build();
+        try {
+            log.info(targetUrl.toString());
+            depositionSubmissionDto = template.getForObject(targetUrl, DepositionSubmissionDto.class);
+            depositionSubmissionDto.getWrapper().getSubmissions().forEach(s -> {
+                Submission submission = buildSubmission(s);
+                submissionList.put(submission.getId(), submission);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SubmissionViewDto submissionViewDto = SubmissionViewDto.builder()
+                .submissionList(submissionList)
+                .page(depositionSubmissionDto.getPage())
+                .build();
+        submissionViewDto.setPageIndexes();
+
+        return submissionViewDto;
     }
 
     public DepositionSubmission getSubmission(String submissionID) {
