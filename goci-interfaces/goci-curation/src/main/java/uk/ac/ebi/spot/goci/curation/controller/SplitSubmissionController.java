@@ -58,9 +58,10 @@ public class SplitSubmissionController {
     @RequestMapping(value = "/in_progress_submissions", produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
     public String inProgressSubmissionsPage(Model model) {
         List<String> submissionIds = submissionImportProgressService.getSubmissions();
-        Map<String, Submission> submissionList = submissionService.getSubmissionsById(submissionIds);
+        SubmissionViewDto submissionViewDto = submissionService.getSubmissionsById(submissionIds);
+        Map<String, Submission> submissionList = submissionViewDto.getSubmissionList();
         model.addAttribute("submissions", submissionList.values());
-        model.addAttribute("dto", new SubmissionViewDto());
+        model.addAttribute("dto", submissionViewDto);
         return "view_submissions";
     }
 

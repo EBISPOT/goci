@@ -14,6 +14,7 @@ import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.util.UriBuilder;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPageInfo;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
@@ -78,12 +79,18 @@ public class DepositionSubmissionService {
         return getSubmissionsWithPagination(targetUrl);
     }
 
-    public Map<String, Submission> getSubmissionsById(List<String> submissionIds) {
+    public SubmissionViewDto getSubmissionsById(List<String> submissionIds) {
         Map<String, Submission> submissionList = new TreeMap<>();
         for (String sId : submissionIds) {
             submissionList.put(sId, buildSubmission(getSubmission(sId)));
         }
-        return submissionList;
+
+        SubmissionViewDto submissionViewDto = SubmissionViewDto.builder()
+                .submissionList(submissionList)
+                .page(new DepositionPageInfo(0,0,0,0))
+                .build();
+        submissionViewDto.setPageIndexes();
+        return submissionViewDto;
     }
 
     public Map<String, Submission> getSubmissionsBasic() {
