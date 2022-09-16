@@ -81,7 +81,8 @@ public class SubmissionController {
         DepositionPageInfo pageInfo = submissionViewDto.getPage();
 
         model.addAttribute("submissions", submissionList.values());
-        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("dto", submissionViewDto);
+
         return "view_submissions";
     }
 

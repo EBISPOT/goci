@@ -48,19 +48,9 @@ public class SplitSubmissionController {
                                           @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         SubmissionViewDto submissionViewDto = submissionService.getSubmissionsByStatus("CURATION_COMPLETE", pageable);
         Map<String, Submission> submissionList = submissionViewDto.getSubmissionList();
-        DepositionPageInfo pageInfo = submissionViewDto.getPage();
 
         model.addAttribute("submissions", submissionList.values());
-        model.addAttribute("pageInfo", pageInfo);
-
-        log.info("Page Number: {}", pageable.getPageNumber());
-        log.info("Page SIze: {}", pageable.getPageSize());
-        log.info("Offset: {}", pageable.getOffset());
-        log.info("Sort: {}\n\n", pageable.getSort().toString());
-
-        log.info("Begin Index: {}", submissionViewDto.getBeginIndex());
-        log.info("Current Index: {}", submissionViewDto.getCurrentIndex());
-        log.info("End Index: {}", submissionViewDto.getEndIndex());
+        model.addAttribute("dto", submissionViewDto);
 
         return "view_submissions";
     }
@@ -70,6 +60,7 @@ public class SplitSubmissionController {
         List<String> submissionIds = submissionImportProgressService.getSubmissions();
         Map<String, Submission> submissionList = submissionService.getSubmissionsById(submissionIds);
         model.addAttribute("submissions", submissionList.values());
+        model.addAttribute("dto", new SubmissionViewDto());
         return "view_submissions";
     }
 
@@ -78,9 +69,8 @@ public class SplitSubmissionController {
                                         @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         SubmissionViewDto submissionViewDto  = submissionService.getSubmissionsByStatus("IMPORT_FAILED", pageable);
         Map<String, Submission> submissionList = submissionViewDto.getSubmissionList();
-        DepositionPageInfo pageInfo = submissionViewDto.getPage();
         model.addAttribute("submissions", submissionList.values());
-        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("dto", submissionViewDto);
         return "view_submissions";
     }
 
@@ -91,7 +81,7 @@ public class SplitSubmissionController {
         Map<String, Submission> submissionList = submissionViewDto.getSubmissionList();
         DepositionPageInfo pageInfo = submissionViewDto.getPage();
         model.addAttribute("submissions", submissionList.values());
-        model.addAttribute("pageInfo", pageInfo);
+        model.addAttribute("dto", submissionViewDto);
         return "view_submissions";
     }
 }

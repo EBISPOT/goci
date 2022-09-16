@@ -87,11 +87,19 @@ public class DepositionSubmissionService {
     }
 
     public Map<String, Submission> getSubmissionsBasic() {
-        String url = String.format("%s%s", depositionIngestURL, "/submission-envelopes");
+        String url = "/submission-envelopes";
+        return getSubmissions(url);
+    }
+
+    private Map<String, Submission> getSubmissions(String url) {
+
         Map<String, Submission> submissionList = new TreeMap<>();
         try {
+            int i = 0;
+            Map<String, Integer> params = new HashMap<>();
+            params.put("page", i);
             DepositionSubmission[] submissions =
-                    template.getForObject(depositionIngestURL + url, DepositionSubmission[].class);
+                    template.getForObject(depositionIngestURL + url, DepositionSubmission[].class, params);
             Arrays.stream(submissions).forEach(s -> {
                 Submission testSub = buildSubmission(s);
                 submissionList.put(testSub.getId(), testSub);
@@ -113,15 +121,15 @@ public class DepositionSubmissionService {
                 submissionList.put(submission.getId(), submission);
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
+
 
         SubmissionViewDto submissionViewDto = SubmissionViewDto.builder()
                 .submissionList(submissionList)
                 .page(depositionSubmissionDto.getPage())
                 .build();
         submissionViewDto.setPageIndexes();
-
         return submissionViewDto;
     }
 
