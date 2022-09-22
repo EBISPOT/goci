@@ -21,8 +21,6 @@
 
     <link rel="stylesheet" href="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.css"/>
 
-    <link rel="stylesheet" th:href="@{/css/general.css}"/>
-
     <script src="//cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
@@ -38,6 +36,8 @@
     <script type="text/javascript" charset="utf8"
             src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
+    <link rel="stylesheet" th:href="@{/css/general.css}"/>
 </head>
 <body>
 
@@ -115,7 +115,8 @@
                                 </td>
 
                                 <td class="gwas-tooltip expand" th:attr="data-title=${submission.submissionType.label}">
-                                    <p class="text-max-width-100px" th:text="${submission.submissionType.label}"> Submission Type </p>
+                                    <p class="text-max-width-100px" th:text="${submission.submissionType.label}">
+                                        Submission Type </p>
                                 </td>
 
                                 <td class="text-max-width-100px">
@@ -155,27 +156,29 @@
                         <ul class="pagination" role="navigation" aria-label="Pagination" style="float: left;">
 
                             <li class="pagination-previous"
-                                th:classappend="${#strings.equals(dto.page.number, '1')} ? 'disabled'">
-                            <span th:if="${#strings.equals(dto.page.number, '1')}"
-                                  aria-label="Previous page">First </span>
+                                th:classappend="${#strings.equals(dto.page.number, '0')} ? 'disabled'">
 
-                                <a th:unless="${#strings.equals(dto.page.number, '1')}"
+                                <span th:if="${#strings.equals(dto.page.number, '0')}"
+                                      aria-label="Previous page">First </span>
+
+                                <a th:unless="${#strings.equals(dto.page.number, '0')}"
                                    th:href="'?page=0&amp;size=' + ${dto.page.size}" aria-label="First page">First </a>
                             </li>
 
                             <li th:each="i: ${#numbers.sequence(dto.beginIndex, dto.endIndex)}"
-                                th:classappend="${i == dto.page.number + 1} ? 'active'"> <!-- +1 offset for spring zero based pagination -->
+                                th:classappend="${i == dto.page.number} ? 'active'">
+                                <!-- +1 offset for spring zero based pagination -->
                                 <a th:href="'?page=' + ${i} + '&amp;size=' + ${dto.page.size}"
                                    th:aria-label="'Page ' + ${i}"
                                    th:text="${i}">1</a>
                             </li>
 
                             <li class="pagination-next"
-                                th:classappend="${#strings.equals(dto.page.number, #strings.toString(dto.page.totalPages))} ? 'disabled' ">
-                                            <span th:if="${#strings.equals(dto.page.number, #strings.toString(dto.page.totalPages))}"
+                                th:classappend="${#strings.equals(dto.page.number+1, #strings.toString(dto.page.totalPages))} ? 'disabled' ">
+                                            <span th:if="${#strings.equals(dto.page.number+1, #strings.toString(dto.page.totalPages))}"
                                                   aria-label="Last page">Last </span>
-                                <a th:unless="${#strings.equals(dto.page.number, #strings.toString(dto.page.totalPages))}"
-                                   th:href="'?page=' + ${dto.page.totalPages} + '&amp;size='+ ${dto.page.size}"
+                                <a th:unless="${#strings.equals(dto.page.number+1, #strings.toString(dto.page.totalPages))}"
+                                   th:href="'?page=' + ${dto.page.totalPages-1} + '&amp;size='+ ${dto.page.size}"
                                    aria-label="Last page">Last </a>
                             </li>
                         </ul>
@@ -212,7 +215,6 @@
             </div>
         </div>
 
-
     </div>
 </div>
 
@@ -220,77 +222,6 @@
 
 <script th:src="@{/js/goci-submission-page.js}"></script>
 
-
-<style>
-    /* setup gwas-tooltips */
-    .gwas-tooltip {
-        position: relative;
-    }
-
-    .gwas-tooltip:before,
-    .gwas-tooltip:after {
-        display: block;
-        opacity: 0;
-        pointer-events: none;
-        position: absolute;
-    }
-
-    .gwas-tooltip:after {
-        border-right: 6px solid transparent;
-        border-bottom: 6px solid #4F8791;
-        border-left: 6px solid transparent;
-        content: '';
-        height: 0;
-        top: 26px;
-        left: 20px;
-        width: 0;
-    }
-
-    .gwas-tooltip:before {
-        background: #4F8791;
-        border-radius: 2px;
-        color: #fff;
-        content: attr(data-title);
-        padding: 6px 10px;
-        top: 32px;
-        white-space: normal;
-        z-index: 99999;
-    }
-
-    /* expand #45A9B8 */
-    .gwas-tooltip.expand:before {
-        transform: scale3d(.2, .2, 1);
-        transition: all .2s ease-in-out;
-    }
-
-    .gwas-tooltip.expand:after {
-        transform: translate3d(0, 6px, 0);
-        transition: all .1s ease-in-out;
-    }
-
-    .gwas-tooltip.expand:hover:before,
-    .gwas-tooltip.expand:hover:after {
-        opacity: 1;
-        transform: scale3d(1, 1, 1);
-    }
-
-    .gwas-tooltip.expand:hover:after {
-        transition: all .2s .1s ease-in-out;
-    }
-
-    .text-max-width-3rem, .text-max-width-100px {
-        overflow: hidden !important;
-        max-width: 200px !important;
-        text-overflow: ellipsis !important;
-        white-space: nowrap !important;
-    }
-    .text-max-width-100px {
-        max-width: 100px !important;
-    }
-    .text-max-width-3rem {
-        max-width: 200px !important;
-    }
-</style>
 </body>
 
 </html>

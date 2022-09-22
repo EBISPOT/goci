@@ -311,6 +311,55 @@
                 </div>
             </div>
 
+            <div class="tab-pane" id="associations">
+                <!-- Associations Data Area -->
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <input type="text" id="table-search" placeholder="Search for Associations ..."
+                                   title="Type in a name"/>
+                            <table id='clickable-table-associations' class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="text-left" style="width:150px;"> Study Tag</th>
+                                    <th style="width:150px;"> pValue</th>
+                                    <th style="width:150px;"> pValue Text</th>
+                                    <th style="width:150px;"> Effect Allele</th>
+                                    <th style="width:150px;"> Effect Allele Freq</th>
+                                    <th style="width:150px;"> Other Allele</th>
+                                    <th style="width:150px;"> Haplotype ID</th>
+                                    <th style="width:150px;"> Variant ID</th>
+                                    <th style="width:150px;"> Standard Error</th>
+                                    <th style="width:150px;"> Odd Ratio</th>
+                                    <th style="width:150px;"> CI Lower</th>
+                                    <th style="width:150px;"> CI Upper</th>
+                                    <th style="width:150px;"> Beta</th>
+                                    <th style="width:150px;"> Beta Direction</th>
+                                    <th style="width:150px;"> Beta Unit</th>
+                                    <th style="width:150px;"> Proxy variant</th>
+                                </tr>
+                                </thead>
+                                <tbody id="deposition-associations-data">
+                                <tr id="loader-row-associations" class="" style="background-color: #FFFFFF;">
+                                    <td colspan="9">
+                                        <div class='loader'></div>
+                                    </td>
+                                </tr>
+                                <!-- TABLE IS INJECTED HERE VIA DOM -->
+                                </tbody>
+                            </table>
+                            <nav aria-label="Page navigation" style="margin-top: -20px;" id="page-area-associations">
+                                <!-- Pagination is updated here -->
+                            </nav>
+                            <nav style="width: 50px; margin-right: 15px; margin-top: -60px; float: right"
+                                 id="page-size-area-associations">
+                                <!-- Page Size is updated here -->
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
