@@ -269,6 +269,48 @@
                 </div>
             </div>
 
+            <div class="tab-pane" id="samples">
+                <!-- Samples Data Area -->
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <input type="text" id="table-search" placeholder="Search for Samples ..."
+                                   title="Type in a name"/>
+                            <table id='clickable-table' class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th class="text-left" style="width:150px;"> Study Tag</th>
+                                    <th style="width:150px;"> Ancestry</th>
+                                    <th style="width:150px;"> Ancestry Category</th>
+                                    <th style="width:150px;"> Ancestry Desc</th>
+                                    <th style="width:150px;"> Size</th>
+                                    <th style="width:150px;"> Cases</th>
+                                    <th style="width:150px;"> Controls</th>
+                                    <th style="width:150px;"> Country Recruitment</th>
+                                    <th style="width:150px;"> Stage</th>
+                                </tr>
+                                </thead>
+                                <tbody id="deposition-sample-data">
+                                <tr id="loader-row" class="" style="background-color: #FFFFFF;">
+                                    <td colspan="9">
+                                        <div class='loader'></div>
+                                    </td>
+                                </tr>
+                                <!-- TABLE IS INJECTED HERE VIA DOM -->
+                                </tbody>
+                            </table>
+                            <nav aria-label="Page navigation" style="margin-top: -20px;" id="page-area-samples">
+                                <!-- Pagination is updated here -->
+                            </nav>
+                            <nav style="width: 50px; margin-right: 15px; margin-top: -60px; float: right"
+                                 id="page-size-area-samples">
+                                <!-- Page Size is updated here -->
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
