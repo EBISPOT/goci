@@ -13,7 +13,7 @@ public class UriBuilder {
 
     public static URI buildUrl(String uri, Pageable pageable, String status){
         UriComponentsBuilder targetUrl = UriComponentsBuilder.fromUriString(uri)
-                .queryParam("page", pageable.getPageNumber() - 1)
+                .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", pageable.getPageSize());
 
         targetUrl = (status.isEmpty()) ? targetUrl : targetUrl.queryParam("status", status);

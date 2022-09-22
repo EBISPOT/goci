@@ -14,7 +14,10 @@ import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.util.UriBuilder;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionAssociationListWrapper;
 import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPageInfo;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionSampleListWrapper;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionStudyListWrapper;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
@@ -131,7 +134,6 @@ public class DepositionSubmissionService {
             log.error(e.getMessage());
         }
 
-
         SubmissionViewDto submissionViewDto = SubmissionViewDto.builder()
                 .submissionList(submissionList)
                 .page(depositionSubmissionDto.getPage())
@@ -143,12 +145,49 @@ public class DepositionSubmissionService {
     public DepositionSubmission getSubmission(String submissionID) {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
-        DepositionSubmission submission =
-                template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class,
-                        params);
+        return template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class, params);
+    }
 
-        return submission;
+    public DepositionSampleListWrapper getSubmissionSamples(Pageable pageable, String submissionId) {
 
+        String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/samples");
+        URI targetUrl = UriBuilder.buildUrl(url, pageable);
+        DepositionSampleListWrapper depositionSampleListWrapper = DepositionSampleListWrapper.builder().build();
+        try {
+            log.info(targetUrl.toString());
+            depositionSampleListWrapper = template.getForObject(targetUrl, DepositionSampleListWrapper.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return depositionSampleListWrapper;
+    }
+
+    public DepositionStudyListWrapper getSubmissionStudies(Pageable pageable, String submissionId) {
+
+        String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/studies");
+        URI targetUrl = UriBuilder.buildUrl(url, pageable);
+        DepositionStudyListWrapper studyListWrapper = DepositionStudyListWrapper.builder().build();
+        try {
+            log.info(targetUrl.toString());
+            studyListWrapper = template.getForObject(targetUrl, DepositionStudyListWrapper.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return studyListWrapper;
+    }
+
+    public DepositionAssociationListWrapper getSubmissionAssociations(Pageable pageable, String submissionId) {
+
+        String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/associations");
+        URI targetUrl = UriBuilder.buildUrl(url, pageable);
+        DepositionAssociationListWrapper associationListWrapper = DepositionAssociationListWrapper.builder().build();
+        try {
+            log.info(targetUrl.toString());
+            associationListWrapper = template.getForObject(targetUrl, DepositionAssociationListWrapper.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return associationListWrapper;
     }
 
     public DepositionProvenance getProvenance(String pmid) {
