@@ -29,15 +29,7 @@ public class SubmissionViewDto {
         int totalPages = (this.page == null) ? 0 : this.page.getTotalPages();
 
         this.currentIndex = pageNumber + 1;
-        this.beginIndex = Math.max(1, this.currentIndex - 4);
-        this.endIndex = Math.min(beginIndex + 12, Math.max(1, totalPages));
+        this.beginIndex = Math.max(0, this.currentIndex - 4);
+        this.endIndex = Math.min(beginIndex + 12, Math.max(0, totalPages-1));
     }
-
-
-        /*
-            let currentIndex = pageData.number + 1;
-        let beginIndex = Math.max(1, page - 4);
-        let endIndex = Math.min(beginIndex + 7, totalPages);
-     */
-
 }

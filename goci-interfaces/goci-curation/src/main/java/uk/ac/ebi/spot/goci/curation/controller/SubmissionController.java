@@ -93,6 +93,8 @@ public class SubmissionController {
         Submission submission = buildSubmission(depositionSubmission);
         model.addAttribute("submission", submission);
         model.addAttribute("submissionData", depositionSubmission);
+        model.addAttribute("samples", depositionSubmission);
+        // getSamplesWithPagination
         model.addAttribute("submissionError", submissionService.checkSubmissionErrors(depositionSubmission));
         try {
             model.addAttribute("submissionString", mapper.writeValueAsString(depositionSubmission));

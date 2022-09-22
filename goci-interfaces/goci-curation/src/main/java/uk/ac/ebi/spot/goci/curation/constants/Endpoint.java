@@ -12,6 +12,12 @@ public class Endpoint {
 
     public static final String DISEASE_TRAITS =  "/disease-traits";
 
+    public static final String SUBMISSIONS =  "/submissions";
+
+    public static final String SAMPLES =  "/samples";
+
+    public static final String ASSOCIATIONS = "/associations";
+
     private Endpoint() {
         // Hide implicit default constructor
     }
