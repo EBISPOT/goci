@@ -164,6 +164,7 @@
                                     </div>
                                     <div class="col-sm-4">
                                         <a th:href="@{/publication/{pubmedId}(pubmedId=${submission.pubMedID})}"
+                                           th:unless="${submission.submissionType.toString().equals('IMPORT_IN_PROGRESS')}"
                                            th:text="${submission.pubMedID}"></a>
                                     </div>
                                     <div class="col-sm-2">

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.ac.ebi.spot.goci.curation.dto.SubmissionViewDto;
+import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.SubmissionImportProgressService;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;

@@ -1,4 +1,4 @@
-package uk.ac.ebi.spot.goci.curation.dto;
+package uk.ac.ebi.spot.goci.model.deposition;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
