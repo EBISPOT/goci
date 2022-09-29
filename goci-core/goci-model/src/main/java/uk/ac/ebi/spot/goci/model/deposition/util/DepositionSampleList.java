@@ -1,6 +1,7 @@
 package uk.ac.ebi.spot.goci.model.deposition.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,8 @@ import java.util.List;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DepositionSampleList {
+
+    @JsonProperty("samples")
     List<DepositionSampleDto> samples = new ArrayList<>();
+
 }

@@ -2,6 +2,7 @@ package uk.ac.ebi.spot.goci.model.deposition.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +14,14 @@ import org.springframework.hateoas.ResourceSupport;
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({
+        "samplesList",
+        "page"
+})
 public class DepositionSampleListWrapper extends ResourceSupport {
+
     @JsonProperty(value = "_embedded")
     private DepositionSampleList samplesList;
+
     private DepositionPageInfo page;
 }
