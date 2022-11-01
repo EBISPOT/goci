@@ -88,7 +88,7 @@ public class DepositionSampleService {
 //                }
                 List<AncestralGroup> ancestryGroups = new ArrayList<>();
                 if (ancestryCat != null) {
-                    String[] groups = ancestryCat.split("\\||,");
+                    String[] groups = ancestryCat.split("\\|");
                     getLog().info("Ancestry groups provided: {}", ancestryCat);
                     for (String group : groups) {
                         AncestralGroup ancestryGroup = ancestralGroupRepository.findByAncestralGroup(group);
