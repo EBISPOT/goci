@@ -6,7 +6,7 @@
 # Ensure all branches ready for release are merged into dev / master
 
 
-DEV_BRANCH='2.x-dev'
+DEV_BRANCH='goci-911-autocurator-mail-spamming'
 
 MASTER_BRANCH='2.x-stable'
 

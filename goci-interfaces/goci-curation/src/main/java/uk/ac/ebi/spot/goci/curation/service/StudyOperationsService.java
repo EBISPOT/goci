@@ -313,7 +313,7 @@ public class StudyOperationsService {
 
                 // Send notification email to curators
                 getLog().info("Sending email...");
-                //Commenting to prevent spamming of mailbox server 
+                //Commenting to prevent spamming of mailbox server
                 //mailService.sendEmailNotification(study, "Publish study");
                 break;
 
