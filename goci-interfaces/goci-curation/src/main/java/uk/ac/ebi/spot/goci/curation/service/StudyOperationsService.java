@@ -313,13 +313,14 @@ public class StudyOperationsService {
 
                 // Send notification email to curators
                 getLog().info("Sending email...");
-                mailService.sendEmailNotification(study, "Publish study");
+                //Commenting to prevent spamming of mailbox server 
+                //mailService.sendEmailNotification(study, "Publish study");
                 break;
 
             case "Level 1 curation done":
                 // Send notification email to curators
                 getLog().info("Sending email...");
-                mailService.sendEmailNotification(study, "Level 1 curation done");
+                //mailService.sendEmailNotification(study, "Level 1 curation done");
 
                 // Save and create event
                 housekeepingOperationsService.saveHousekeeping(study, housekeeping);
@@ -328,7 +329,7 @@ public class StudyOperationsService {
             case "Level 2 curation done":
                 // Send notification email to curators
                 getLog().info("Sending email... Level 2 curation Done");
-                mailService.sendEmailNotification(study, "Level 2 curation done");
+                //mailService.sendEmailNotification(study, "Level 2 curation done");
 
                 // Save and create event
                 housekeepingOperationsService.saveHousekeeping(study, housekeeping);
