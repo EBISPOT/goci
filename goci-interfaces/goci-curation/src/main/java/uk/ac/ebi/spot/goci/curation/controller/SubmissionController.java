@@ -7,6 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
 import uk.ac.ebi.spot.goci.curation.service.CurrentUserDetailsService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionImportService;
 import uk.ac.ebi.spot.goci.curation.service.deposition.DepositionSubmissionService;
@@ -25,6 +29,7 @@ import uk.ac.ebi.spot.goci.model.deposition.DepositionAuthor;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
 import uk.ac.ebi.spot.goci.model.deposition.SubmissionImportProgress;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPageInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.PrintWriter;
@@ -69,9 +74,15 @@ public class SubmissionController {
     }
 
     @RequestMapping(produces = MediaType.TEXT_HTML_VALUE, method = RequestMethod.GET)
-    public String allSubmissionsPage(Model model) {
-        Map<String, Submission> submissionList = submissionService.getReadyToImportSubmissions();
+    public String allSubmissionsPage(Model model,
+                                     @SortDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        SubmissionViewDto submissionViewDto = submissionService.getSubmissionsByStatus("READY_TO_IMPORT", pageable);
+        Map<String, Submission> submissionList = submissionViewDto.getSubmissionList();
+        DepositionPageInfo pageInfo = submissionViewDto.getPage();
+
         model.addAttribute("submissions", submissionList.values());
+        model.addAttribute("dto", submissionViewDto);
+
         return "view_submissions";
     }
 
@@ -82,6 +93,8 @@ public class SubmissionController {
         Submission submission = buildSubmission(depositionSubmission);
         model.addAttribute("submission", submission);
         model.addAttribute("submissionData", depositionSubmission);
+        model.addAttribute("samples", depositionSubmission);
+        // getSamplesWithPagination
         model.addAttribute("submissionError", submissionService.checkSubmissionErrors(depositionSubmission));
         try {
             model.addAttribute("submissionString", mapper.writeValueAsString(depositionSubmission));
@@ -164,7 +177,7 @@ public class SubmissionController {
         List<String> statusMessages = new ArrayList<>();
         List<String> errorMessages = new ArrayList<>();
         try {
-            Map<String, Submission> submissionList = submissionService.getSubmissions();
+            Map<String, Submission> submissionList = submissionService.getSubmissions().getSubmissionList();
             DepositionSubmission depositionSubmission = submissionService.getSubmission(submissionID);
             SecureUser currentUser = currentUserDetailsService.getUserFromRequest(request);
 

@@ -6,20 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPageInfo;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionSubmissionList;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionNoteDto {
-    @JsonProperty("study_tag")
-    private String studyTag;
+public class DepositionSubmissionDto {
 
-    private String note;
+    @JsonProperty(value = "_embedded")
+    private DepositionSubmissionList wrapper;
 
-    @JsonProperty("note_subject")
-    private String noteSubject;
-
-    private String status;
+    private DepositionPageInfo page;
 }
+

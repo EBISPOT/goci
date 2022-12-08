@@ -17,5 +17,6 @@ import java.util.List;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DepositionAssociationList {
+    
     List<DepositionAssociationDto> associations = new ArrayList<>();
 }

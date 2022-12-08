@@ -11,6 +11,9 @@
             <li><a th:href="@{/failed_submissions}">Import failed</a></li>
             <li><a th:href="@{/imported_submissions}">Imported</a></li>
             <li><a th:href="@{/other_submissions}">Other</a></li>
+            <li style="float: right;"><a
+                    th:href="@{{baseURL}/submissions(baseURL=${@environment.getProperty('deposition.ui.uri')})}"
+                    target="_blank" class="btn btn-primary"> View in Deposition App </a></li>
         </ul>
 
     </div>
