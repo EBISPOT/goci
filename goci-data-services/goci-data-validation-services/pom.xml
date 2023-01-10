@@ -6,7 +6,7 @@
 
     <artifactId>goci-data-validation-services</artifactId>
 
-    <version>3.3.7</version>
+    <version>3.3.8</version>
 
 
     <name>GOCI Data Validation Services</name>
@@ -15,7 +15,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
 
-        <version>3.3.7</version>
+        <version>3.3.8</version>
 
         <artifactId>goci-parent</artifactId>
         <relativePath>../../goci-parent/pom.xml</relativePath>

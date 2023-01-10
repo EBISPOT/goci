@@ -8,14 +8,14 @@
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
 
-        <version>3.3.7</version>
+        <version>3.3.8</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>goci-urilabelchecker</artifactId>
 
-    <version>3.3.7</version>
+    <version>3.3.8</version>
 
     <packaging>jar</packaging>
 
