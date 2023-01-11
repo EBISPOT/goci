@@ -12,17 +12,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnsemblReleaseJson {
 
-    private int[] releases;
+    private Integer[] releases;
 
     public EnsemblReleaseJson() {
 
     }
 
-    public int[] getReleases() {
+    public Integer[] getReleases() {
         return releases;
     }
 
-    public void setReleases(int[] releases) {
+    public void setReleases(Integer[] releases) {
         this.releases = releases;
     }
 }

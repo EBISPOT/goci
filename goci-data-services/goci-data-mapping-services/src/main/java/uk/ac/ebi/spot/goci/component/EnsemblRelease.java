@@ -9,6 +9,9 @@ import uk.ac.ebi.spot.goci.exception.EnsemblRestIOException;
 import uk.ac.ebi.spot.goci.model.EnsemblReleaseJson;
 
 import javax.validation.constraints.NotNull;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by Laurent on 22/09/15.
@@ -48,11 +51,15 @@ public class EnsemblRelease {
         try {
             EnsemblReleaseJson ensemblReleaseJson = restTemplate.getForObject(url, EnsemblReleaseJson.class);
             getLog().info("Querying " + url);
-            int[] releases = ensemblReleaseJson.getReleases();
+            Integer[] releases = ensemblReleaseJson.getReleases();
+
 
             if (releases != null) {
-                if (releases.length == 1) {
-                    currentEnsemblRelease = releases[0];
+                List <Integer> rels = Arrays.asList(releases);
+                rels.sort(Comparator.reverseOrder());
+                //if (releases.length == 1) {
+                if(!rels.isEmpty()) {
+                    currentEnsemblRelease = rels.get(0);
                 }
                 else {
                     throw new EnsemblRestIOException("Unable to determine Ensembl release");
