@@ -5,7 +5,7 @@
     <parent>
         <artifactId>goci-parent</artifactId>
         <groupId>uk.ac.ebi.spot</groupId>
-        <version>3.3.6</version>
+        <version>3.3.9</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
@@ -13,7 +13,7 @@
 
     <artifactId>goci-ontology</artifactId>
 
-    <version>3.3.6</version>
+    <version>3.3.9</version>
 
 
 

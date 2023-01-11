@@ -6,7 +6,7 @@
 
     <artifactId>goci-ancestry-mapper</artifactId>
 
-    <version>3.3.6</version>
+    <version>3.3.9</version>
 
     <packaging>jar</packaging>
 
@@ -17,7 +17,7 @@
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
 
-        <version>3.3.6</version>
+        <version>3.3.9</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
