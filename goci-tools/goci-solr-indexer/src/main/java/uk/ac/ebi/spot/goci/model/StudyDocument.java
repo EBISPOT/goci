@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Javadocs go here!
@@ -82,6 +83,14 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     private Collection<String> mappedBkgLabels;
     @Field("mappedBkgUri")
     private Collection<String> mappedBkgUris;
+
+    @Field("numberOfIndividualsInitial")
+    private Integer numberOfIndividualsInitial;
+
+    @Field("numberOfIndividualReplication")
+    private Integer numberOfIndividualReplication;
+
+
 
     public StudyDocument(Study study) {
         super(study);
@@ -157,6 +166,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         this.mappedBkgLabels = new LinkedHashSet<>();
         this.mappedBkgUris = new LinkedHashSet<>();
+        computeInitialAndReplicationNUmber(study);
     }
 
     public String getPubmedId() {
@@ -490,6 +500,21 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
 
         return platform;
+    }
+
+    private void computeInitialAndReplicationNUmber(Study study) {
+        AtomicInteger noOfInitialIndividuals = null;
+        AtomicInteger noOfReplicationIndividuals = null;
+        study.getAncestries().forEach(
+                ancestry -> {
+                    String type = ancestry.getType();
+                    if(type.equals("initial"))
+                        noOfInitialIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
+                    if(type.equals("replication"))
+                        noOfReplicationIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
+                });
+        numberOfIndividualsInitial = noOfInitialIndividuals.intValue();
+        numberOfIndividualReplication = noOfReplicationIndividuals.intValue();
     }
 
 
