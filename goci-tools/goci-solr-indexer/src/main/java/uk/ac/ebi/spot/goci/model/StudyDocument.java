@@ -503,8 +503,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     }
 
     private void computeInitialAndReplicationNUmber(Study study) {
-        AtomicInteger noOfInitialIndividuals = null;
-        AtomicInteger noOfReplicationIndividuals = null;
+        AtomicInteger noOfInitialIndividuals = new AtomicInteger();
+        AtomicInteger noOfReplicationIndividuals = new AtomicInteger();
         study.getAncestries().forEach(
                 ancestry -> {
                     String type = ancestry.getType();
