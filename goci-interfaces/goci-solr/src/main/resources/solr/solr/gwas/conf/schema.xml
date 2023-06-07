@@ -147,7 +147,7 @@
     <field name="countriesOfRecruitment" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="numberOfIndividuals" type="int" indexed="true" stored="true" multiValued="true" />
     <field name="numberOfIndividualsInitial" type="int" indexed="true" stored="true" multiValued="false" />
-    <field name="numberOfIndividualReplication" type="int" indexed="true" stored="true" multiValued="false" />
+    <field name="numberOfIndividualsReplication" type="int" indexed="true" stored="true" multiValued="false" />
     <field name="discovery-sample-ancestry" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="replication-sample-ancestry" type="text_general" indexed="true" stored="true" multiValued="true" />
     <field name="additionalAncestryDescription" type="text_general" indexed="true" stored="true" multiValued="true" />
