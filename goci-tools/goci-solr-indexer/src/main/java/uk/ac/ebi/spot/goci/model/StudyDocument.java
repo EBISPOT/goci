@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * Javadocs go here!
@@ -87,8 +88,14 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("numberOfIndividualsInitial")
     private Integer numberOfIndividualsInitial;
 
-    @Field("numberOfIndividualReplication")
-    private Integer numberOfIndividualReplication;
+    @Field("numberOfIndividualsReplication")
+    private Integer numberOfIndividualsReplication;
+
+    @Field("discovery-sample-ancestry")
+    private Collection<String> discoverySampleAncestry;
+
+    @Field("replication-sample-ancestry")
+    private Collection<String> replicationSampleAncestry;
 
 
 
@@ -166,7 +173,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         this.mappedBkgLabels = new LinkedHashSet<>();
         this.mappedBkgUris = new LinkedHashSet<>();
+        this.discoverySampleAncestry = new ArrayList<>();
+        this.replicationSampleAncestry = new ArrayList<>();
         computeInitialAndReplicationNUmber(study);
+        extractDiscoveryAndReplicationSampleAncestryList();
     }
 
     public String getPubmedId() {
@@ -514,7 +524,32 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                         noOfReplicationIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
                 });
         numberOfIndividualsInitial = noOfInitialIndividuals.intValue();
-        numberOfIndividualReplication = noOfReplicationIndividuals.intValue();
+        numberOfIndividualsReplication = noOfReplicationIndividuals.intValue();
+    }
+
+    private void extractDiscoveryAndReplicationSampleAncestryList() {
+        discoverySampleAncestry = this.ancestryLinks.stream()
+                .filter((ancestryText) -> ancestryText.startsWith("initial"))
+                .map((text) -> {
+                    StringBuilder initialSampleText = new StringBuilder();
+                    String[] freetext = text.split("\\|");
+                    initialSampleText.append(freetext[4]);
+                    initialSampleText.append(" ");
+                    initialSampleText.append(freetext[3]);
+                    return initialSampleText.toString();
+                }).collect(Collectors.toList());
+
+       replicationSampleAncestry = this.ancestryLinks.stream()
+                .filter((ancestryText) -> ancestryText.startsWith("replication"))
+                .map((text) -> {
+                    StringBuilder replicateSampleText = new StringBuilder();
+                    String[] freetext = text.split("\\|");
+                    replicateSampleText.append(freetext[4]);
+                    replicateSampleText.append(" ");
+                    replicateSampleText.append(freetext[3]);
+                    return replicateSampleText.toString();
+                }).collect(Collectors.toList());
+
     }
 
 
