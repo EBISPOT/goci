@@ -32,6 +32,10 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     @Value("${deposition.uri}")
     private String depositionBackendUri;
 
+    private final static String API_V1 = "/v1";
+
+    private final static String API_V2 = "/v2";
+
     @Autowired
     @Qualifier("JodaMapper")
     private ObjectMapper mapper;
@@ -45,7 +49,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         DepositionPublication publication = null;
         Map<String, String> params = new HashMap<>();
         params.put("pmID", id);
-        String url = depositionIngestUri + "/publications/{pmID}?pmid=true";
+        String url = depositionIngestUri + API_V1 + "/publications/{pmID}?pmid=true";
         try {
             String response = template.getForObject(url, String.class, params);
             publication = template.getForObject(url, DepositionPublication.class, params);
@@ -57,19 +61,19 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
 
     @Override
     public void addPublication(DepositionPublication depositionPublication) {
-        String url = depositionIngestUri + "/publications";
+        String url = depositionIngestUri + API_V1 + "/publications";
         template.postForObject(url, depositionPublication, DepositionPublication.class);
     }
 
     @Override
     public void updatePublication(DepositionPublication depositionPublication) {
-        String url = depositionIngestUri + "/publications/" + depositionPublication.getPmid();
+        String url = depositionIngestUri + API_V1 + "/publications/" + depositionPublication.getPmid();
         template.put(url, depositionPublication);
     }
 
     @Override
     public void deletePublication(DepositionPublication depositionPublication) {
-        String url = depositionIngestUri + "/publications/" + depositionPublication.getPmid();
+        String url = depositionIngestUri + API_V1 + "/publications/" + depositionPublication.getPmid();
         try {
             template.delete(url);
         } catch (Exception e) {
@@ -84,7 +88,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
         DepositionSubmission submission = null;
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", id);
-        String url = depositionIngestUri + "/submissions/{submissionID}";
+        String url = depositionIngestUri + API_V1 + "/submissions/{submissionID}";
         try {
             String response = template.getForObject(url, String.class, params);
             submission = template.getForObject(url, DepositionSubmission.class, params);
@@ -98,21 +102,21 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     public void addSubmission(DepositionSubmission depositionSubmission) {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", depositionSubmission.getSubmissionId());
-        String url = depositionIngestUri + "/submissions/{submissionID}";
+        String url = depositionIngestUri + API_V1 + "/submissions/{submissionID}";
         template.put(url, depositionSubmission, params);
     }
 
     @Override
     public Map<String, DepositionPublication> getAllPublications() {
         log.info("Retrieving publications");
-        String url = depositionIngestUri + "/publications?page={page}&size=100";
+        String url = depositionIngestUri + API_V1 + "/publications?page={page}&size=100";
         return getAllPublications(url);
     }
 
     @Override
     public Map<String, BodyOfWorkDto> getAllBodyOfWork() {
         log.info("Retrieving publications");
-        String url = depositionIngestUri + "/bodyofwork/?status=UNDER_SUBMISSION&page={page}&size=100";
+        String url = depositionIngestUri + API_V1 + "/bodyofwork/?status=UNDER_SUBMISSION&page={page}&size=100";
         Map<String, BodyOfWorkDto> bomMap = new HashMap<>();
         try {
             int i = 0;
@@ -138,7 +142,7 @@ public class DepositionPublicationServiceImpl implements DepositionPublicationSe
     @Override
     public Map<String, DepositionPublication> getAllBackendPublications() {
         log.info("Retrieving publications");
-        String url = depositionBackendUri + "/publications?page={page}&size=100";
+        String url = depositionBackendUri + API_V1 + "/publications?page={page}&size=100";
         Map<String, DepositionPublication> publicationMap = new HashMap<>();
         try {
             int i = 0;
