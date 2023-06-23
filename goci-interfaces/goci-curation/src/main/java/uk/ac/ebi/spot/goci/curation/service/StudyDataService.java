@@ -42,6 +42,10 @@ public class StudyDataService {
         return studyRepository.findByHousekeepingIsPublished(pageable, isPublished);
     }
 
+    public Page<Study> getStudies(Pageable pageable) {
+        return studyRepository.findAll(pageable);
+    }
+
     public Optional<Study> getStudyByAccessionId(String accessionId) {
         return studyRepository.findByAccessionId(accessionId);
     }
