@@ -8,7 +8,7 @@
         <artifactId>goci-parent</artifactId>
         <groupId>uk.ac.ebi.spot</groupId>
 
-        <version>3.3.9</version>
+        <version>3.4.0</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
@@ -16,7 +16,7 @@
 
     <artifactId>goci-db-binding</artifactId>
 
-    <version>3.3.9</version>
+    <version>3.4.0</version>
 
 
 

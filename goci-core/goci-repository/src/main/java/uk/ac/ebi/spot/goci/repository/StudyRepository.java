@@ -224,5 +224,8 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
             true)
     String getNextAccessionId();
 
+    @RestResource(exported = false)
+    Page<Study> findAll(Pageable pageable);
+
 }
 

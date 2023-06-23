@@ -6,7 +6,7 @@
 # Ensure all branches ready for release are merged into dev / master
 
 
-DEV_BRANCH='goci#882-NEW-fix-Ensembl-versioning-code'
+DEV_BRANCH='goci-1049-release-prod'
 
 MASTER_BRANCH='2.x-stable'
 
