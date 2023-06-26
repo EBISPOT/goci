@@ -11,6 +11,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * Javadocs go here!
@@ -42,6 +44,16 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private Collection<String> countriesOfOrigin;
     @Field private Collection<String> countriesOfRecruitment;
     @Field private Collection<Integer> numberOfIndividuals;
+
+    @Field("numberOfIndividualsInitial")
+    private Integer numberOfIndividualsInitial;
+    @Field("numberOfIndividualsReplication")
+    private Integer numberOfIndividualsReplication;
+    @Field("discovery-sample-ancestry")
+    private Collection<String> discoverySampleAncestry;
+    @Field("replication-sample-ancestry")
+    private Collection<String> replicationSampleAncestry;
+
     @Field private Collection<String> additionalAncestryDescription;
     @Field private Collection<String> ancestryLinks;
     @Field private Collection<String> genotypingTechnologies;
@@ -157,6 +169,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         this.mappedBkgLabels = new LinkedHashSet<>();
         this.mappedBkgUris = new LinkedHashSet<>();
+        computeInitialAndReplicationNUmber(study);
+        extractDiscoveryAndReplicationSampleAncestryList();
     }
 
     public String getPubmedId() {
@@ -507,5 +521,45 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
     public Boolean getAgreedToCc0() {
         return agreedToCc0;
+    }
+
+    private void extractDiscoveryAndReplicationSampleAncestryList() {
+        discoverySampleAncestry = this.ancestryLinks.stream()
+                .filter((ancestryText) -> ancestryText.startsWith("initial"))
+                .map((text) -> {
+                    StringBuilder initialSampleText = new StringBuilder();
+                    String[] freetext = text.split("\\|");
+                    initialSampleText.append(freetext[4]);
+                    initialSampleText.append(" ");
+                    initialSampleText.append(freetext[3]);
+                    return initialSampleText.toString();
+                }).collect(Collectors.toList());
+
+        replicationSampleAncestry = this.ancestryLinks.stream()
+                .filter((ancestryText) -> ancestryText.startsWith("replication"))
+                .map((text) -> {
+                    StringBuilder replicateSampleText = new StringBuilder();
+                    String[] freetext = text.split("\\|");
+                    replicateSampleText.append(freetext[4]);
+                    replicateSampleText.append(" ");
+                    replicateSampleText.append(freetext[3]);
+                    return replicateSampleText.toString();
+                }).collect(Collectors.toList());
+
+    }
+
+    private void computeInitialAndReplicationNUmber(Study study) {
+        AtomicInteger noOfInitialIndividuals = new AtomicInteger();;
+        AtomicInteger noOfReplicationIndividuals = new AtomicInteger();;
+        study.getAncestries().forEach(
+                ancestry -> {
+                    String type = ancestry.getType();
+                    if(type.equals("initial"))
+                        noOfInitialIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
+                    if(type.equals("replication"))
+                        noOfReplicationIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
+                });
+        numberOfIndividualsInitial = noOfInitialIndividuals.intValue();
+        numberOfIndividualsReplication = noOfReplicationIndividuals.intValue();
     }
 }

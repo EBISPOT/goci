@@ -6,7 +6,7 @@
 # Ensure all branches ready for release are merged into dev / master
 
 
-DEV_BRANCH='goci-1049-release-prod'
+DEV_BRANCH='gwas-ui-296-Release-Prod'
 
 MASTER_BRANCH='2.x-stable'
 
