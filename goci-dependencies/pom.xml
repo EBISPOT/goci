@@ -7,7 +7,7 @@
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci-dependencies</artifactId>
 
-    <version>3.4.0</version>
+    <version>3.4.1</version>
 
     <packaging>pom</packaging>
 
@@ -30,7 +30,7 @@
 
     <properties>
 
-        <goci.version>3.4.0</goci.version>
+        <goci.version>3.4.1</goci.version>
 
         <hibernate.jpa.2.1.version>1.0.0.Final</hibernate.jpa.2.1.version>
         <oracle.version>19.3.0.0</oracle.version>
@@ -161,7 +161,7 @@
                 <groupId>uk.ac.ebi.spot</groupId>
                 <artifactId>goci-pussycat</artifactId>
 
-                <version>3.4.0</version>
+                <version>3.4.1</version>
 
                 <classifier>classes</classifier>
             </dependency>
