@@ -518,10 +518,14 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         study.getAncestries().forEach(
                 ancestry -> {
                     String type = ancestry.getType();
-                    if(type.equals("initial"))
+                    if(type.equals("initial")) {
+                        if(ancestry.getNumberOfIndividuals() != null)
                         noOfInitialIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
-                    if(type.equals("replication"))
+                    }
+                    if(type.equals("replication")) {
+                        if(ancestry.getNumberOfIndividuals() != null)
                         noOfReplicationIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
+                    }
                 });
         numberOfIndividualsInitial = noOfInitialIndividuals.intValue();
         numberOfIndividualsReplication = noOfReplicationIndividuals.intValue();
