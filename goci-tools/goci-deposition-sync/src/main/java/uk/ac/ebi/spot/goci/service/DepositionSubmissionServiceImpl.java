@@ -4,11 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmissionDto;
+import uk.ac.ebi.spot.goci.model.deposition.Submission;
+import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
+import uk.ac.ebi.spot.goci.util.DepositionUtil;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,7 +23,9 @@ import java.util.TreeMap;
 @Service
 public class DepositionSubmissionServiceImpl implements DepositionSubmissionService {
 
-    private static final Logger log = LoggerFactory.getLogger(DepositionSubmissionServiceImpl.class);
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Value("${deposition.ingest.uri}")
     private String depositionIngestUri;
 
@@ -36,42 +45,39 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
     @Override
     public Map<String, DepositionSubmission> getSubmissions() {
 
-        String url = depositionIngestUri + API_V2 + "/submissions/all";
+        String url = String.format("%s%s", depositionIngestUri, "/submissions");
+        int page = 0; int pageSize = 100;
+        Pageable pageable = new PageRequest(page, pageSize);
+
         Map<String, DepositionSubmission> submissionList = new TreeMap<>();
-        Map<String, Integer> params = new HashMap<>();
-        Integer count = getSubmissionCount();
-        log.info("The Submission count is "+count);
-        int noOfPages = count/10;
-        log.info("The noOfPages  is "+noOfPages);
-        int pageSize = 10;
-        try {
-            for(int i = 0; i <=  noOfPages; i++ ) {
-                DepositionSubmission[] submissions =
-                        template.getForObject(buildPaginationParams(url, i , pageSize), DepositionSubmission[].class, params);
-                for (DepositionSubmission submission : submissions) {
-                   //log.info("SubmissionId in the loop is ->"+submission.getSubmissionId());
-                    submissionList.put(submission.getSubmissionId(), submission);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        URI uri = DepositionUtil.buildUrl(url, pageable);
+        DepositionSubmissionDto depositionSubmissionDto = getSubmissionsWithPagination(uri);
+        depositionSubmissionDto.getWrapper().getSubmissions().forEach(submission -> {
+            submissionList.put(submission.getSubmissionId(), submission);
+        });
+
+        int batchSize = depositionSubmissionDto.getPage().getTotalPages();
+        for (int nextPage=1; nextPage<batchSize; nextPage++){
+            uri = DepositionUtil.buildUrl(url, new PageRequest(nextPage, pageSize));
+            depositionSubmissionDto = getSubmissionsWithPagination(uri);
+            depositionSubmissionDto.getWrapper().getSubmissions().forEach(submission -> {
+                submissionList.put(submission.getSubmissionId(), submission);
+            });
         }
+
         return submissionList;
     }
 
-    public Integer getSubmissionCount() {
-        String url = API_V2 + "/submissions/count";
-        Map<String, Integer> params = new HashMap<>();
-        Integer countSubmissions = null;
+    private DepositionSubmissionDto getSubmissionsWithPagination(URI targetUrl) {
+        DepositionSubmissionDto depositionSubmissionDto = DepositionSubmissionDto.builder().build();
         try {
-          String countSub =  template.getForObject(depositionIngestUri + url, String.class, params);
-          countSubmissions = Integer.parseInt(countSub);
-
-        }catch (Exception e) {
-            log.error("Error in Calling API for Submission Count"+e.getMessage(),e);
+            depositionSubmissionDto = template.getForObject(targetUrl, DepositionSubmissionDto.class);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return countSubmissions;
+        return depositionSubmissionDto;
     }
+
 
     public void updateSubmission(DepositionSubmission depositionSubmission, String submissionStatus) {
         depositionSubmission.setStatus(submissionStatus);
@@ -85,13 +91,6 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
         }
     }
 
-    private String buildPaginationParams(String uri , Integer page, Integer size) {
-        return UriComponentsBuilder.fromHttpUrl(uri)
-                .queryParam("page",page )
-                .queryParam("size", size)
-                .build()
-                .toUriString();
 
-    }
 
 }

@@ -213,6 +213,7 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
     @RestResource(exported = false)
     Page<Study> findByOpenTargets(Boolean openTargets, Pageable pageable);
 
+
     @RestResource(exported = false)
     @Transactional
     @Modifying(clearAutomatically = true)
@@ -224,5 +225,7 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
             true)
     String getNextAccessionId();
 
+    @RestResource(exported = false)
+    Page<Study> findAll(Pageable pageable);
 }
 

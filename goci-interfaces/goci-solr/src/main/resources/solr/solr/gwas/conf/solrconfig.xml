@@ -204,7 +204,7 @@
              be based on the last SolrCore to be initialized.
 
           -->
-        <maxBooleanClauses>1024</maxBooleanClauses>
+        <maxBooleanClauses>12288</maxBooleanClauses>
 
 
         <!-- Solr Internal Query Caches

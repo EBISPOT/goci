@@ -5,21 +5,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
-
+import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
+import uk.ac.ebi.spot.goci.curation.util.UriBuilder;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
 import uk.ac.ebi.spot.goci.model.deposition.util.DepositionAssociationListWrapper;
 import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPageInfo;
 import uk.ac.ebi.spot.goci.model.deposition.util.DepositionSampleListWrapper;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionStudyListWrapper;
 import uk.ac.ebi.spot.goci.repository.CurationStatusRepository;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 
@@ -47,6 +49,8 @@ public class DepositionSubmissionService {
 
     @Value("${deposition.token}")
     private String depositionToken;
+
+    private final Pageable pageable = new PageRequest(0, 3000, null);
 
     private SubmissionImportProgressService submissionImportProgressService;
 
@@ -149,7 +153,6 @@ public class DepositionSubmissionService {
     }
 
     public DepositionSampleListWrapper getSubmissionSamples(Pageable pageable, String submissionId) {
-
         String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/samples");
         URI targetUrl = UriBuilder.buildUrl(url, pageable);
         DepositionSampleListWrapper depositionSampleListWrapper = DepositionSampleListWrapper.builder().build();
@@ -186,6 +189,29 @@ public class DepositionSubmissionService {
             studyListWrapper = template.getForObject(uri, DepositionStudyListWrapper.class);
         } catch (Exception e) {
             log.error("Exception in rest API call sor studies API"+e.getMessage(),e);
+        String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/samples");
+        URI targetUrl = UriBuilder.buildUrl(url, pageable);
+        DepositionSampleListWrapper depositionSampleListWrapper = DepositionSampleListWrapper.builder().build();
+        try {
+            log.info(targetUrl.toString());
+            depositionSampleListWrapper = template.getForObject(targetUrl, DepositionSampleListWrapper.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return depositionSampleListWrapper;
+    }
+
+    public DepositionStudyListWrapper getSubmissionStudies(Pageable pageable, String submissionId) {
+
+        String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/studies");
+        URI targetUrl = UriBuilder.buildUrl(url, pageable);
+        DepositionStudyListWrapper studyListWrapper = DepositionStudyListWrapper.builder().build();
+        try {
+            log.info(targetUrl.toString());
+            studyListWrapper = template.getForObject(targetUrl, DepositionStudyListWrapper.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+
         }
         return studyListWrapper;
     }
