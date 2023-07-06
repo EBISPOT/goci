@@ -16,5 +16,15 @@ import org.springframework.hateoas.ResourceSupport;
 public class DepositionAssociationListWrapper extends ResourceSupport {
     @JsonProperty(value = "_embedded")
     private DepositionAssociationList associations;
+<<<<<<< Updated upstream
+=======
+
+    @JsonProperty("_links")
+    private Links links;
+
+    @JsonProperty("page")
+>>>>>>> Stashed changes
     private DepositionPageInfo page;
+
+
 }

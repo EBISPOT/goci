@@ -16,5 +16,10 @@ import org.springframework.hateoas.ResourceSupport;
 public class DepositionStudyListWrapper extends ResourceSupport {
     @JsonProperty(value = "_embedded")
     private DepositionStudyList studies;
+
+    @JsonProperty("_links")
+    private Links links;
+
+    @JsonProperty("page")
     private DepositionPageInfo page;
 }

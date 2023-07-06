@@ -16,5 +16,12 @@ import org.springframework.hateoas.ResourceSupport;
 public class DepositionSampleListWrapper extends ResourceSupport {
     @JsonProperty(value = "_embedded")
     private DepositionSampleList samplesList;
+
+    @JsonProperty("_links")
+    private Links links;
+
+    @JsonProperty("page")
     private DepositionPageInfo page;
+
+
 }

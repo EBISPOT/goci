@@ -13,11 +13,15 @@ import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionAssociationListWrapper;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionStudyListWrapper;
+import uk.ac.ebi.spot.goci.model.deposition.util.Links;
 import uk.ac.ebi.spot.goci.repository.*;
 import uk.ac.ebi.spot.goci.service.PublicationService;
 import uk.ac.ebi.spot.goci.service.StudyService;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,6 +72,9 @@ public class DepositionSubmissionImportService {
     @Autowired
     private StudyService studyService;
 
+    @Autowired
+    private DepositionSubmissionService depositionSubmissionService;
+
     @Async
     @Transactional
     public void importSubmission(DepositionSubmission depositionSubmission, SecureUser currentUser, Long submissionImportId) {
@@ -87,21 +94,45 @@ public class DepositionSubmissionImportService {
         Collection<Study> dbStudies = studyService.findByPublication(depositionSubmission.getPublication().getPmid());
         List<Long> dbStudyIds = dbStudies.stream().map(Study::getId).collect(Collectors.toList());
         getLog().info("[{}] Found {} studies: {}", submissionID, dbStudies.size(), dbStudyIds);
+        DepositionStudyListWrapper depositionStudyListWrapper = null;
+        List<DepositionStudyDto> studyDtos = new ArrayList<>();
+        depositionStudyListWrapper = depositionSubmissionService.getSubmissionStudies("", String.valueOf(submissionImportId));
+        Links links = depositionStudyListWrapper.getLinks();
+        while(links != null && links.getNext() != null) {
+            depositionStudyListWrapper = depositionSubmissionService.getSubmissionStudies(links.getNext().getHref(), String.valueOf(submissionImportId));
+            studyDtos.addAll(buildStudiesList(depositionStudyListWrapper));
+            links = depositionStudyListWrapper.getLinks();
+        }
 
         List<DepositionStudyDto> studies = depositionSubmission.getStudies();
         List<String> gcsts = studies.stream().map(DepositionStudyDto::getAccession).collect(Collectors.toList());
         getLog().info("[{}] Found {} studies in the submission retrieved from the Deposition App: {}", submissionID, studies.size(), gcsts);
 
-        boolean outcome = true;
+        Boolean outcome =  true;
+
 
         if (submissionType == Submission.SubmissionType.SUM_STATS) { //if submission type is SUM_STATS only
+            List<Pair<Boolean, List<String>>> results = new ArrayList<>();
+
             getLog().info("[{}] Found SUM_STATS submission.", submissionID, studies.size());
             ImportLogStep importStep = importLog.addStep(new ImportLogStep("Publishing summary stats", submissionID));
-            Pair<Boolean, List<String>> result = depositionStudyService.publishSummaryStats(studies, dbStudies);
-            if (result.getLeft()) {
-                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
-                importLog.addErrors(result.getRight(), "Publishing summary stats");
+            updateSumstatsData(studyDtos, dbStudies);
 
+
+                for(Pair<Boolean, List<String>> pair : results) {
+                    if(pair.getLeft() != null && !pair.getLeft()) {
+                        importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
+                        importLog.addErrors(pair.getRight(), "Publishing summary stats");
+                        outcome = false;
+                        break;
+                    }
+                    if(pair.getLeft() != null && pair.getLeft()) {
+                        importLog.addErrors(pair.getRight(),"Publishing summary stats");
+                    }
+                }
+
+            if(outcome) {
+                importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                 importStep = importLog.addStep(new ImportLogStep("Updating submission status: CURATION_COMPLETE", submissionID));
                 String stepOutcome = ingestService.updateSubmissionStatus(depositionSubmission, "CURATION_COMPLETE", "PUBLISHED_WITH_SS");
                 if (stepOutcome != null) {
@@ -110,21 +141,26 @@ public class DepositionSubmissionImportService {
                 } else {
                     importLog.updateStatus(importStep.getId(), ImportLog.SUCCESS);
                 }
-            } else {
-                importLog.updateStatus(importStep.getId(), ImportLog.FAIL);
-                importLog.addErrors(result.getRight(), "Publishing summary stats");
-                outcome = false;
             }
         } else {
             ImportLogStep studiesStep = importLog.addStep(new ImportLogStep("Verifying studies", submissionID));
-            if (studies != null) {// && dbStudies.size() == 1) { //only do this for un-curated publications
+            if (studyDtos != null) { // && dbStudies.size() == 1) { //only do this for un-curated publications
                 importLog.updateStatus(studiesStep.getId(), ImportLog.SUCCESS);
                 getLog().info("[{}] Validating associations ...", submissionID);
+                List<DepositionAssociationDto> asscnDtos = new ArrayList<>();
                 ImportLogStep importStep = importLog.addStep(new ImportLogStep("Validating associations", submissionID));
-                for (DepositionStudyDto studyDto : studies) {
-                    List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
-                    if (associations != null) {
-                        List<String> errors = associationValidationService.validateAssociations(studyDto.getStudyTag(), studyDto.getAccession(), associations);
+                DepositionAssociationListWrapper depositionAssociationListWrapper = null;
+                depositionAssociationListWrapper = depositionSubmissionService.getSubmissionAssociations("", String.valueOf(submissionImportId));
+                Links asscnLinks = depositionAssociationListWrapper.getLinks();
+                while(asscnLinks != null && asscnLinks.getNext() != null) {
+                    depositionAssociationListWrapper = depositionSubmissionService.getSubmissionAssociations(asscnLinks.getNext().getHref(), String.valueOf(submissionImportId));
+                    asscnDtos.addAll(buildAssociationList(depositionAssociationListWrapper));
+                    asscnLinks = depositionAssociationListWrapper.getLinks();
+                }
+
+                for (DepositionStudyDto studyDto : studyDtos) {
+                    if (asscnDtos != null) {
+                        List<String> errors = associationValidationService.validateAssociations(studyDto.getStudyTag(), studyDto.getAccession(), asscnDtos);
                         importLog.addWarnings(errors, "Validating associations");
                     }
                 }
@@ -244,5 +280,26 @@ public class DepositionSubmissionImportService {
 
         return null;
     }
+
+        private List<Pair<Boolean, List<String>>>  updateSumstatsData(List<DepositionStudyDto> studyDtos, Collection<Study> dbStudies) {
+            List<Pair<Boolean, List<String>>> results =
+                                    studyDtos.stream().
+                                            map(studyDTO -> depositionStudyService.publishSummaryStats(studyDTO, dbStudies)).collect(Collectors.toList());
+
+            return results;
+        }
+
+        private List<DepositionAssociationDto> buildAssociationList(DepositionAssociationListWrapper depositionAssociationListWrapper) {
+            return Optional.ofNullable(depositionAssociationListWrapper.getAssociations())
+                    .map(studyList -> studyList.getAssociations())
+                    .orElse(null);
+        }
+
+    private List<DepositionStudyDto> buildStudiesList(DepositionStudyListWrapper depositionStudyListWrapper) {
+        return Optional.ofNullable(depositionStudyListWrapper.getStudies())
+                .map(studyList -> studyList.getStudies())
+                .orElse(null);
+    }
+
 
 }
