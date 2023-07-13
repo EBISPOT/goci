@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.ResourceSupport;
 
 @Data
 @AllArgsConstructor
@@ -18,10 +17,17 @@ import org.springframework.hateoas.ResourceSupport;
         "associations",
         "page"
 })
-public class DepositionAssociationListWrapper extends ResourceSupport {
+public class DepositionAssociationListWrapper {
 
     @JsonProperty(value = "_embedded")
     private DepositionAssociationList associations;
 
+
+    @JsonProperty("_links")
+    private Links links;
+
+    @JsonProperty("page")
     private DepositionPageInfo page;
+
+
 }

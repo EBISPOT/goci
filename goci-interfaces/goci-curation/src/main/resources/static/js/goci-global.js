@@ -56,7 +56,7 @@ class UI {
         text = (text === null) ? "NA" : text;
         let dText = document.createTextNode(text);
 
-        if (text.length > 30){
+        if (text?.length > 30){
             td.setAttribute("class", "gwas-tooltip expand");
             let p = document.createElement("p");
             p.setAttribute('class', 'text-max-width-3rem');
