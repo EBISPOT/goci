@@ -227,5 +227,6 @@ public interface StudyRepository extends JpaRepository<Study, Long>, JpaSpecific
 
     @RestResource(exported = false)
     Page<Study> findAll(Pageable pageable);
+
 }
 
