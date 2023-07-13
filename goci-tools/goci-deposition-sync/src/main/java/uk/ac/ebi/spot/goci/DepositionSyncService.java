@@ -359,9 +359,9 @@ public class DepositionSyncService {
         Links sampleLinks = depositionSampleListWrapper.getLinks();
         while(sampleLinks != null && sampleLinks.getNext() != null) {
             depositionSampleListWrapper = submissionService.getSamples(sampleLinks.getNext().getHref(), String.valueOf(submissionImportId));
-            List<DepositionSampleDto> samplesLink = buildSamplesList(depositionSampleListWrapper);
-            if(samplesLink != null) {
-                sampleDtoList.addAll(samplesLink);
+            samples = buildSamplesList(depositionSampleListWrapper);
+            if(samples != null) {
+                sampleDtoList.addAll(samples);
             }
             sampleLinks = depositionSampleListWrapper.getLinks();
         }
@@ -537,9 +537,9 @@ public class DepositionSyncService {
         Links links = depositionStudyListWrapper.getLinks();
         while(links != null && links.getNext() != null) {
             depositionStudyListWrapper = submissionService.getSubmissionStudies(links.getNext().getHref(), String.valueOf(depositionSubmission.getSubmissionId()));
-            List<DepositionStudyDto> studiesLink = buildStudiesList(depositionStudyListWrapper);
-            if(studiesLink != null) {
-                studyDtos.addAll(studiesLink);
+            studies = buildStudiesList(depositionStudyListWrapper);
+            if(studies != null) {
+                studyDtos.addAll(studies);
             }
             links = depositionStudyListWrapper.getLinks();
         }
