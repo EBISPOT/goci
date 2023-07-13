@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class SubmissionImportProgressService {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
@@ -41,6 +41,7 @@ public class SubmissionImportProgressService {
         log.info("Removing id: {}", id);
         submissionImportProgressRepository.delete(id);
     }
+
 
     public List<String> getSubmissions() {
         List<SubmissionImportProgress> submissionImportProgresses = submissionImportProgressRepository.findAll();

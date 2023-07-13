@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uk.ac.ebi.spot.goci.model.*;
 import uk.ac.ebi.spot.goci.model.deposition.*;
+import uk.ac.ebi.spot.goci.model.deposition.util.*;
 import uk.ac.ebi.spot.goci.repository.BodyOfWorkRepository;
 import uk.ac.ebi.spot.goci.repository.UnpublishedAncestryRepository;
 import uk.ac.ebi.spot.goci.repository.UnpublishedStudyRepository;
@@ -21,12 +22,13 @@ import uk.ac.ebi.spot.goci.util.DepositionUtil;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class DepositionSyncService {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
@@ -239,8 +241,9 @@ public class DepositionSyncService {
         //curation import will need to prune unpublished_studies, ancestry and body_of_work
         submissions.forEach((s, submission) -> {
             Submission.SubmissionType submissionType = DepositionUtil.getSubmissionType(submission);
+            List<DepositionStudyDto> studyDtos = getStudies(submission);
             if (submission.getStatus().equals("SUBMITTED") && submissionType == Submission.SubmissionType.SUM_STATS) {
-                autoImportSumStatsSubmission(submission, importLog);
+                autoImportSumStatsSubmission(submission, importLog, studyDtos);
             }
 
             if (submission.getStatus().equals("DEPOSITION_COMPLETE") && submission.getProvenanceType().equals("BODY_OF_WORK")) {
@@ -249,7 +252,8 @@ public class DepositionSyncService {
                 if (isEligible(bodyOfWorkDto)) {
                     getLog().info(" - Submission [{}] is eligible.", submission.getSubmissionId());
                     Set<UnpublishedStudy> studies = new HashSet<>();
-                    submission.getStudies().forEach(studyDto -> {
+
+                    studyDtos.forEach(studyDto -> {
                         String studyTag = studyDto.getStudyTag();
                         getLog().info(" - Processing study tag: {}", studyTag);
                         UnpublishedStudy unpublishedStudy = unpublishedRepository.findByAccession(studyDto.getAccession());
@@ -259,13 +263,13 @@ public class DepositionSyncService {
                                     unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto, submission));
                             studies.add(unpublishedStudy);
                             //add ancestries
-                            List<DepositionSampleDto> sampleDtoList = getSamples(submission, studyTag);
+                            List<DepositionSampleDto> sampleDtoList = getSamples(studyTag, submission.getSubmissionId());
                             List<UnpublishedAncestry> ancestryList = new ArrayList<>();
                             for (DepositionSampleDto sampleDto : sampleDtoList) {
                                 UnpublishedAncestry ancestry = UnpublishedAncestry.create(sampleDto, unpublishedStudy);
                                 ancestryList.add(ancestry);
                             }
-                            getLog().info(" - Study tag [{}] has {} ancestries.", ancestryList.size());
+                            getLog().info(" - Study tag [{}] has {} ancestries.", studyTag, ancestryList.size());
                             unpublishedAncestryRepo.save(ancestryList);
                             unpublishedStudy.setAncestries(ancestryList);
                             unpublishedRepository.save(unpublishedStudy);
@@ -306,18 +310,18 @@ public class DepositionSyncService {
         depositionSyncEmailService.sendImportNotification(importLog.getLog());
     }
 
-    private void autoImportSumStatsSubmission(DepositionSubmission submission, ImportLog importLog) {
+    private void autoImportSumStatsSubmission(DepositionSubmission submission, ImportLog importLog, List<DepositionStudyDto> studyDtos) {
         getLog().info("Publishing summary stats: {} | {}", submission.getSubmissionId(), submission.getPublication().getPmid());
         List<String> errors = new ArrayList<>();
         getLog().info("[{}] Looking for studies in the local DB ...", submission.getSubmissionId());
         Collection<Study> dbStudies = studyService.findByPublication(submission.getPublication().getPmid());
+
         List<Long> studyIds = new ArrayList<>();
         for (Study study : dbStudies) {
             studyIds.add(study.getId());
         }
-
         try {
-            for (DepositionStudyDto studyDto : submission.getStudies()) {
+            for (DepositionStudyDto studyDto : studyDtos) {
                 String tag = studyDto.getStudyTag();
                 boolean match = false;
                 for (Long studyId : studyIds) {
@@ -344,14 +348,26 @@ public class DepositionSyncService {
         importLog.addEntry(submission.getSubmissionId(), submission.getPublication().getPmid(), errors);
     }
 
-    private List<DepositionSampleDto> getSamples(DepositionSubmission submission, String studyTag) {
+    private List<DepositionSampleDto> getSamples(String studyTag, String submissionImportId) {
         List<DepositionSampleDto> sampleDtoList = new ArrayList<>();
-        submission.getSamples().forEach(depositionSampleDto -> {
-            if (depositionSampleDto.getStudyTag().equals(studyTag)) {
-                sampleDtoList.add(depositionSampleDto);
+        DepositionSampleListWrapper depositionSampleListWrapper = null;
+        depositionSampleListWrapper = submissionService.getSamples("", String.valueOf(submissionImportId));
+        List<DepositionSampleDto> samples = buildSamplesList(depositionSampleListWrapper);
+        if(samples != null) {
+            sampleDtoList.addAll(samples);
+        }
+        Links sampleLinks = depositionSampleListWrapper.getLinks();
+        while(sampleLinks != null && sampleLinks.getNext() != null) {
+            depositionSampleListWrapper = submissionService.getSamples(sampleLinks.getNext().getHref(), String.valueOf(submissionImportId));
+            samples = buildSamplesList(depositionSampleListWrapper);
+            if(samples != null) {
+                sampleDtoList.addAll(samples);
             }
-        });
-        return sampleDtoList;
+            sampleLinks = depositionSampleListWrapper.getLinks();
+        }
+       return sampleDtoList.stream()
+                .filter(depositionSampleDto -> depositionSampleDto.getStudyTag().equals(studyTag))
+                        .collect(Collectors.toList());
     }
 
     private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication) {
@@ -507,5 +523,38 @@ public class DepositionSyncService {
 
         }
         return false;
+    }
+
+
+    private List<DepositionStudyDto> getStudies(DepositionSubmission depositionSubmission) {
+        List<DepositionStudyDto> studyDtos = new ArrayList<>();
+        DepositionStudyListWrapper depositionStudyListWrapper = null;
+        depositionStudyListWrapper = submissionService.getSubmissionStudies("", String.valueOf(depositionSubmission.getSubmissionId()));
+        List<DepositionStudyDto> studies = buildStudiesList(depositionStudyListWrapper);
+        if(studies != null) {
+            studyDtos.addAll(studies);
+        }
+        Links links = depositionStudyListWrapper.getLinks();
+        while(links != null && links.getNext() != null) {
+            depositionStudyListWrapper = submissionService.getSubmissionStudies(links.getNext().getHref(), String.valueOf(depositionSubmission.getSubmissionId()));
+            studies = buildStudiesList(depositionStudyListWrapper);
+            if(studies != null) {
+                studyDtos.addAll(studies);
+            }
+            links = depositionStudyListWrapper.getLinks();
+        }
+        return studyDtos;
+    }
+
+    private List<DepositionSampleDto> buildSamplesList(DepositionSampleListWrapper depositionSampleListWrapper) {
+        return Optional.ofNullable(depositionSampleListWrapper.getSamplesList())
+                .map(DepositionSampleList::getSamples)
+                .orElse(null);
+    }
+
+    private List<DepositionStudyDto> buildStudiesList(DepositionStudyListWrapper depositionStudyListWrapper) {
+        return Optional.ofNullable(depositionStudyListWrapper.getStudies())
+                .map(DepositionStudyList::getStudies)
+                .orElse(null);
     }
 }

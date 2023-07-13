@@ -511,6 +511,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return platform;
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2.x-dev
 
 
     public Collection<String> getAdditionalAncestryDescription() {

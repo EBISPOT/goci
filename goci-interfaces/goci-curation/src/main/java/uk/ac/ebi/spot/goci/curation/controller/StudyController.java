@@ -206,12 +206,19 @@ public class StudyController {
         model.addAttribute("assignee", assignee);
         model.addAttribute("statusAssignment", statusAssignment);
 
-        Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
+        //Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
         studyPage.forEach(study -> {
-            if (pubmedMap.containsKey(study.getPublicationId().getPubmedId())) {
+            try {
+                String submissionId = submissionService.getSubmissionPubMedIds(study.getPublicationId().getPubmedId());
+
+                //if (pubmedMap.containsKey(study.getPublicationId().getPubmedId())) {
                 study.getPublicationId().setActiveSubmission(true);
-                study.getPublicationId().setSubmissionId(pubmedMap.get(study.getPublicationId().getPubmedId()));
+                //study.getPublicationId().setSubmissionId(pubmedMap.get(study.getPublicationId().getPubmedId()));
+                study.getPublicationId().setSubmissionId(submissionId);
+            } catch(Exception ex) {
+                log.error("Exception in restTemplate call with Submission Envelope"+ex.getMessage(),ex);
             }
+            //}
         });
         return "studies";
     }

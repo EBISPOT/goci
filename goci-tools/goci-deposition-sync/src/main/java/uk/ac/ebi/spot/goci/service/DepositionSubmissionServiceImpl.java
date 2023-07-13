@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmissionDto;
-import uk.ac.ebi.spot.goci.model.deposition.Submission;
-import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionSampleListWrapper;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionStudyListWrapper;
 import uk.ac.ebi.spot.goci.util.DepositionUtil;
 
 import java.net.URI;
@@ -23,12 +25,9 @@ import java.util.TreeMap;
 @Service
 public class DepositionSubmissionServiceImpl implements DepositionSubmissionService {
 
-<<<<<<< HEAD
-    private static final Logger log = LoggerFactory.getLogger(DepositionSubmissionServiceImpl.class);
-=======
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
->>>>>>> 2.x-dev
     @Value("${deposition.ingest.uri}")
     private String depositionIngestUri;
 
@@ -47,27 +46,8 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
 
     @Override
     public Map<String, DepositionSubmission> getSubmissions() {
-<<<<<<< HEAD
 
-        String url = depositionIngestUri + API_V2 + "/submissions/all";
-        Map<String, DepositionSubmission> submissionList = new TreeMap<>();
-        Map<String, Integer> params = new HashMap<>();
-        Integer count = getSubmissionCount();
-        log.info("The Submission count is "+count);
-        int noOfPages = count/10;
-        log.info("The noOfPages  is "+noOfPages);
-        int pageSize = 10;
-        try {
-            for(int i = 0; i <=  noOfPages; i++ ) {
-                DepositionSubmission[] submissions =
-                        template.getForObject(buildPaginationParams(url, i , pageSize), DepositionSubmission[].class, params);
-                for (DepositionSubmission submission : submissions) {
-                   //log.info("SubmissionId in the loop is ->"+submission.getSubmissionId());
-                    submissionList.put(submission.getSubmissionId(), submission);
-                }
-            }
-=======
-        String url = String.format("%s%s", depositionIngestUri, "/submissions");
+        String url = String.format("%s%s%s", depositionIngestUri,API_V1, "/submissions");
         int page = 0; int pageSize = 100;
         Pageable pageable = new PageRequest(page, pageSize);
 
@@ -90,30 +70,54 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
         return submissionList;
     }
 
+    public DepositionSampleListWrapper getSamples(String uri , String submissionId) {
+        String targetUri = uri;
+        if(uri.isEmpty()) {
+            uri = String.format("%s%s%s%s%s", depositionIngestUri,API_V1, "/submissions/", submissionId, "/samples");
+            MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+            paramsMap.add("size","500");
+            targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
+        }
+        DepositionSampleListWrapper depositionSampleListWrapper = null;
+        try {
+            log.info("The Samples API based in submission is ->"+targetUri);
+            depositionSampleListWrapper = template.getForObject(targetUri , DepositionSampleListWrapper.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return depositionSampleListWrapper;
+    }
+
+
+    public DepositionStudyListWrapper getSubmissionStudies(String uri, String submissionId) {
+        String targetUri = uri;
+        if(uri.isEmpty()) {
+            uri = String.format("%s%s%s%s%s", depositionIngestUri,API_V1, "/submissions/", submissionId, "/studies");
+            MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+            paramsMap.add("size","500");
+            targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
+        }
+
+        DepositionStudyListWrapper studyListWrapper = null;
+        try {
+            log.info("The Studies API based in submission is ->"+uri);
+            studyListWrapper = template.getForObject(targetUri, DepositionStudyListWrapper.class);
+        } catch (Exception e) {
+            log.error("Exception in rest API call sor studies API" + e.getMessage(), e);
+        }
+        return studyListWrapper;
+    }
+
     private DepositionSubmissionDto getSubmissionsWithPagination(URI targetUrl) {
         DepositionSubmissionDto depositionSubmissionDto = DepositionSubmissionDto.builder().build();
         try {
             depositionSubmissionDto = template.getForObject(targetUrl, DepositionSubmissionDto.class);
->>>>>>> 2.x-dev
         } catch (Exception e) {
             e.printStackTrace();
         }
         return depositionSubmissionDto;
     }
 
-    public Integer getSubmissionCount() {
-        String url = API_V2 + "/submissions/count";
-        Map<String, Integer> params = new HashMap<>();
-        Integer countSubmissions = null;
-        try {
-          String countSub =  template.getForObject(depositionIngestUri + url, String.class, params);
-          countSubmissions = Integer.parseInt(countSub);
-
-        }catch (Exception e) {
-            log.error("Error in Calling API for Submission Count"+e.getMessage(),e);
-        }
-        return countSubmissions;
-    }
 
     public void updateSubmission(DepositionSubmission depositionSubmission, String submissionStatus) {
         depositionSubmission.setStatus(submissionStatus);
@@ -127,13 +131,6 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
         }
     }
 
-    private String buildPaginationParams(String uri , Integer page, Integer size) {
-        return UriComponentsBuilder.fromHttpUrl(uri)
-                .queryParam("page",page )
-                .queryParam("size", size)
-                .build()
-                .toUriString();
 
-    }
 
 }
