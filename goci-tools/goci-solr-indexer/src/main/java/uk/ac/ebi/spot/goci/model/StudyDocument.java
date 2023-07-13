@@ -95,6 +95,20 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("mappedBkgUri")
     private Collection<String> mappedBkgUris;
 
+    @Field("numberOfIndividualsInitial")
+    private Integer numberOfIndividualsInitial;
+
+    @Field("numberOfIndividualsReplication")
+    private Integer numberOfIndividualsReplication;
+
+    @Field("discovery-sample-ancestry")
+    private Collection<String> discoverySampleAncestry;
+
+    @Field("replication-sample-ancestry")
+    private Collection<String> replicationSampleAncestry;
+
+
+
     public StudyDocument(Study study) {
         super(study);
         this.pubmedId = study.getPublicationId().getPubmedId();
@@ -169,6 +183,11 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         this.mappedBkgLabels = new LinkedHashSet<>();
         this.mappedBkgUris = new LinkedHashSet<>();
+<<<<<<< HEAD
+=======
+        this.discoverySampleAncestry = new ArrayList<>();
+        this.replicationSampleAncestry = new ArrayList<>();
+>>>>>>> 2.x-dev
         computeInitialAndReplicationNUmber(study);
         extractDiscoveryAndReplicationSampleAncestryList();
     }
@@ -504,6 +523,46 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
 
         return platform;
+    }
+
+    private void computeInitialAndReplicationNUmber(Study study) {
+        AtomicInteger noOfInitialIndividuals = new AtomicInteger();
+        AtomicInteger noOfReplicationIndividuals = new AtomicInteger();
+        study.getAncestries().forEach(
+                ancestry -> {
+                    String type = ancestry.getType();
+                    if(type.equals("initial"))
+                        noOfInitialIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
+                    if(type.equals("replication"))
+                        noOfReplicationIndividuals.addAndGet(ancestry.getNumberOfIndividuals());
+                });
+        numberOfIndividualsInitial = noOfInitialIndividuals.intValue();
+        numberOfIndividualsReplication = noOfReplicationIndividuals.intValue();
+    }
+
+    private void extractDiscoveryAndReplicationSampleAncestryList() {
+        discoverySampleAncestry = this.ancestryLinks.stream()
+                .filter((ancestryText) -> ancestryText.startsWith("initial"))
+                .map((text) -> {
+                    StringBuilder initialSampleText = new StringBuilder();
+                    String[] freetext = text.split("\\|");
+                    initialSampleText.append(freetext[4]);
+                    initialSampleText.append(" ");
+                    initialSampleText.append(freetext[3]);
+                    return initialSampleText.toString();
+                }).collect(Collectors.toList());
+
+       replicationSampleAncestry = this.ancestryLinks.stream()
+                .filter((ancestryText) -> ancestryText.startsWith("replication"))
+                .map((text) -> {
+                    StringBuilder replicateSampleText = new StringBuilder();
+                    String[] freetext = text.split("\\|");
+                    replicateSampleText.append(freetext[4]);
+                    replicateSampleText.append(" ");
+                    replicateSampleText.append(freetext[3]);
+                    return replicateSampleText.toString();
+                }).collect(Collectors.toList());
+
     }
 
 

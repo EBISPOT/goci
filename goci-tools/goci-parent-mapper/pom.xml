@@ -7,7 +7,7 @@
 
     <artifactId>goci-parent-mapper</artifactId>
 
-    <version>3.4.2</version>
+    <version>4.0.0</version>
 
     <packaging>jar</packaging>
 
@@ -18,7 +18,7 @@
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
 
-        <version>3.4.2</version>
+        <version>4.0.0</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>

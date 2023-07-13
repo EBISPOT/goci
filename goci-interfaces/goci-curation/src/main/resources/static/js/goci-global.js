@@ -51,10 +51,22 @@ class UI {
 
     static tableData(text, dataId) {
         let td = document.createElement("td");
-        td.setAttribute('style', 'white-space: nowrap;');
         td.setAttribute("id", dataId);
+        td.setAttribute('data-title', text);
+        text = (text === null) ? "NA" : text;
         let dText = document.createTextNode(text);
-        td.appendChild(dText);
+
+        if (text.length > 30){
+            td.setAttribute("class", "gwas-tooltip expand");
+            let p = document.createElement("p");
+            p.setAttribute('class', 'text-max-width-3rem');
+            p.appendChild(dText);
+            td.appendChild(p);
+        }else {
+            td.appendChild(dText);
+        }
+
+
         return td;
     }
 

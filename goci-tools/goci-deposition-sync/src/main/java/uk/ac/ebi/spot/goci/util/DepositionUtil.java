@@ -1,9 +1,13 @@
 package uk.ac.ebi.spot.goci.util;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.util.UriComponentsBuilder;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionAssociationDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionStudyDto;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
 import uk.ac.ebi.spot.goci.model.deposition.Submission;
+
+import java.net.URI;
 
 public class DepositionUtil {
 
@@ -54,6 +58,19 @@ public class DepositionUtil {
             }
         }
         return Submission.SubmissionType.UNKNOWN;
+    }
+
+    public static URI buildUrl(String uri, Pageable pageable){
+        return buildUrl(uri, pageable, "");
+    }
+
+    public static URI buildUrl(String uri, Pageable pageable, String status){
+        UriComponentsBuilder targetUrl = UriComponentsBuilder.fromUriString(uri)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize());
+
+        targetUrl = (status.isEmpty()) ? targetUrl : targetUrl.queryParam("status", status);
+        return targetUrl.build().encode().toUri();
     }
 
 }
