@@ -6,7 +6,7 @@
 
     <artifactId>goci-model</artifactId>
 
-    <version>3.4.2</version>
+    <version>4.0.1</version>
 
 
     <name>GOCI Object Model</name>
@@ -15,7 +15,7 @@
     <parent>
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
-        <version>3.4.2</version>
+        <version>4.0.1</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>

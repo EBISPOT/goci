@@ -6,14 +6,14 @@
         <artifactId>goci-parent</artifactId>
         <groupId>uk.ac.ebi.spot</groupId>
 
-        <version>3.4.2</version>
+        <version>4.0.1</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>goci-data-filtering-services</artifactId>
-    <version>3.4.2</version>
+    <version>4.0.1</version>
 
 
     <name>GOCI Data Filtering Services</name>

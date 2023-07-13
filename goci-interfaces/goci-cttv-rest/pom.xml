@@ -7,7 +7,7 @@
     <groupId>uk.ac.ebi.spot.cttv</groupId>
     <artifactId>goci-cttv-rest</artifactId>
 
-    <version>3.4.2</version>
+    <version>4.0.1</version>
 
 
     <name>GOCI CTTV Rest API</name>
@@ -17,7 +17,7 @@
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
 
-        <version>3.4.2</version>
+        <version>4.0.1</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>
