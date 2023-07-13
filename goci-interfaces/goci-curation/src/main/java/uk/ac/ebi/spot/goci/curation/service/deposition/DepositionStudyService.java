@@ -76,8 +76,8 @@ public class DepositionStudyService {
         studyService.save(study);
     }
 
-    public Pair<Boolean, List<String>> publishSummaryStats(Collection<DepositionStudyDto> studyDtos, Collection<Study> dbStudies) {
-        getLog().info("Publishing summary stats: {} | {}", studyDtos.size(), dbStudies.size());
+    public Pair<Boolean, List<String>> publishSummaryStats(DepositionStudyDto studyDto, Collection<Study> dbStudies) {
+        getLog().info("Publishing summary stats: | {}", dbStudies.size());
         List<String> errors = new ArrayList<>();
         boolean outcome = true;
         List<Long> studyIds = new ArrayList<>();
@@ -85,7 +85,7 @@ public class DepositionStudyService {
             studyIds.add(study.getId());
         }
         try {
-            for (DepositionStudyDto studyDto : studyDtos) {
+
                 String tag = studyDto.getStudyTag();
                 boolean match = false;
                 for (Long studyId : studyIds) {
@@ -102,7 +102,7 @@ public class DepositionStudyService {
                         publishSummaryStats(studyService.findOne(studyId), null);
                     }
                 }
-            }
+
             getLog().info("Publishing summary stats done.");
         } catch (Exception e) {
             getLog().error("Encountered error: {}", e.getMessage(), e);

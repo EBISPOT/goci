@@ -20,7 +20,7 @@ import java.util.*;
 @Service
 public class StudiesProcessingService {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
@@ -53,15 +53,15 @@ public class StudiesProcessingService {
     @Autowired
     private DepositionAssociationService depositionAssociationService;
 
-    public boolean processStudies(DepositionSubmission depositionSubmission, SecureUser currentUser, Publication publication, Curator curator, ImportLog importLog) {
-        for (DepositionStudyDto studyDto : depositionSubmission.getStudies()) {
+    public boolean processStudies(DepositionSubmission depositionSubmission, SecureUser currentUser, Publication publication, Curator curator, ImportLog importLog,
+                                  List<DepositionStudyDto> studyDtos ,
+                                  List<DepositionAssociationDto> associations, List<DepositionSampleDto> samples) {
+        for (DepositionStudyDto studyDto : studyDtos) {
             getLog().info("[{}] Processing study: {} | {}.", depositionSubmission.getSubmissionId(), studyDto.getStudyTag(), studyDto.getAccession());
 
             ImportLogStep importStep = importLog.addStep(new ImportLogStep("Creating study [" + studyDto.getAccession() + "]", depositionSubmission.getSubmissionId()));
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             StringBuffer studyNote = new StringBuffer(sdf.format(new Date()) + "\n");
-            List<DepositionAssociationDto> associations = depositionSubmission.getAssociations();
-            List<DepositionSampleDto> samples = depositionSubmission.getSamples();
 
             List<DepositionNoteDto> notes = depositionSubmission.getNotes();
             String studyTag = studyDto.getStudyTag();

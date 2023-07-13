@@ -98,6 +98,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
 
 
+
     public StudyDocument(Study study) {
         super(study);
         this.pubmedId = study.getPublicationId().getPubmedId();
@@ -509,6 +510,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         return platform;
     }
+
+
 
 
     public Collection<String> getAdditionalAncestryDescription() {

@@ -2,29 +2,20 @@ package uk.ac.ebi.spot.goci.model.deposition.util;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder({
-        "studies",
-        "page"
-})
-public class DepositionStudyListWrapper {
+public class Links {
 
-    @JsonProperty(value = "_embedded")
-    private DepositionStudyList studies;
+    private static final long serialVersionUID = -1399435018150773170L;
 
-    @JsonProperty("_links")
-    private Links links;
-
-    @JsonProperty("page")
-    private DepositionPageInfo page;
+    @JsonProperty("next")
+    private Next next;
 }

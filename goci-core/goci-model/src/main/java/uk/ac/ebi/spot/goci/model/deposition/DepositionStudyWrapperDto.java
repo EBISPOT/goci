@@ -1,28 +1,22 @@
 package uk.ac.ebi.spot.goci.model.deposition;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import uk.ac.ebi.spot.goci.model.deposition.util.DepositionPageInfo;
-import uk.ac.ebi.spot.goci.model.deposition.util.DepositionSubmissionList;
-import uk.ac.ebi.spot.goci.model.deposition.util.Links;
+import uk.ac.ebi.spot.goci.model.deposition.util.DepositionStudyList;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class DepositionSubmissionDto {
+public class DepositionStudyWrapperDto {
 
     @JsonProperty(value = "_embedded")
-    private DepositionSubmissionList wrapper;
+    private DepositionStudyList studyList;
 
+    @JsonProperty(value = "page")
     private DepositionPageInfo page;
-
-    @JsonProperty("_links")
-    private Links links;
 }
-
