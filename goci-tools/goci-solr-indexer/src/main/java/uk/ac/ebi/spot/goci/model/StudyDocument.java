@@ -95,6 +95,10 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field("mappedBkgUri")
     private Collection<String> mappedBkgUris;
 
+
+
+
+
     public StudyDocument(Study study) {
         super(study);
         this.pubmedId = study.getPublicationId().getPubmedId();
@@ -169,6 +173,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         this.mappedBkgLabels = new LinkedHashSet<>();
         this.mappedBkgUris = new LinkedHashSet<>();
+
         computeInitialAndReplicationNUmber(study);
         extractDiscoveryAndReplicationSampleAncestryList();
     }
@@ -505,6 +510,7 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
 
         return platform;
     }
+
 
 
     public Collection<String> getAdditionalAncestryDescription() {

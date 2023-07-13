@@ -4,11 +4,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmission;
+import uk.ac.ebi.spot.goci.model.deposition.DepositionSubmissionDto;
+import uk.ac.ebi.spot.goci.model.deposition.Submission;
+import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
+import uk.ac.ebi.spot.goci.util.DepositionUtil;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,7 +23,12 @@ import java.util.TreeMap;
 @Service
 public class DepositionSubmissionServiceImpl implements DepositionSubmissionService {
 
+<<<<<<< HEAD
     private static final Logger log = LoggerFactory.getLogger(DepositionSubmissionServiceImpl.class);
+=======
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+>>>>>>> 2.x-dev
     @Value("${deposition.ingest.uri}")
     private String depositionIngestUri;
 
@@ -35,6 +47,7 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
 
     @Override
     public Map<String, DepositionSubmission> getSubmissions() {
+<<<<<<< HEAD
 
         String url = depositionIngestUri + API_V2 + "/submissions/all";
         Map<String, DepositionSubmission> submissionList = new TreeMap<>();
@@ -53,10 +66,39 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
                     submissionList.put(submission.getSubmissionId(), submission);
                 }
             }
+=======
+        String url = String.format("%s%s", depositionIngestUri, "/submissions");
+        int page = 0; int pageSize = 100;
+        Pageable pageable = new PageRequest(page, pageSize);
+
+        Map<String, DepositionSubmission> submissionList = new TreeMap<>();
+        URI uri = DepositionUtil.buildUrl(url, pageable);
+        DepositionSubmissionDto depositionSubmissionDto = getSubmissionsWithPagination(uri);
+        depositionSubmissionDto.getWrapper().getSubmissions().forEach(submission -> {
+            submissionList.put(submission.getSubmissionId(), submission);
+        });
+
+        int batchSize = depositionSubmissionDto.getPage().getTotalPages();
+        for (int nextPage=1; nextPage<batchSize; nextPage++){
+            uri = DepositionUtil.buildUrl(url, new PageRequest(nextPage, pageSize));
+            depositionSubmissionDto = getSubmissionsWithPagination(uri);
+            depositionSubmissionDto.getWrapper().getSubmissions().forEach(submission -> {
+                submissionList.put(submission.getSubmissionId(), submission);
+            });
+        }
+
+        return submissionList;
+    }
+
+    private DepositionSubmissionDto getSubmissionsWithPagination(URI targetUrl) {
+        DepositionSubmissionDto depositionSubmissionDto = DepositionSubmissionDto.builder().build();
+        try {
+            depositionSubmissionDto = template.getForObject(targetUrl, DepositionSubmissionDto.class);
+>>>>>>> 2.x-dev
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return submissionList;
+        return depositionSubmissionDto;
     }
 
     public Integer getSubmissionCount() {
