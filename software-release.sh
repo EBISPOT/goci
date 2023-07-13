@@ -6,7 +6,7 @@
 # Ensure all branches ready for release are merged into dev / master
 
 
-DEV_BRANCH='goci#882-NEW-fix-Ensembl-versioning-code'
+DEV_BRANCH='gwas-ui-296-fix-solr-indexer-nullpointer'
 
 MASTER_BRANCH='2.x-stable'
 

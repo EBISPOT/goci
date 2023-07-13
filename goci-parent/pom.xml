@@ -6,7 +6,7 @@
 
     <artifactId>goci-parent</artifactId>
 
-    <version>3.3.9</version>
+    <version>3.4.2</version>
 
     <packaging>pom</packaging>
 
@@ -14,7 +14,7 @@
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-dependencies</artifactId>
 
-        <version>3.3.9</version>
+        <version>3.4.2</version>
 
         <relativePath>../goci-dependencies/pom.xml</relativePath>
         <!-- lookup parent from repository -->
