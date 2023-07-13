@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.hateoas.ResourceSupport;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +17,7 @@ import org.springframework.hateoas.ResourceSupport;
         "samplesList",
         "page"
 })
-public class DepositionSampleListWrapper extends ResourceSupport {
+public class DepositionSampleListWrapper {
 
     @JsonProperty(value = "_embedded")
     private DepositionSampleList samplesList;

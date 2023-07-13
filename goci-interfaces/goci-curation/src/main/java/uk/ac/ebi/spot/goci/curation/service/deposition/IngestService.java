@@ -14,7 +14,7 @@ import java.util.Map;
 @Service
 public class IngestService {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
@@ -38,12 +38,12 @@ public class IngestService {
 
         getLog().info("[IMPORT] Sending request to update submission in the Deposition App.");
         try {
-            template.postForEntity(depositionIngestURL + "/submissions/{submissionID}", submissionStatus, String.class, params);
+            template.put(depositionIngestURL +   "/submissions/{submissionID}", depositionSubmission, params);
         } catch (Exception e) {
             getLog().error("Unable to call Ingest service: {}", e.getMessage(), e);
             return "Unable to call Ingest service: " + e.getMessage();
         }
 
-        return "success";
+        return null;
     }
 }

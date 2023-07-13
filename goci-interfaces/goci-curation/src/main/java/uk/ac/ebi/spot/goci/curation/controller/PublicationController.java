@@ -11,6 +11,8 @@ import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
@@ -41,6 +43,8 @@ import java.util.*;
 @Controller
 @RequestMapping("/publication")
 public class PublicationController {
+
+    private Logger log = LoggerFactory.getLogger(getClass());
     @Value("${deposition.ui.uri}")
     private String depositionUiURL;
     @Autowired
@@ -177,17 +181,23 @@ public class PublicationController {
         Set<String> studiesWithFiles = new HashSet<>();
         Collection<Study> studies = studyService.findByPublication(publicationId.toString());
         for (Study study : studies) {
-            List<StudyFileSummary> studyFiles = studyFileService.getStudyFiles(study.getId());
+           List<StudyFileSummary> studyFiles = studyFileService.getStudyFiles(study.getId());
             if (studyFiles != null && studyFiles.size() != 0) {
                 studiesWithFiles.add(study.getId().toString());
             }
         }
 
-        Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
-        if (pubmedMap.containsKey(publication.getPubmedId())) {
+        //Map<String, String> pubmedMap = submissionService.getSubmissionPubMedIds();
+        //if (pubmedMap.containsKey(publication.getPubmedId())) {
+        try {
+            String submissionId = submissionService.getSubmissionPubMedIds(publication.getPubmedId());
             publication.setActiveSubmission(true);
-            publication.setSubmissionId(pubmedMap.get(publication.getPubmedId()));
+            //publication.setSubmissionId(pubmedMap.get(publication.getPubmedId()));
+            publication.setSubmissionId(submissionId);
+        } catch(Exception ex) {
+            log.error("Exception in restTemplate call with Submission Envelope"+ex.getMessage(),ex);
         }
+        //}
         Pair<Boolean, Boolean> flagStatus = bulkOperationsService.getFlagStatus(studies);
         publication.setOpenTargets(flagStatus.getLeft());
         publication.setUserRequested(flagStatus.getRight());

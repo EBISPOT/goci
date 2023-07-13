@@ -12,8 +12,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
-import uk.ac.ebi.spot.goci.model.deposition.SubmissionViewDto;
 import uk.ac.ebi.spot.goci.curation.service.StudyOperationsService;
 import uk.ac.ebi.spot.goci.curation.util.UriBuilder;
 import uk.ac.ebi.spot.goci.model.*;
@@ -31,7 +29,7 @@ import java.util.*;
 @Service
 public class DepositionSubmissionService {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     protected Logger getLog() {
         return log;
@@ -74,6 +72,17 @@ public class DepositionSubmissionService {
         return pubmedMap;
     }
 
+    public String getSubmissionPubMedIds(String pubmedId) {
+        String url = depositionIngestURL + "/submission-envelopes?pmid={pmid}";
+        Map<String, String> params = new HashMap<>();
+        List<String> submissionids = new ArrayList<>();
+        params.put("pmid", pubmedId);
+        DepositionSubmission[] submissions =
+                template.getForObject( url, DepositionSubmission[].class, params);
+        Arrays.asList(submissions).forEach(submission -> submissionids.add(submission.getSubmissionId()));
+        return submissionids.get(0);
+    }
+
     public SubmissionViewDto getSubmissions() {
         String url = String.format("%s%s", depositionIngestURL, "/submissions?page={page}");
         URI targetUrl = UriBuilder.buildUrl(url, pageable);
@@ -89,7 +98,10 @@ public class DepositionSubmissionService {
     public SubmissionViewDto getSubmissionsById(List<String> submissionIds) {
         Map<String, Submission> submissionList = new TreeMap<>();
         for (String sId : submissionIds) {
-            submissionList.put(sId, buildSubmission(getSubmission(sId)));
+            DepositionSubmission depositionSubmission = getSubmission(sId);
+            if(depositionSubmission != null) {
+            submissionList.put(sId, buildSubmission(depositionSubmission));
+            }
         }
 
         SubmissionViewDto submissionViewDto = SubmissionViewDto.builder()
@@ -149,7 +161,12 @@ public class DepositionSubmissionService {
     public DepositionSubmission getSubmission(String submissionID) {
         Map<String, String> params = new HashMap<>();
         params.put("submissionID", submissionID);
-        return template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class, params);
+        try {
+            return template.getForObject(depositionIngestURL + "/submissions/{submissionID}", DepositionSubmission.class, params);
+        }catch(Exception ex){
+            log.error("Exception in Rest API call"+ex.getMessage(),ex);
+            return null;
+        }
     }
 
     public DepositionSampleListWrapper getSubmissionSamples(Pageable pageable, String submissionId) {
@@ -180,41 +197,24 @@ public class DepositionSubmissionService {
     }
 
     public DepositionStudyListWrapper getSubmissionStudies(String uri, String submissionId) {
+        String targetUri = uri;
         if(uri.isEmpty()) {
             uri = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/studies");
+            MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+            paramsMap.add("size","500");
+            targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
         }
+
         DepositionStudyListWrapper studyListWrapper = null;
         try {
-            log.info("The Studies API based in submission is ->"+uri);
-            studyListWrapper = template.getForObject(uri, DepositionStudyListWrapper.class);
+            log.info("The Studies API based in submission is ->"+targetUri);
+            studyListWrapper = template.getForObject(targetUri, DepositionStudyListWrapper.class);
         } catch (Exception e) {
-            log.error("Exception in rest API call sor studies API"+e.getMessage(),e);
-        String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/samples");
-        URI targetUrl = UriBuilder.buildUrl(url, pageable);
-        DepositionSampleListWrapper depositionSampleListWrapper = DepositionSampleListWrapper.builder().build();
-        try {
-            log.info(targetUrl.toString());
-            depositionSampleListWrapper = template.getForObject(targetUrl, DepositionSampleListWrapper.class);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-        return depositionSampleListWrapper;
-    }
-
-    public DepositionStudyListWrapper getSubmissionStudies(Pageable pageable, String submissionId) {
-
-        String url = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/studies");
-        URI targetUrl = UriBuilder.buildUrl(url, pageable);
-        DepositionStudyListWrapper studyListWrapper = DepositionStudyListWrapper.builder().build();
-        try {
-            log.info(targetUrl.toString());
-            studyListWrapper = template.getForObject(targetUrl, DepositionStudyListWrapper.class);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-
+            log.error("Exception in rest API call sor studies API" + e.getMessage(), e);
         }
         return studyListWrapper;
     }
+
 
     public DepositionAssociationListWrapper getSubmissionAssociations(Pageable pageable, String submissionId) {
 
@@ -231,18 +231,16 @@ public class DepositionSubmissionService {
     }
 
     public DepositionAssociationListWrapper getSubmissionAssociations(String uri, String submissionId) {
-        String targetUri = "";
+        String targetUri = uri;
         if(uri.isEmpty()) {
             uri = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/associations");
             MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
             paramsMap.add("size","500");
             targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
         }
-        MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
-        paramsMap.add("size","100");
         DepositionAssociationListWrapper associationListWrapper = null;
         try {
-            log.info("The Associations API based in submission is ->"+uri);
+            log.info("The Associations API based in submission is ->"+targetUri);
             associationListWrapper = template.getForObject(targetUri , DepositionAssociationListWrapper.class);
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -250,6 +248,24 @@ public class DepositionSubmissionService {
         return associationListWrapper;
     }
 
+    public DepositionSampleListWrapper getSubmissionSamples(String uri, String submissionId) {
+        String targetUri = uri;
+        if(uri.isEmpty()) {
+            uri = String.format("%s%s%s%s", depositionIngestURL, "/submissions/", submissionId, "/samples");
+            MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
+            paramsMap.add("size","500");
+            targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
+        }
+        DepositionSampleListWrapper depositionSampleListWrapper = null;
+        try {
+            log.info("The Samples API based in submission is ->"+targetUri);
+            depositionSampleListWrapper = template.getForObject(targetUri , DepositionSampleListWrapper.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        return depositionSampleListWrapper;
+
+    }
     public DepositionProvenance getProvenance(String pmid) {
         try {
             Map<String, String> params = new HashMap<>();
