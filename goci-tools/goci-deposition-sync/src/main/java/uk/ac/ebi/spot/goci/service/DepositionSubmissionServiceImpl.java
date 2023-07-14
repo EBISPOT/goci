@@ -78,6 +78,9 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
             paramsMap.add("size","500");
             targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
         }
+        if(!targetUri.contains("https")) {
+            targetUri = targetUri.replace("http", "https");
+        }
         DepositionSampleListWrapper depositionSampleListWrapper = null;
         try {
             log.info("The Samples API based in submission is ->"+targetUri);
@@ -97,10 +100,12 @@ public class DepositionSubmissionServiceImpl implements DepositionSubmissionServ
             paramsMap.add("size","500");
             targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
         }
-
+        if(!targetUri.contains("https")) {
+            targetUri = targetUri.replace("http", "https");
+        }
         DepositionStudyListWrapper studyListWrapper = null;
         try {
-            log.info("The Studies API based in submission is ->"+uri);
+            log.info("The Studies API based in submission is ->"+targetUri);
             studyListWrapper = template.getForObject(targetUri, DepositionStudyListWrapper.class);
         } catch (Exception e) {
             log.error("Exception in rest API call sor studies API" + e.getMessage(), e);
