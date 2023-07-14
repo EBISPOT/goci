@@ -6,7 +6,7 @@
 
     <artifactId>goci-tools</artifactId>
 
-    <version>4.0.0</version>
+    <version>4.0.3</version>
 
 
     <packaging>pom</packaging>
@@ -16,7 +16,7 @@
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci</artifactId>
 
-        <version>4.0.0</version>
+        <version>4.0.3</version>
 
     </parent>
 
