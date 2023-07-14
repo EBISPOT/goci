@@ -6,7 +6,7 @@
 # Ensure all branches ready for release are merged into dev / master
 
 
-DEV_BRANCH='gwas-ui-296-fix-solr-indexer-nullpointer'
+DEV_BRANCH='2.x-dev'
 
 MASTER_BRANCH='2.x-stable'
 
