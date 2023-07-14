@@ -204,7 +204,9 @@ public class DepositionSubmissionService {
             paramsMap.add("size","500");
             targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
         }
-
+        if(!targetUri.contains("https")) {
+            targetUri = targetUri.replace("http", "https");
+        }
         DepositionStudyListWrapper studyListWrapper = null;
         try {
             log.info("The Studies API based in submission is ->"+targetUri);
@@ -238,6 +240,9 @@ public class DepositionSubmissionService {
             paramsMap.add("size","500");
             targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
         }
+        if(!targetUri.contains("https")) {
+            targetUri = targetUri.replace("http", "https");
+        }
         DepositionAssociationListWrapper associationListWrapper = null;
         try {
             log.info("The Associations API based in submission is ->"+targetUri);
@@ -255,6 +260,9 @@ public class DepositionSubmissionService {
             MultiValueMap<String, String> paramsMap = new LinkedMultiValueMap<>();
             paramsMap.add("size","500");
             targetUri = UriComponentsBuilder.fromHttpUrl(uri).queryParams(paramsMap).build().toUriString();
+        }
+        if(!targetUri.contains("https")) {
+            targetUri = targetUri.replace("http", "https");
         }
         DepositionSampleListWrapper depositionSampleListWrapper = null;
         try {
