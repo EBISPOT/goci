@@ -6,7 +6,7 @@
 
     <artifactId>goci-catalog-io</artifactId>
 
-    <version>4.0.3</version>
+    <version>4.0.4</version>
 
     <packaging>jar</packaging>
 
@@ -17,7 +17,7 @@
         <groupId>uk.ac.ebi.spot</groupId>
         <artifactId>goci-parent</artifactId>
 
-        <version>4.0.3</version>
+        <version>4.0.4</version>
 
         <relativePath>../../goci-parent/pom.xml</relativePath>
     </parent>

@@ -7,7 +7,7 @@
     <groupId>uk.ac.ebi.spot</groupId>
     <artifactId>goci</artifactId>
 
-    <version>4.0.3</version>
+    <version>4.0.4</version>
 
 
     <packaging>pom</packaging>
