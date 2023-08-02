@@ -53,8 +53,8 @@ public class StudyRestController {
     public Object getStudies(PagedResourcesAssembler<Study> assembler,
                              @PageableDefault(size = 20) Pageable pageable) {
 
-        //Page<Study> studies = studyDataService.getStudiesByHousekeepingStatus(pageable, true);
-        Page<Study> studies = studyDataService.getStudies(pageable);
+        Page<Study> studies = studyDataService.getStudiesByHousekeepingStatus(pageable, true);
+        //Page<Study> studies = studyDataService.getStudies(pageable);
         final ControllerLinkBuilder linkBuilder = ControllerLinkBuilder.linkTo(
                 ControllerLinkBuilder
                         .methodOn(StudyRestController.class)
