@@ -252,7 +252,7 @@ public class DepositionSyncService {
                 if (isEligible(bodyOfWorkDto)) {
                     getLog().info(" - Submission [{}] is eligible.", submission.getSubmissionId());
                     Set<UnpublishedStudy> studies = new HashSet<>();
-
+                    List<DepositionSampleDto> sampleDtoList = getSamples(submission.getSubmissionId());
                     studyDtos.forEach(studyDto -> {
                         String studyTag = studyDto.getStudyTag();
                         getLog().info(" - Processing study tag: {}", studyTag);
@@ -263,9 +263,9 @@ public class DepositionSyncService {
                                     unpublishedRepository.save(UnpublishedStudy.createFromStudy(studyDto, submission));
                             studies.add(unpublishedStudy);
                             //add ancestries
-                            List<DepositionSampleDto> sampleDtoList = getSamples(studyTag, submission.getSubmissionId());
+                            List<DepositionSampleDto> filteredSamplesList = filterSamplesBasedonStudyTag(studyTag, sampleDtoList);
                             List<UnpublishedAncestry> ancestryList = new ArrayList<>();
-                            for (DepositionSampleDto sampleDto : sampleDtoList) {
+                            for (DepositionSampleDto sampleDto : filteredSamplesList) {
                                 UnpublishedAncestry ancestry = UnpublishedAncestry.create(sampleDto, unpublishedStudy);
                                 ancestryList.add(ancestry);
                             }
@@ -348,7 +348,7 @@ public class DepositionSyncService {
         importLog.addEntry(submission.getSubmissionId(), submission.getPublication().getPmid(), errors);
     }
 
-    private List<DepositionSampleDto> getSamples(String studyTag, String submissionImportId) {
+    private List<DepositionSampleDto> getSamples(String submissionImportId) {
         List<DepositionSampleDto> sampleDtoList = new ArrayList<>();
         DepositionSampleListWrapper depositionSampleListWrapper = null;
         depositionSampleListWrapper = submissionService.getSamples("", String.valueOf(submissionImportId));
@@ -365,9 +365,16 @@ public class DepositionSyncService {
             }
             sampleLinks = depositionSampleListWrapper.getLinks();
         }
-       return sampleDtoList.stream()
+   /*   return sampleDtoList.stream()
                 .filter(depositionSampleDto -> depositionSampleDto.getStudyTag().equals(studyTag))
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList());*/
+        return sampleDtoList;
+    }
+
+    private List<DepositionSampleDto> filterSamplesBasedonStudyTag(String studyTag, List<DepositionSampleDto> sampleDtoList) {
+        return sampleDtoList.stream()
+                .filter(depositionSampleDto -> depositionSampleDto.getStudyTag().equals(studyTag))
+                .collect(Collectors.toList());
     }
 
     private boolean addSummaryStatsData(DepositionPublication depositionPublication, Publication publication) {
