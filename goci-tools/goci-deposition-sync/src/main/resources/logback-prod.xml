@@ -19,10 +19,10 @@
             <pattern>${FILE_LOG_PATTERN}</pattern>
         </encoder>
         <!--current log file-->
-        <file>${LOG_PATH}/gwas_deposition_sync.log</file>
+        <file>${logging.file.path}/gwas_deposition_sync.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOG_PATH}/gwas_deposition_sync.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${logging.file.path}/gwas_deposition_sync.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!--determines when we rollover-->
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>10MB</maxFileSize>
