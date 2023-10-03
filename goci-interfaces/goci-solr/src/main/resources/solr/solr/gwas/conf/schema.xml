@@ -15,10 +15,10 @@
  limitations under the License.
 -->
 
-<!--  
+<!--
  This is the Solr schema file. This file should be named "schema.xml" and
  should be in the conf directory under the solr home
- (i.e. ./solr/conf/schema.xml by default) 
+ (i.e. ./solr/conf/schema.xml by default)
  or located where the classloader for the Solr webapp can find it.
 
  This example schema is the recommended starting point for users.
@@ -158,6 +158,8 @@
     <field name="accessionId" type="text_general" indexed="true" stored="true" multiValued="false" />
     <field name="fullPvalueSet" type="boolean" indexed="true" stored="true" multiValued="false" />
     <field name="agreedToCc0" type="boolean" indexed="true" stored="true" multiValued="false" />
+    <field name="cohort" type="text_general" indexed="false" stored="true" multiValued="false" />
+    <field name="ftpLink" type="text_general" indexed="false" stored="true" multiValued="false" />
 
     <!-- embedded study -->
     <field name="study_author" type="text_general" indexed="true" stored="true" multiValued="true" />
@@ -389,6 +391,8 @@
     <copyField source="study_genotypingTechnologies" dest="text" />
     <copyField source="fullPvalueSet" dest="text" />
     <copyField source="agreedToCc0" dest="text" />
+    <copyField source="cohort" dest="text" />
+    <copyField source="ftpLink" dest="text" />
     <copyField source="study_author" dest="text" />
     <copyField source="study_orcid" dest="text" />
     <copyField source="study_authorAscii" dest="text" />
