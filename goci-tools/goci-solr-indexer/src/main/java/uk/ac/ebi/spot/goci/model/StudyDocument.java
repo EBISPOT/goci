@@ -1,5 +1,6 @@
 package uk.ac.ebi.spot.goci.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.beans.Field;
 
 import javax.persistence.CollectionTable;
@@ -59,6 +60,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
     @Field private Collection<String> genotypingTechnologies;
     @Field private String studyDesignComment;
     @Field @NonEmbeddableField private Boolean agreedToCc0;
+    @Field @NonEmbeddableField private String cohort;
+    @Field @NonEmbeddableField private String ftpLink;
 
     @Field @NonEmbeddableField private int associationCount;
 
@@ -110,6 +113,8 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         this.accessionId = study.getAccessionId();
         this.fullPvalueSet = study.getFullPvalueSet();
         this.agreedToCc0 = study.isAgreedToCc0();
+        this.cohort = getCohort(study);
+        this.ftpLink = computeFtpLink(study);
 
         this.initialSampleDescription = study.getInitialSampleSize();
         this.replicateSampleDescription = study.getReplicateSampleSize();
@@ -530,6 +535,14 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
         return agreedToCc0;
     }
 
+    public String getCohort() {
+        return cohort;
+    }
+
+    public String getFtpLink() {
+        return ftpLink;
+    }
+
     private void extractDiscoveryAndReplicationSampleAncestryList() {
         discoverySampleAncestry = this.ancestryLinks.stream()
                 .filter((ancestryText) -> ancestryText.startsWith("initial"))
@@ -553,6 +566,25 @@ public class StudyDocument extends OntologyEnabledDocument<Study> {
                     return replicateSampleText.toString();
                 }).collect(Collectors.toList());
 
+    }
+
+    private String computeFtpLink(Study study) {
+        if (study.getFullPvalueSet()) {
+            String accId = study.getAccessionId().substring(study.getAccessionId().indexOf("GCST")+4);
+            int gsctNum = Integer.parseInt(accId);
+            int lowerRange = (int) (Math.floor((gsctNum-1)/1000))*1000+1;
+            int upperRange = (int) (Math.floor((gsctNum-1)/1000)+1)*1000;
+            String range = "GCST"+ StringUtils.leftPad(String.valueOf(lowerRange),6,"0")
+                    +"-GCST"+StringUtils.leftPad(String.valueOf(upperRange),6,"0");
+            return "http://ftp.ebi.ac.uk/pub/databases/gwas/summary_statistics/".concat(range).concat("/").concat(study.getAccessionId());
+        }
+        return null;
+    }
+
+    private String getCohort(Study study) {
+        StudyExtension studyExtension = study.getStudyExtension();
+        if (studyExtension != null) return studyExtension.getCohort();
+        return null;
     }
 
     private void computeInitialAndReplicationNUmber(Study study) {
